@@ -1,0 +1,11 @@
+// Prisma schema for the Branch-to-Head-Office Management Platform.
+// The data model from docs/SPEC.md section 5 is added in Phase 1.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
