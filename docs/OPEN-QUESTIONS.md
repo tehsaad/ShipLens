@@ -6,11 +6,11 @@ This file is the record of approved clarifications, additions and deviations. Wh
 approved decision below adds to, narrows or overrides `docs/SPEC.md`, the decision applies.
 
 - Decisions approved: 2026-10-22, by the project owner (all 12 items, including 5a and 7a).
-- `docs/SPEC.md` is still byte-for-byte identical to the recovered source
+- The recovered `docs/SPEC.md` is preserved unchanged in commit `d6ad7fe`
   (SHA-256 `db82a0722ccbd8db241fc0e3d45f08918e73bf0b07a0f7d00ce0f45fa20d9890`).
-- One approved deviation (7a) must also be written into `docs/SPEC.md`. That amendment is
-  **not applied yet**: see [Pending SPEC.md amendment](#pending-specmd-amendment) for the
-  exact text and the commit order that keeps the original version in Git history.
+- One approved deviation (7a) is also written into `docs/SPEC.md` as amendment A1, applied
+  in commit `39f1b88`. It only appends lines after section 15; lines 1–285 still match the
+  recovered source. See [SPEC.md amendment](#specmd-amendment).
 - A few implementation details for 7a are proposals, not yet approved; they are listed
   under [7a follow-up details](#7a-follow-up-details-proposed-not-yet-approved).
 
@@ -180,7 +180,7 @@ set).
 - **Deviation:** this overrides "amount (Decimal, > 0)" in section 5 and "Amount must be
   greater than zero" in section 6.3 for correction entries only. Because it changes the
   spec's wording, it is also to be written into `docs/SPEC.md` (see
-  [Pending SPEC.md amendment](#pending-specmd-amendment)).
+  [SPEC.md amendment](#specmd-amendment)).
 
 ### 7a follow-up details (proposed, not yet approved)
 
@@ -200,24 +200,21 @@ can. They are needed in Phase 1–3, not Phase 0.
   rows. The same applies to `totalsSnapshot` and the unrouted list.
 - **Routing:** a correction is routed by FINANCE_REVIEWER like any other entry.
 
-## Pending SPEC.md amendment
+## SPEC.md amendment
 
 **Approved content:** decision 7a (Option B).
 
-**Commit-order requirement:** the original `docs/SPEC.md` is not in Git yet; it only
-exists as an untracked file. Editing it now would lose the original version. To keep the
-original in Git history, the amendment has to come after a commit of the original:
+**Status: applied.** The commit order kept the original version in Git history:
 
-1. Commit `docs/SPEC.md` exactly as recovered (hash above), as its own commit.
-2. Commit `docs/OPEN-QUESTIONS.md`.
-3. Commit the amendment below as a separate `docs(spec):` commit.
+1. `d6ad7fe` adds `docs/SPEC.md` exactly as recovered (hash above).
+2. `a32ec36` adds this file.
+3. `39f1b88` appends the amendment below as a separate `docs(spec):` commit.
 
-`git show <commit 1>:docs/SPEC.md` then returns the original text, and `git diff` between
-commits 1 and 3 shows exactly what changed. These commits need your approval and will go
-on `feature/phase-0-foundation`, before any Phase 0 code.
+`git show d6ad7fe:docs/SPEC.md` returns the original text, and
+`git diff d6ad7fe 39f1b88 -- docs/SPEC.md` shows the 15 added lines and nothing else.
 
-**How it is applied:** add the block below at the end of `docs/SPEC.md`, after section 15,
-without editing any existing line. Lines 1–285 stay byte-for-byte identical to the
+**How it was applied:** the block below was added at the end of `docs/SPEC.md`, after
+section 15, without editing any existing line. Lines 1–285 stay byte-for-byte identical to the
 recovered source, so the original can still be checked by hashing those lines. Prettier
 must keep ignoring `docs/SPEC.md`.
 
@@ -324,19 +321,19 @@ Every approved decision, classified against the original spec text.
 - **Clarification / Choice:** resolves ambiguous wording or picks an option the spec allows.
 - **As specified:** no change.
 
-| Decision | Kind          | Spec text affected                                                  | What is approved                                                     | In SPEC.md           |
-| -------- | ------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------- | -------------------- |
-| 7a       | Deviation     | §5 "amount (Decimal, > 0)"; §6.3 "Amount must be greater than zero" | Correction entries only may be negative; never below zero in total   | Pending amendment A1 |
-| 5a       | Deviation     | §7.2 "must be changed on first login"                               | Seeded demo users start with `mustChangePassword = false`            | No (recorded here)   |
-| 4        | Addition      | §5 Branch; §7.1 Branches page                                       | New nullable field `Branch.contactEmail`                             | No (recorded here)   |
-| 5        | Addition      | §5 User; §7.2 Users                                                 | New field `User.mustChangePassword`, enforced on the server          | No (recorded here)   |
-| 7        | Addition      | §5 Collection; §6.3 corrections                                     | New fields `correctsCollectionId`, `correctionNote`; audited         | Pending amendment A1 |
-| 8        | Addition      | §6.3 lock trigger                                                   | Reject new collections dated in an approved week (app and database)  | No (recorded here)   |
-| 9        | Addition      | §7.2 Dashboard                                                      | Computed overdue-report indicator; listed KPIs unchanged             | No (recorded here)   |
-| 1        | Addition      | §12, §13 (repository, README)                                       | Landing page moved to `docs/design/landing-reference/`; History note | Not needed           |
-| 2        | Clarification | §3 "exactly five" roles                                             | PUBLIC is anonymous access, not a stored role                        | Not needed           |
-| 3        | Clarification | §3 "manages"; §7.2 "read and edit own branch"                       | Field-level split between Branch Lead, HR Lead and Super Admin       | Not needed           |
-| 6        | Choice        | §5 Event "rows or separate localised fields"                        | Separate fields `titleEn`, `titleUr`, English fallback               | Not needed           |
-| 10       | Choice        | §2 vs §12 docker-compose wording                                    | `db` by default, `app` behind a compose profile                      | Not needed           |
-| 12       | Stricter      | §14 "3 merged pull requests"                                        | PR #1 not counted                                                    | Not needed           |
-| 11       | As specified  | §10 "1 BRANCH_LEAD per branch"                                      | Six Branch Leads                                                     | Not needed           |
+| Decision | Kind          | Spec text affected                                                  | What is approved                                                     | In SPEC.md               |
+| -------- | ------------- | ------------------------------------------------------------------- | -------------------------------------------------------------------- | ------------------------ |
+| 7a       | Deviation     | §5 "amount (Decimal, > 0)"; §6.3 "Amount must be greater than zero" | Correction entries only may be negative; never below zero in total   | Amendment A1 (`39f1b88`) |
+| 5a       | Deviation     | §7.2 "must be changed on first login"                               | Seeded demo users start with `mustChangePassword = false`            | No (recorded here)       |
+| 4        | Addition      | §5 Branch; §7.1 Branches page                                       | New nullable field `Branch.contactEmail`                             | No (recorded here)       |
+| 5        | Addition      | §5 User; §7.2 Users                                                 | New field `User.mustChangePassword`, enforced on the server          | No (recorded here)       |
+| 7        | Addition      | §5 Collection; §6.3 corrections                                     | New fields `correctsCollectionId`, `correctionNote`; audited         | Amendment A1 (`39f1b88`) |
+| 8        | Addition      | §6.3 lock trigger                                                   | Reject new collections dated in an approved week (app and database)  | No (recorded here)       |
+| 9        | Addition      | §7.2 Dashboard                                                      | Computed overdue-report indicator; listed KPIs unchanged             | No (recorded here)       |
+| 1        | Addition      | §12, §13 (repository, README)                                       | Landing page moved to `docs/design/landing-reference/`; History note | Not needed               |
+| 2        | Clarification | §3 "exactly five" roles                                             | PUBLIC is anonymous access, not a stored role                        | Not needed               |
+| 3        | Clarification | §3 "manages"; §7.2 "read and edit own branch"                       | Field-level split between Branch Lead, HR Lead and Super Admin       | Not needed               |
+| 6        | Choice        | §5 Event "rows or separate localised fields"                        | Separate fields `titleEn`, `titleUr`, English fallback               | Not needed               |
+| 10       | Choice        | §2 vs §12 docker-compose wording                                    | `db` by default, `app` behind a compose profile                      | Not needed               |
+| 12       | Stricter      | §14 "3 merged pull requests"                                        | PR #1 not counted                                                    | Not needed               |
+| 11       | As specified  | §10 "1 BRANCH_LEAD per branch"                                      | Six Branch Leads                                                     | Not needed               |
