@@ -10,6 +10,9 @@ next-env.d.ts
 # Production build output
 build/
 
+# Written automatically by `next dev`; not project documentation
+AGENTS.md
+
 # Generated Prisma client
 lib/generated/
 
