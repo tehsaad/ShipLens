@@ -283,3 +283,18 @@ All tables have id (UUID), createdAt, updatedAt. Money is Decimal(14,2) in PKR.
 ## 15. Surprise twist
 Expect a late change request. Keep modules loosely coupled: services in lib/services/, UI
 does not contain business rules, and every rule has a test. Budget half a day for the change.
+
+## Amendments (approved after the original specification)
+
+### A1. Collection correction entries (2026-10-22, see docs/OPEN-QUESTIONS.md, decision 7a)
+
+Overrides "amount (Decimal, > 0)" in section 5 and "Amount must be greater than zero" in
+section 6.3, for correction entries only.
+
+- Collection gains correctsCollectionId (nullable, references the original collection in
+  the same branch) and correctionNote (the reason; required when correctsCollectionId is set).
+- A normal entry (correctsCollectionId is null) must have amount > 0.
+- A correction entry may have a positive or negative amount, never zero.
+- The original amount plus the sum of its corrections must never be below zero.
+- Enforced in the service layer and in PostgreSQL. Every correction is written to the
+  audit log. Deletion remains forbidden for all roles.
