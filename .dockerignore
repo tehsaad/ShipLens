@@ -1,0 +1,27 @@
+# Keep the build context small and free of secrets.
+.git
+.github
+.husky
+node_modules
+.next
+out
+build
+coverage
+playwright-report
+test-results
+lib/generated
+
+# Local environment files and keys must never enter an image.
+.env
+.env.*
+*.pem
+
+# Not needed at runtime
+docs
+*.md
+Dockerfile
+.dockerignore
+docker-compose.yml
+.vscode
+.idea
+npm-debug.log*
