@@ -53,7 +53,9 @@ export async function authenticate(
       entityType: "User",
       entityId: user?.id ?? null,
       branchId: user?.branchId ?? null,
-      after: { email, reason },
+      // The typed email is kept only when it matched an account. Unmatched input may be a
+      // password typed into the wrong field, and the audit log is permanent (section 8, A09).
+      after: user ? { email, reason } : { reason },
     });
     return null;
   };

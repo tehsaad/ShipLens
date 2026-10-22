@@ -313,6 +313,22 @@ least three new feature-branch PRs will be merged with green CI, starting with
 
 ---
 
+## Interpretations made during implementation (for review)
+
+These resolve wording in `docs/SPEC.md` without changing it. They are encoded in
+`lib/permissions.ts` and tested; each can be changed if the project owner disagrees.
+
+- **Super Admin and collections or reports.** Section 3 gives SUPER_ADMIN "all data", while
+  section 7.2 says "SUPER_ADMIN read all" for collections. The more specific section 7.2 is
+  followed: Super Admin reads and exports collections and reports but does not enter, edit,
+  route, approve or return them. Approval stays with FINANCE_REVIEWER.
+- **Contact messages.** No role is named for them; only SUPER_ADMIN (all data) reads and
+  handles them.
+- **Branch list for staff.** Every staff role can read branch names and codes for context
+  (for example, a Content Editor linking an event to a branch); BRANCH_LEAD sees only its own.
+- **Login audit entries.** A failed sign-in for an unknown email records no identifier, only
+  the reason, so a mistyped password is never stored in the append-only audit log.
+
 ## Register of approved deviations from `docs/SPEC.md`
 
 Every approved decision, classified against the original spec text.

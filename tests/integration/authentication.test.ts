@@ -110,12 +110,20 @@ describe("authenticate", () => {
     expect(entry).toMatchObject({ action: "auth.login.failed", after: { reason: "inactive" } });
 
     const email = `nobody-${randomUUID()}@example.test`;
+    const before = new Date();
     expect(await authenticate(prisma, email, PASSWORD, context)).toBe(null);
     const unknown = await prisma.auditLog.findFirst({
-      where: { action: "auth.login.failed", after: { path: ["email"], equals: email } },
+      where: { action: "auth.login.failed", entityId: null, createdAt: { gte: before } },
+      orderBy: { createdAt: "desc" },
     });
-    expect(unknown?.after).toMatchObject({ reason: "unknown_account" });
-    expect(unknown?.entityId).toBe(null);
+    expect(unknown?.after).toEqual({ reason: "unknown_account" });
+  });
+
+  it("does not store unmatched input, which may be a mistyped password", async () => {
+    const typedIntoEmailField = `My-Secret-Pass-${randomUUID()}`;
+    await authenticate(prisma, typedIntoEmailField, "anything", context);
+    const entries = await prisma.auditLog.findMany({ where: { action: "auth.login.failed" } });
+    expect(JSON.stringify(entries)).not.toContain(typedIntoEmailField.toLowerCase());
   });
 
   it("never writes the password to the audit log", async () => {
