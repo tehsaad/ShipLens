@@ -1,0 +1,14 @@
+# Recovered specification: must stay byte-for-byte identical to its source.
+docs/SPEC.md
+
+# Preserved landing page, kept unchanged as a design reference.
+docs/design/landing-reference/
+
+# Generated and build output
+.next/
+out/
+build/
+coverage/
+lib/generated/
+next-env.d.ts
+package-lock.json
