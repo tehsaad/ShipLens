@@ -11,8 +11,8 @@ approved decision below adds to, narrows or overrides `docs/SPEC.md`, the decisi
 - One approved deviation (7a) is also written into `docs/SPEC.md` as amendment A1, applied
   in commit `39f1b88`. It only appends lines after section 15; lines 1–285 still match the
   recovered source. See [SPEC.md amendment](#specmd-amendment).
-- A few implementation details for 7a are proposals, not yet approved; they are listed
-  under [7a follow-up details](#7a-follow-up-details-proposed-not-yet-approved).
+- The implementation details for 7a were adopted at the start of Phase 1; they are listed
+  under [7a follow-up details](#7a-follow-up-details-adopted).
 
 | #   | Topic                             | Spec section(s) | Decision                                                               | Status              | Applies from |
 | --- | --------------------------------- | --------------- | ---------------------------------------------------------------------- | ------------------- | ------------ |
@@ -182,10 +182,11 @@ set).
   spec's wording, it is also to be written into `docs/SPEC.md` (see
   [SPEC.md amendment](#specmd-amendment)).
 
-### 7a follow-up details (proposed, not yet approved)
+### 7a follow-up details (adopted)
 
 These follow from Option B. Each default keeps to the spec's existing wording where it
-can. They are needed in Phase 1–3, not Phase 0.
+can. They were proposed on 2026-10-22 and adopted at the start of Phase 1 under the project
+owner's instruction to make sensible decisions consistent with the specification.
 
 - **No chains:** a correction must point to an original (normal) entry, never to another
   correction, so each original has one flat list of corrections.
