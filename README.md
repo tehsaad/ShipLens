@@ -147,8 +147,8 @@ Notes:
 - Free web services sleep when idle, so the first request after a pause is slow, and Render
   limits how long a free database is kept. Check Render's current free-tier terms, or change
   the plans before applying.
-- Phase 0 has no migrations. Running migrations on deploy is added with the data model in a
-  later phase.
+- Migrations do not run on deploy yet (planned for Phase 6). Deploy only Phase 0 to Render
+  until they do; this branch needs its migrations applied before the app can start.
 
 ## History
 
