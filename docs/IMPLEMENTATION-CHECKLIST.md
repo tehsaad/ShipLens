@@ -26,15 +26,27 @@ Legend: `[x]` done and verified locally, `[~]` done but not fully verifiable her
   validated and every step passes in a clean clone; not yet run on GitHub (not pushed)
 - [x] README, MIT LICENSE kept
 
-## Phase 1: Data and access
+## Phase 1: Data and access (`feature/phase-1-data-access`)
 
-- [ ] Full Prisma schema from section 5, plus decisions 4, 5, 6 and 7 / amendment A1
-- [ ] Migrations, enums, 7-day lock trigger (with decision 8 insert check and A1 rules)
-- [ ] AuditLog append-only privileges
-- [ ] Idempotent seed (section 10; decisions 5a and 11)
-- [ ] Auth.js credentials login, Argon2id, lockout, session rotation, forced password change
-- [ ] `lib/permissions.ts` matrix (decisions 2 and 3) and audit service
-- [ ] Permission matrix test and lock-trigger integration test
+- [x] Full Prisma schema from section 5, plus decisions 4, 5, 6 and 7 / amendment A1;
+      database-generated `MEM-######` member codes; section 9 indexes
+- [x] Migrations with check constraints and triggers: 7-day lock (routing-only updates allowed),
+      approved-week inserts (decision 8, Monday/Sunday boundaries and concurrent approval),
+      correction limits (A1, including concurrent corrections), closed branches, approved
+      report lock, no collection deletion
+- [x] Append-only audit log: trigger for every role, plus a `shiplens_app` role with only
+      SELECT and INSERT on `audit_logs` (tested as that role)
+- [x] Idempotent, deterministic seed (section 10; decisions 5a and 11), tested by seeding twice
+- [x] Auth.js credentials login, Argon2id, 5-attempt / 15-minute lockout, generic errors,
+      new token on sign-in, 8-hour idle expiry, forced first-login password change enforced on
+      the server, account status re-checked on every request
+- [x] `lib/permissions.ts` matrix (decisions 2 and 3) and the audit service
+- [x] Permission matrix unit test (321 cases) and database-rule integration tests
+- [x] Verified end to end on the production standalone build: each of the five demo roles
+      signs in over HTTP; the forced password change, deactivation and sign-out work; the
+      login and change-password forms work in a browser
+- [~] CI runs unit and integration tests against a PostgreSQL 16 service container; every step
+  passes in a clean clone here, but not yet on GitHub (not pushed)
 
 ## Phase 2: Branches and members
 
@@ -61,6 +73,14 @@ Legend: `[x]` done and verified locally, `[~]` done but not fully verifiable her
 - [ ] Section 13 documents and the section 14 acceptance checklist
 
 ## Notes
+
+- Auth.js v5 (required by section 2) is only published as a beta; `next-auth@5.0.0-beta.32` is
+  pinned.
+- Phase 1 admin screens (sign-in, change password) use English text; moving admin labels into
+  `messages/en.json` and `messages/ur.json` (section 7.4) is part of Phase 4.
+- Login rate limiting (section 8) is part of Phase 5; the lockout is already in place.
+- Database checks ran against PostgreSQL 16.14 (embedded) locally, and the Docker image has
+  not been built here (no Docker access).
 
 - `GET /api/health` uses the constant query `SELECT 1` through Prisma's tagged-template
   `$queryRaw`. It takes no input, so it carries no injection risk, but it is raw SQL outside
