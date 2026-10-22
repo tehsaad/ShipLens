@@ -1,4 +1,5 @@
-import "server-only";
+// No "server-only" guard: the seed script runs this outside Next.js. The native Argon2
+// binding cannot be bundled for the browser in any case.
 import { hash, verify } from "@node-rs/argon2";
 
 // The package's Algorithm enum is an ambient const enum, which isolatedModules cannot read.
