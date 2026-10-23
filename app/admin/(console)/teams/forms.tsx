@@ -20,7 +20,7 @@ export function CreateTeamForm({
       {branches ? (
         <Field name="branchId" label="Branch" state={state}>
           {(props) => (
-            <Select {...props} defaultValue="">
+            <Select defaultValue="" {...props}>
               <option value="">Choose a branch</option>
               {branches.map((branch) => (
                 <option key={branch.id} value={branch.id}>
@@ -73,7 +73,7 @@ export function AssignMemberForm({
       </div>
       <Field name="memberId" label="Member" state={state}>
         {(props) => (
-          <Select {...props} defaultValue="">
+          <Select defaultValue="" {...props}>
             <option value="">Choose a member</option>
             {candidates.map((member) => (
               <option key={member.id} value={member.id}>

@@ -69,7 +69,7 @@ export function DeclineForm({ id }: { id: string }) {
         state={state}
         hint="Never shown to the applicant."
       >
-        {(props) => <Textarea {...props} maxLength={1000} />}
+        {(props) => <Textarea maxLength={1000} {...props} />}
       </Field>
       <div>
         <SubmitButton variant="destructive" pendingLabel="Declining…">

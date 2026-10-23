@@ -24,8 +24,8 @@ export async function updateContactAction(_: FormState, formData: FormData): Pro
     email: field(formData, "email"),
     phone: field(formData, "phone"),
   });
-  if (!parsed.success) return invalid(parsed.error);
-  const state = await runForm(async () => {
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const state = await runForm(formData, async () => {
     await updateMemberContact(await serviceContext(user), id, parsed.data);
     return "Contact details saved.";
   });
@@ -37,8 +37,8 @@ export async function changeStatusAction(_: FormState, formData: FormData): Prom
   const user = await requireUser();
   const id = uuidSchema.parse(field(formData, "id"));
   const parsed = memberStatusSchema.safeParse({ status: field(formData, "status") });
-  if (!parsed.success) return invalid(parsed.error);
-  const state = await runForm(async () => {
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const state = await runForm(formData, async () => {
     await changeMemberStatus(await serviceContext(user), id, parsed.data.status);
     return "Status changed.";
   });
@@ -50,8 +50,8 @@ export async function changeBranchAction(_: FormState, formData: FormData): Prom
   const user = await requireUser();
   const id = uuidSchema.parse(field(formData, "id"));
   const parsed = memberBranchSchema.safeParse({ branchId: field(formData, "branchId") });
-  if (!parsed.success) return invalid(parsed.error);
-  const state = await runForm(async () => {
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const state = await runForm(formData, async () => {
     await changeMemberBranch(await serviceContext(user), id, parsed.data.branchId);
     return "Member moved. Team assignments in the old branch were removed.";
   });

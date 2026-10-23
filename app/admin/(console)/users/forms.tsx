@@ -27,12 +27,22 @@ function RoleAndBranch({
   role?: Role;
   branchId?: string | null;
 }) {
-  const [role, setRole] = useState<Role>(initialRole);
+  // Controlled, so the branch field can follow it; restored after a failed submission.
+  const [role, setRole] = useState<Role>(
+    (state.values?.["role"] as Role | undefined) ?? initialRole,
+  );
   return (
     <>
       <Field name="role" label="Role" state={state}>
         {(props) => (
-          <Select {...props} value={role} onChange={(event) => setRole(event.target.value as Role)}>
+          <Select
+            id={props.id}
+            name={props.name}
+            aria-invalid={props["aria-invalid"]}
+            aria-describedby={props["aria-describedby"]}
+            value={role}
+            onChange={(event) => setRole(event.target.value as Role)}
+          >
             {Object.entries(ROLE_LABELS).map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
@@ -44,7 +54,7 @@ function RoleAndBranch({
       {role === "BRANCH_LEAD" ? (
         <Field name="branchId" label="Branch" state={state}>
           {(props) => (
-            <Select {...props} defaultValue={branchId ?? ""}>
+            <Select defaultValue={branchId ?? ""} {...props}>
               <option value="">Choose a branch</option>
               {branches.map((branch) => (
                 <option key={branch.id} value={branch.id}>
@@ -101,7 +111,7 @@ export function EditUserForm({
       <Field name="name" label="Name" state={state} defaultValue={user.name} />
       <Field name="locale" label="Language" state={state}>
         {(props) => (
-          <Select {...props} defaultValue={user.locale}>
+          <Select defaultValue={user.locale} {...props}>
             <option value="en">English</option>
             <option value="ur">اردو (Urdu)</option>
           </Select>

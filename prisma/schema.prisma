@@ -293,6 +293,10 @@ model ContentEntry {
   title       String
   /// Markdown, sanitised on render.
   body        String
+  /// Section 7.2: edits to a PUBLISHED entry wait here until republished; the public site
+  /// keeps showing title and body. Null when there are no pending edits.
+  draftTitle  String?       @map("draft_title")
+  draftBody   String?       @map("draft_body")
   status      PublishStatus @default(DRAFT)
   publishedAt DateTime?     @map("published_at") @db.Timestamptz(3)
   updatedById String?       @map("updated_by_id") @db.Uuid

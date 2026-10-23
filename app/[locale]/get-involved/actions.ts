@@ -31,8 +31,8 @@ export async function submitApplicationAction(
     motivation: field(formData, "motivation"),
     consentGiven: formData.get("consentGiven") === "on",
   });
-  if (!parsed.success) return invalid(parsed.error);
-  return runForm(async () => {
+  if (!parsed.success) return invalid(parsed.error, formData);
+  return runForm(formData, async () => {
     await submitApplication(getPrisma(), parsed.data, await getRequestContext());
     return THANK_YOU;
   });

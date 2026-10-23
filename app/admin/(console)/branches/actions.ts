@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth/session";
+import { revalidatePublicSite } from "@/lib/revalidate-site";
 import type { FormState } from "@/lib/form-state";
 import { invalid, runForm, serviceContext } from "@/lib/server-action";
 import { changeBranchStatus, createBranch, updateBranch } from "@/lib/services/branches";
@@ -20,12 +21,13 @@ export async function createBranchAction(_: FormState, formData: FormData): Prom
     city: field(formData, "city"),
     contactEmail: field(formData, "contactEmail"),
   });
-  if (!parsed.success) return invalid(parsed.error);
+  if (!parsed.success) return invalid(parsed.error, formData);
   let id = "";
-  const state = await runForm(async () => {
+  const state = await runForm(formData, async () => {
     id = (await createBranch(await serviceContext(user), parsed.data)).id;
   });
   if (state.error) return state;
+  revalidatePublicSite();
   redirect(`/admin/branches/${id}`);
 }
 
@@ -37,11 +39,12 @@ export async function updateBranchAction(_: FormState, formData: FormData): Prom
     contactEmail: field(formData, "contactEmail"),
     leadUserId: field(formData, "leadUserId"),
   });
-  if (!parsed.success) return invalid(parsed.error);
-  const state = await runForm(async () => {
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const state = await runForm(formData, async () => {
     await updateBranch(await serviceContext(user), id, parsed.data);
     return "Branch saved.";
   });
+  if (!state.error) revalidatePublicSite();
   revalidatePath(`/admin/branches/${id}`);
   return state;
 }
@@ -53,11 +56,12 @@ export async function changeBranchStatusAction(
   const user = await requireUser();
   const id = uuidSchema.parse(field(formData, "id"));
   const parsed = changeBranchStatusSchema.safeParse({ status: field(formData, "status") });
-  if (!parsed.success) return invalid(parsed.error);
-  const state = await runForm(async () => {
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const state = await runForm(formData, async () => {
     await changeBranchStatus(await serviceContext(user), id, parsed.data.status);
     return "Status changed.";
   });
+  if (!state.error) revalidatePublicSite();
   revalidatePath(`/admin/branches/${id}`);
   return state;
 }

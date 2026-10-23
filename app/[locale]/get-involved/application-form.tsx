@@ -53,7 +53,7 @@ export function ApplicationForm({ branches }: { branches: BranchOption[] }) {
       <div className="grid gap-4 sm:grid-cols-2">
         <Field name="preferredBranchId" label="Preferred branch" state={state}>
           {(props) => (
-            <Select {...props} defaultValue="" required>
+            <Select defaultValue="" required {...props}>
               <option value="">Choose a branch</option>
               {branches.map((branch) => (
                 <option key={branch.id} value={branch.id}>
@@ -65,7 +65,7 @@ export function ApplicationForm({ branches }: { branches: BranchOption[] }) {
         </Field>
         <Field name="availability" label="Availability" state={state}>
           {(props) => (
-            <Select {...props} defaultValue="" required>
+            <Select defaultValue="" required {...props}>
               <option value="">Choose one</option>
               {Object.entries(AVAILABILITY_LABELS).map(([value, label]) => (
                 <option key={value} value={value}>
@@ -77,7 +77,7 @@ export function ApplicationForm({ branches }: { branches: BranchOption[] }) {
         </Field>
       </div>
       <Field name="skills" label="Skills (optional)" state={state} hint="Up to 500 characters.">
-        {(props) => <Textarea {...props} maxLength={500} />}
+        {(props) => <Textarea maxLength={500} {...props} />}
       </Field>
       <Field
         name="motivation"
@@ -85,7 +85,7 @@ export function ApplicationForm({ branches }: { branches: BranchOption[] }) {
         state={state}
         hint="Between 50 and 1000 characters."
       >
-        {(props) => <Textarea {...props} maxLength={1000} required className="min-h-32" />}
+        {(props) => <Textarea maxLength={1000} required className="min-h-32" {...props} />}
       </Field>
       <div className="grid gap-1">
         <label className="flex items-start gap-2 text-sm">

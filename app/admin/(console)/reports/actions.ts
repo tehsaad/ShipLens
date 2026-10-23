@@ -27,7 +27,7 @@ export async function openReportAction(_: FormState, formData: FormData): Promis
   const parsed = dateOnlySchema.safeParse(field(formData, "week"));
   if (!parsed.success) return { error: null, fieldErrors: { week: ["Choose a date."] } };
   let id = "";
-  const state = await runForm(async () => {
+  const state = await runForm(formData, async () => {
     id = (await openReport(await serviceContext(user), weekStartOf(parsed.data))).id;
   });
   if (state.error) return state;
@@ -41,8 +41,8 @@ export async function saveNotesAction(_: FormState, formData: FormData): Promise
     version: field(formData, "version"),
     leadNotes: field(formData, "leadNotes"),
   });
-  if (!parsed.success) return invalid(parsed.error);
-  const state = await runForm(async () => {
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const state = await runForm(formData, async () => {
     await updateReportNotes(await serviceContext(user), id, parsed.data);
     return "Notes saved.";
   });
@@ -54,8 +54,8 @@ export async function submitReportAction(_: FormState, formData: FormData): Prom
   const user = await requireUser();
   const id = uuidSchema.parse(field(formData, "id"));
   const parsed = reportTransitionSchema.safeParse({ version: field(formData, "version") });
-  if (!parsed.success) return invalid(parsed.error);
-  const state = await runForm(async () => {
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const state = await runForm(formData, async () => {
     await submitReport(await serviceContext(user), id, parsed.data.version);
     return "Report submitted for review. Its totals are now frozen.";
   });
@@ -70,8 +70,8 @@ export async function approveReportAction(_: FormState, formData: FormData): Pro
     version: field(formData, "version"),
     comment: field(formData, "comment"),
   });
-  if (!parsed.success) return invalid(parsed.error);
-  const state = await runForm(async () => {
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const state = await runForm(formData, async () => {
     await approveReport(await serviceContext(user), id, parsed.data);
     return "Report approved. It and its week's collections are now locked.";
   });
@@ -86,8 +86,8 @@ export async function returnReportAction(_: FormState, formData: FormData): Prom
     version: field(formData, "version"),
     comment: field(formData, "comment"),
   });
-  if (!parsed.success) return invalid(parsed.error);
-  const state = await runForm(async () => {
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const state = await runForm(formData, async () => {
     await returnReport(await serviceContext(user), id, parsed.data);
     return "Report returned to the Branch Lead.";
   });

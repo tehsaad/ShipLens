@@ -37,12 +37,18 @@ type FieldProps = {
     name: string;
     "aria-invalid"?: true;
     "aria-describedby"?: string;
+    /** Present after a failed submission: what the user typed. Spread props last. */
+    defaultValue?: string;
   }) => ReactNode;
 } & Omit<ComponentProps<"input">, "name" | "children">;
 
-/** A labelled input (or custom control) with its field error from the form state. */
+/**
+ * A labelled input (or custom control) with its field error from the form state. After a
+ * failed submission the control starts from what the user typed (FormState.values).
+ */
 export function Field({ name, label, state, hint, children, className, ...input }: FieldProps) {
   const errors = state.fieldErrors?.[name];
+  const restored = state.values?.[name];
   const id = `field-${name}`;
   const describedBy = [errors ? `${id}-error` : null, hint ? `${id}-hint` : null]
     .filter(Boolean)
@@ -52,11 +58,12 @@ export function Field({ name, label, state, hint, children, className, ...input 
     name,
     ...(errors ? { "aria-invalid": true as const } : {}),
     ...(describedBy ? { "aria-describedby": describedBy } : {}),
+    ...(restored !== undefined ? { defaultValue: restored } : {}),
   };
   return (
     <div className={cn("grid gap-2", className)}>
       <Label htmlFor={id}>{label}</Label>
-      {children ? children(controlProps) : <Input {...controlProps} {...input} />}
+      {children ? children(controlProps) : <Input {...input} {...controlProps} />}
       {hint ? (
         <p id={`${id}-hint`} className="text-muted-foreground text-xs">
           {hint}

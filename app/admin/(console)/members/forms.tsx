@@ -37,7 +37,7 @@ export function StatusForm({ id, status }: { id: string; status: MemberStatus })
       <FormMessages state={state} />
       <Field name="status" label="Status" state={state}>
         {(props) => (
-          <Select {...props} defaultValue={status}>
+          <Select defaultValue={status} {...props}>
             {Object.entries(MEMBER_STATUS_LABELS).map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
@@ -74,7 +74,7 @@ export function BranchForm({
         hint="Moving a member removes it from its current teams."
       >
         {(props) => (
-          <Select {...props} defaultValue={branchId}>
+          <Select defaultValue={branchId} {...props}>
             {branches.map((branch) => (
               <option key={branch.id} value={branch.id}>
                 {branch.code} · {branch.name}

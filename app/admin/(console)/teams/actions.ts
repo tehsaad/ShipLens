@@ -16,13 +16,13 @@ export async function createTeamAction(_: FormState, formData: FormData): Promis
     name: field(formData, "name"),
     branchId: field(formData, "branchId") || null,
   });
-  if (!parsed.success) return invalid(parsed.error);
+  if (!parsed.success) return invalid(parsed.error, formData);
   // A Branch Lead always creates teams in its own branch.
   const branchId =
     scopeFor(user.role, "team.create") === "ownBranch" ? user.branchId : parsed.data.branchId;
   if (!branchId) return { error: null, fieldErrors: { branchId: ["Choose a branch."] } };
   let id = "";
-  const state = await runForm(async () => {
+  const state = await runForm(formData, async () => {
     id = (await createTeam(await serviceContext(user), { branchId, name: parsed.data.name })).id;
   });
   if (state.error) return state;
@@ -33,8 +33,8 @@ export async function renameTeamAction(_: FormState, formData: FormData): Promis
   const user = await requireUser();
   const id = uuidSchema.parse(field(formData, "id"));
   const parsed = teamSchema.safeParse({ name: field(formData, "name") });
-  if (!parsed.success) return invalid(parsed.error);
-  const state = await runForm(async () => {
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const state = await runForm(formData, async () => {
     await renameTeam(await serviceContext(user), id, parsed.data.name);
     return "Team renamed.";
   });
@@ -49,8 +49,8 @@ export async function assignMemberAction(_: FormState, formData: FormData): Prom
     memberId: field(formData, "memberId"),
     roleInTeam: field(formData, "roleInTeam"),
   });
-  if (!parsed.success) return invalid(parsed.error);
-  const state = await runForm(async () => {
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const state = await runForm(formData, async () => {
     await setTeamAssignment(await serviceContext(user), id, parsed.data);
     return "Team updated.";
   });

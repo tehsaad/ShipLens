@@ -18,9 +18,9 @@ export async function createUserAction(_: FormState, formData: FormData): Promis
     branchId: field(formData, "branchId"),
     password: field(formData, "password"),
   });
-  if (!parsed.success) return invalid(parsed.error);
+  if (!parsed.success) return invalid(parsed.error, formData);
   let id = "";
-  const state = await runForm(async () => {
+  const state = await runForm(formData, async () => {
     id = (await createUser(await serviceContext(user), parsed.data)).id;
   });
   if (state.error) return state;
@@ -36,8 +36,8 @@ export async function updateUserAction(_: FormState, formData: FormData): Promis
     branchId: field(formData, "branchId"),
     locale: field(formData, "locale"),
   });
-  if (!parsed.success) return invalid(parsed.error);
-  const state = await runForm(async () => {
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const state = await runForm(formData, async () => {
     await updateUser(await serviceContext(user), id, parsed.data);
     return "User saved.";
   });
@@ -49,7 +49,7 @@ export async function setUserActiveAction(_: FormState, formData: FormData): Pro
   const user = await requireUser();
   const id = uuidSchema.parse(field(formData, "id"));
   const active = field(formData, "active") === "true";
-  const state = await runForm(async () => {
+  const state = await runForm(formData, async () => {
     await setUserActive(await serviceContext(user), id, active);
     return active ? "Account reactivated." : "Account deactivated.";
   });
@@ -61,8 +61,8 @@ export async function resetPasswordAction(_: FormState, formData: FormData): Pro
   const user = await requireUser();
   const id = uuidSchema.parse(field(formData, "id"));
   const parsed = resetPasswordSchema.safeParse({ password: field(formData, "password") });
-  if (!parsed.success) return invalid(parsed.error);
-  const state = await runForm(async () => {
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const state = await runForm(formData, async () => {
     await resetUserPassword(await serviceContext(user), id, parsed.data.password);
     return "Password reset. The user must choose a new one at next sign-in.";
   });
