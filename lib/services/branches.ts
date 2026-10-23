@@ -1,5 +1,5 @@
 import "server-only";
-import type { BranchStatus, Prisma } from "@/lib/generated/prisma/client";
+import type { BranchStatus, Prisma, PrismaClient } from "@/lib/generated/prisma/client";
 import { businessToday } from "@/lib/dates";
 import { databaseErrorCode, toRuleViolation } from "@/lib/db-errors";
 import { AppError } from "@/lib/errors";
@@ -204,5 +204,23 @@ export async function listLeadCandidates({ db, actor }: ServiceContext, branchId
     where: { branchId, role: "BRANCH_LEAD", isActive: true },
     select: { id: true, name: true, email: true },
     orderBy: { name: "asc" },
+  });
+}
+
+export type PublicBranch = {
+  id: string;
+  code: string;
+  name: string;
+  city: string;
+  contactEmail: string | null;
+};
+
+/** Section 7.1: only ACTIVE branches appear on the public site, with code, city and email. */
+export async function listPublicBranches(db: PrismaClient): Promise<PublicBranch[]> {
+  authorize(null, "branch.readPublic");
+  return db.branch.findMany({
+    where: { status: "ACTIVE" },
+    select: { id: true, code: true, name: true, city: true, contactEmail: true },
+    orderBy: [{ city: "asc" }, { code: "asc" }],
   });
 }

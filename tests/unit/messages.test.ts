@@ -45,3 +45,33 @@ describe("messages/en.json and messages/ur.json", () => {
     }
   });
 });
+
+describe("public form errors", () => {
+  it("only use keys that exist in both message files", async () => {
+    const { applicationSchema, contactSchema } = await import("@/lib/validation/applications");
+    const keys = new Set<string>();
+    const collect = (result: { success: boolean; error?: { issues: { message: string }[] } }) =>
+      result.error?.issues.forEach((issue) => keys.add(issue.message));
+    // Empty, too-long and malformed values reach every rule.
+    for (const value of ["", "x".repeat(3000)]) {
+      collect(
+        applicationSchema.safeParse({
+          fullName: value,
+          email: value,
+          phone: value,
+          preferredBranchId: value,
+          skills: value,
+          availability: value,
+          motivation: value,
+          consentGiven: false,
+        }),
+      );
+      collect(contactSchema.safeParse({ name: value, email: value, message: value }));
+    }
+    expect(keys.size).toBeGreaterThanOrEqual(12);
+    for (const key of keys) {
+      expect(en.errors, key).toHaveProperty(key);
+      expect(ur.errors, key).toHaveProperty(key);
+    }
+  });
+});

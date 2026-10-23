@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
 import { StaticPage } from "@/components/site/static-page";
 import { localeFrom } from "@/lib/locale-params";
+import { pageMetadata } from "@/lib/page-meta";
 
 type Props = { params: Promise<{ locale: string }> };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const t = await getTranslations({ locale: await localeFrom(params), namespace: "terms" });
-  return { title: t("metaTitle") };
+export function generateMetadata({ params }: Props): Promise<Metadata> {
+  return pageMetadata(params, "terms", "/terms");
 }
 
 export default async function Page({ params }: Props) {

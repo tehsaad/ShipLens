@@ -1,60 +1,98 @@
 "use client";
 
-import { useActionState } from "react";
-import { Field, FormMessages, Select, SubmitButton, Textarea } from "@/components/admin/form";
-import { initialFormState } from "@/lib/form-state";
-import { AVAILABILITY_LABELS } from "@/lib/labels";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
+import { startTransition, useActionState } from "react";
+import { useForm } from "react-hook-form";
+import type { z } from "zod";
+import { Select, Textarea } from "@/components/admin/form";
+import { Honeypot, PublicField } from "@/components/site/public-field";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { initialPublicFormState } from "@/lib/public-form";
+import { applicationSchema } from "@/lib/validation/applications";
 import { submitApplicationAction } from "./actions";
 
-type BranchOption = { id: string; code: string; name: string; city: string };
+type Values = z.input<typeof applicationSchema>;
+type BranchOption = { id: string; name: string; city: string };
 
+const AVAILABILITY = ["WEEKDAYS", "WEEKENDS", "FLEXIBLE"] as const;
+
+/**
+ * Volunteer application (section 7.1): React Hook Form validates with the same Zod schema as
+ * the server action, field by field, in the visitor's language. Without JavaScript the form
+ * still posts to the server action, which validates again.
+ */
 export function ApplicationForm({ branches }: { branches: BranchOption[] }) {
-  const [state, action] = useActionState(submitApplicationAction, initialFormState);
-  if (state.success) return <FormMessages state={state} />;
-  const consentError = state.fieldErrors?.["consentGiven"];
+  const t = useTranslations("form");
+  const [state, formAction, pending] = useActionState(
+    submitApplicationAction,
+    initialPublicFormState,
+  );
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Values, unknown, z.output<typeof applicationSchema>>({
+    resolver: zodResolver(applicationSchema),
+    mode: "onTouched",
+  });
+
+  if (state.ok) {
+    return (
+      <Alert role="status">
+        <AlertDescription>{t("applicationThanks")}</AlertDescription>
+      </Alert>
+    );
+  }
+
+  const error = (name: keyof Values) => errors[name]?.message ?? state.fieldErrors?.[name]?.[0];
+  // Valid in the browser: send the form's own fields (including the honeypot) to the server.
+  const onValid = (_values: unknown, event?: { target: EventTarget | null }) => {
+    const formData = new FormData(event!.target as HTMLFormElement);
+    startTransition(() => formAction(formData));
+  };
 
   return (
-    <form action={action} className="grid gap-4" noValidate>
-      <FormMessages state={state} />
-      {/* Honeypot: hidden from people and assistive technology; bots tend to fill it. */}
-      <div aria-hidden="true" className="absolute -left-[9999px] h-0 overflow-hidden">
-        <label>
-          Website
-          <input type="text" name="website" tabIndex={-1} autoComplete="off" />
-        </label>
-      </div>
-      <Field
-        name="fullName"
-        label="Full name"
-        state={state}
-        autoComplete="name"
-        required
-        maxLength={80}
-      />
+    <form
+      action={formAction}
+      onSubmit={handleSubmit(onValid)}
+      className="relative grid gap-4"
+      noValidate
+    >
+      {state.formError ? (
+        <Alert variant="destructive" aria-live="polite">
+          <AlertDescription>{t(state.formError)}</AlertDescription>
+        </Alert>
+      ) : null}
+      <Honeypot label={t("honeypot")} />
+      <PublicField id="fullName" label={t("fullName")} error={error("fullName")}>
+        {(props) => (
+          <Input {...props} autoComplete="name" maxLength={80} {...register("fullName")} />
+        )}
+      </PublicField>
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field
-          name="email"
-          label="Email"
-          state={state}
-          type="email"
-          autoComplete="email"
-          required
-        />
-        <Field
-          name="phone"
-          label="Phone"
-          state={state}
-          type="tel"
-          autoComplete="tel"
-          required
-          hint="For example +92 300 1234567 or 0300 1234567."
-        />
-      </div>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Field name="preferredBranchId" label="Preferred branch" state={state}>
+        <PublicField id="email" label={t("email")} error={error("email")}>
           {(props) => (
-            <Select defaultValue="" required {...props}>
-              <option value="">Choose a branch</option>
+            <Input {...props} type="email" autoComplete="email" dir="ltr" {...register("email")} />
+          )}
+        </PublicField>
+        <PublicField id="phone" label={t("phone")} hint={t("phoneHint")} error={error("phone")}>
+          {(props) => (
+            <Input {...props} type="tel" autoComplete="tel" dir="ltr" {...register("phone")} />
+          )}
+        </PublicField>
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <PublicField
+          id="preferredBranchId"
+          label={t("preferredBranch")}
+          error={error("preferredBranchId")}
+        >
+          {(props) => (
+            <Select {...props} defaultValue="" {...register("preferredBranchId")}>
+              <option value="">{t("chooseBranch")}</option>
               {branches.map((branch) => (
                 <option key={branch.id} value={branch.id}>
                   {branch.city} · {branch.name}
@@ -62,51 +100,45 @@ export function ApplicationForm({ branches }: { branches: BranchOption[] }) {
               ))}
             </Select>
           )}
-        </Field>
-        <Field name="availability" label="Availability" state={state}>
+        </PublicField>
+        <PublicField id="availability" label={t("availability")} error={error("availability")}>
           {(props) => (
-            <Select defaultValue="" required {...props}>
-              <option value="">Choose one</option>
-              {Object.entries(AVAILABILITY_LABELS).map(([value, label]) => (
+            <Select {...props} defaultValue="" {...register("availability")}>
+              <option value="">{t("chooseOne")}</option>
+              {AVAILABILITY.map((value) => (
                 <option key={value} value={value}>
-                  {label}
+                  {t(`availability${value}`)}
                 </option>
               ))}
             </Select>
           )}
-        </Field>
+        </PublicField>
       </div>
-      <Field name="skills" label="Skills (optional)" state={state} hint="Up to 500 characters.">
-        {(props) => <Textarea maxLength={500} {...props} />}
-      </Field>
-      <Field
-        name="motivation"
-        label="Why do you want to volunteer?"
-        state={state}
-        hint="Between 50 and 1000 characters."
+      <PublicField id="skills" label={t("skills")} hint={t("skillsHint")} error={error("skills")}>
+        {(props) => <Textarea {...props} maxLength={500} {...register("skills")} />}
+      </PublicField>
+      <PublicField
+        id="motivation"
+        label={t("motivation")}
+        hint={t("motivationHint")}
+        error={error("motivation")}
       >
-        {(props) => <Textarea maxLength={1000} required className="min-h-32" {...props} />}
-      </Field>
-      <div className="grid gap-1">
-        <label className="flex items-start gap-2 text-sm">
-          <input
-            type="checkbox"
-            name="consentGiven"
-            className="mt-0.5"
-            aria-invalid={consentError ? true : undefined}
-            aria-describedby={consentError ? "consent-error" : undefined}
-          />
-          I agree that the organisation stores these details to process my application and contact
-          me. No national ID is collected.
-        </label>
-        {consentError ? (
-          <p id="consent-error" className="text-destructive text-sm">
-            {consentError[0]}
-          </p>
-        ) : null}
-      </div>
+        {(props) => (
+          <Textarea {...props} maxLength={1000} className="min-h-32" {...register("motivation")} />
+        )}
+      </PublicField>
+      <PublicField id="consentGiven" label="" error={error("consentGiven")}>
+        {(props) => (
+          <label className="flex items-start gap-2 text-sm">
+            <input type="checkbox" className="mt-1.5" {...props} {...register("consentGiven")} />
+            {t("consent")}
+          </label>
+        )}
+      </PublicField>
       <div>
-        <SubmitButton pendingLabel="Sending…">Send application</SubmitButton>
+        <Button type="submit" size="lg" disabled={pending}>
+          {pending ? t("sending") : t("submitApplication")}
+        </Button>
       </div>
     </form>
   );
