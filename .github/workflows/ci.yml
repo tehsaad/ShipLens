@@ -78,3 +78,32 @@ jobs:
 
       - name: Production build
         run: npm run build
+
+      # Section 12: build the image Render deploys, keep it under 300 MB, and start it against
+      # an empty database so migrations, the seed and the server are proven on the real image.
+      - name: Docker image builds, fits the size budget and starts
+        env:
+          # Throwaway values for this check only; not secrets.
+          SMOKE_AUTH_SECRET: ci-only-auth-secret-0123456789abcdefghij
+          SMOKE_SEED_PASSWORD: ci-only-demo-password
+        run: |
+          docker build -t shiplens:ci .
+          size=$(docker image inspect shiplens:ci --format '{{.Size}}')
+          echo "Image size: $((size / 1024 / 1024)) MB"
+          test "$size" -le $((300 * 1024 * 1024))
+          docker exec ${{ job.services.postgres.id }} createdb -U ci shiplens_smoke
+          docker run -d --name shiplens-smoke --network host \
+            -e PORT=3300 \
+            -e DATABASE_URL=postgresql://ci:ci@localhost:5432/shiplens_smoke?schema=public \
+            -e AUTH_SECRET="$SMOKE_AUTH_SECRET" \
+            -e AUTH_TRUST_HOST=true \
+            -e SEED_DEMO_PASSWORD="$SMOKE_SEED_PASSWORD" \
+            shiplens:ci
+          for attempt in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:3300/api/health; then
+              echo; docker logs shiplens-smoke | head -20; exit 0
+            fi
+            sleep 2
+          done
+          docker logs shiplens-smoke
+          exit 1

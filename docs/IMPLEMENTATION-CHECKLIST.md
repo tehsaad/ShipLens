@@ -22,7 +22,8 @@ Legend: `[x]` done and verified locally, `[~]` done but not fully verifiable her
       `Cache-Control: no-store`, generic body, shared Prisma client
 - [~] Multi-stage `Dockerfile` (non-root user, health check, pinned base image). The runtime
   contents (standalone server, migrations, bundled seed, entrypoint) were assembled and started
-  against a fresh database here; `docker build` itself not yet run (no Docker access)
+  against a fresh database here, and CI builds the image and starts it against an empty
+  database (size checked against 300 MB)
 - [x] `.github/workflows/ci.yml` (validate, generate, format, lint, typecheck, tests, build),
       green on GitHub since run 7
 - [x] README, MIT LICENSE kept
@@ -76,7 +77,8 @@ Legend: `[x]` done and verified locally, `[~]` done but not fully verifiable her
 - [x] Pages answer 403 for a role without access and 404 for another branch's records
 - [x] Unit tests (lifecycle, codes, money, collection rules) and integration tests for each
       service, including IDOR checks for members, teams and collections
-- [x] Each screen checked in a browser against the seeded data (Playwright script, not yet in CI)
+- [x] Each screen checked once by hand in a browser against the seeded data (a throwaway
+      script; the Playwright suite in the repository is Phase 6)
 
 ## Phase 3: Reporting and dashboard
 
