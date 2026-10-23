@@ -14,6 +14,9 @@ reports, 6 published content entries, 2 events and 1 contact message.
 - The script is safe to re-run: it creates only missing records and never overwrites
   existing ones, including passwords.
 - Every demo account uses the password in `SEED_DEMO_PASSWORD` (at least 12 characters).
+- On Render (and in the Docker image generally) the container runs the seed at every start
+  while `SEED_DEMO_PASSWORD` is set. Remove the variable to stop seeding, for example once the
+  demo accounts are retired; existing data is never touched either way.
 - Demo accounts do not have to change their password on first sign-in, so the published
   credentials keep working (decision 5a). Accounts created any other way always must.
 

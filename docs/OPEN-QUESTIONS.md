@@ -329,6 +329,33 @@ These resolve wording in `docs/SPEC.md` without changing it. They are encoded in
 - **Login audit entries.** A failed sign-in for an unknown email records no identifier, only
   the reason, so a mistyped password is never stored in the append-only audit log.
 
+Added in Phase 2:
+
+- **City letters in branch codes.** "First 3 letters of city" uses the first three Latin
+  letters, ignoring other characters and accents ("D.I. Khan" -> `DIK`). A city with fewer
+  than three Latin letters is rejected. Numbers continue from the highest code used for that
+  prefix and are never reused; 999 is the limit.
+- **Branch lifecycle.** A FORMING branch can only become ACTIVE (it never opened, so it
+  cannot be paused or closed). `openedAt` is set to the business date of the first
+  activation and never changes after that. The city cannot be edited, because the code is
+  derived from it and never changes.
+- **Branch lead.** `Branch.leadUserId` must be an active Branch Lead assigned to that branch.
+  Deactivating that user, or moving them to another role or branch, clears it.
+- **User management.** Built in Phase 2 although no phase listed it. Super Admins cannot
+  deactivate themselves (section 7.2) or change their own role. A password reset also clears
+  a lockout and sets `mustChangePassword`.
+- **Applications.** Phone numbers are stored as `+92` followed by 10 digits. The submission's
+  audit entry records only ids, not the applicant's details. HR may place the member in any
+  branch that is not CLOSED; the joining date defaults to today and cannot be in the future.
+  Declining frees the email for a new application.
+- **Member branch moves.** Teams belong to one branch, so a member moved to another branch
+  leaves its old teams (recorded in the audit entry).
+- **Teams.** Only members of the team's branch can join it. Branch Leads add and remove
+  members; a member's role in a team is free text.
+- **Collections.** An edit is refused when either the old or the new date falls in an
+  approved week. A correction takes the original's purpose. Routing is recorded once and is
+  never changed afterwards.
+
 ## Register of approved deviations from `docs/SPEC.md`
 
 Every approved decision, classified against the original spec text.
