@@ -1,11 +1,11 @@
 import "server-only";
-import { redirect } from "next/navigation";
+import { forbidden, notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import type { Locale, Role } from "@/lib/generated/prisma/client";
 import { auth } from "@/lib/auth";
 import { LOGIN_PATH } from "@/lib/auth/config";
 import { getPrisma } from "@/lib/db";
-import { authorize, type Action, type ScopedResource } from "@/lib/permissions";
+import { decide, type Action, type ScopedResource } from "@/lib/permissions";
 
 export const CHANGE_PASSWORD_PATH = "/admin/change-password";
 
@@ -68,12 +68,18 @@ export async function requireUser(
   return user;
 }
 
-/** Requires a signed-in user who may perform the action on the resource. */
+/**
+ * Requires a signed-in user who may perform the action on the resource, for an admin page.
+ * A role without the permission gets the 403 page; another branch's resource gets the 404
+ * page, so its existence is not revealed (section 4).
+ */
 export async function requirePermission(
   action: Action,
   resource?: ScopedResource,
 ): Promise<SessionUser> {
   const user = await requireUser();
-  authorize(user, action, resource);
+  const decision = decide(user, action, resource);
+  if (decision === "forbidden") forbidden();
+  if (decision === "outOfScope") notFound();
   return user;
 }
