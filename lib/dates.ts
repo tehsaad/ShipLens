@@ -45,3 +45,8 @@ export function businessToday(now: Date = new Date()): Date {
   }).format(now);
   return parseDateOnly(parts);
 }
+
+/** A timestamp's calendar date in Asia/Karachi, as YYYY-MM-DD, for display. */
+export function formatBusinessDate(timestamp: Date): string {
+  return formatDateOnly(businessToday(timestamp));
+}
