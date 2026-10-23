@@ -1,0 +1,201 @@
+{
+  "site": {
+    "name": "ShipLens Volunteers",
+    "tagline": "Volunteer branches across Pakistan, one head office.",
+    "skipToContent": "Skip to content"
+  },
+  "nav": {
+    "label": "Main",
+    "home": "Home",
+    "about": "About",
+    "programs": "Programs",
+    "branches": "Branches",
+    "events": "Events",
+    "getInvolved": "Get involved",
+    "contact": "Contact",
+    "menu": "Menu"
+  },
+  "language": {
+    "label": "Language",
+    "switchTo": "اردو",
+    "switchToName": "Urdu"
+  },
+  "theme": {
+    "toggle": "Switch between light and dark theme",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "footer": {
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "staff": "Staff sign-in",
+    "rights": "© {year} ShipLens Volunteers. Built for volunteer branches and head office."
+  },
+  "fallback": {
+    "notice": "This page is not available in Urdu yet, so it is shown in English."
+  },
+  "home": {
+    "metaTitle": "Home",
+    "heroTitle": "Serve your community with a branch near you",
+    "heroText": "Our volunteer branches run tutoring, food and clothing drives and community events. Head office supports every branch so volunteers can focus on the work.",
+    "ctaApply": "Become a volunteer",
+    "ctaPrograms": "See our programs",
+    "statBranches": "{count, plural, one {# active branch} other {# active branches}}",
+    "programsTitle": "Programs",
+    "programsMore": "All programs",
+    "eventsTitle": "Upcoming events",
+    "eventsMore": "All events",
+    "eventsEmpty": "No upcoming events right now.",
+    "announcementsTitle": "Announcements"
+  },
+  "about": {
+    "metaTitle": "About us",
+    "missingTitle": "About us",
+    "missing": "This page is being written."
+  },
+  "programs": {
+    "metaTitle": "Programs",
+    "title": "Programs",
+    "intro": "What our branches do, week after week.",
+    "empty": "Programs will be listed here soon."
+  },
+  "branches": {
+    "metaTitle": "Branches",
+    "title": "Branches",
+    "intro": "Active branches and how to reach them.",
+    "filterLabel": "City",
+    "allCities": "All cities",
+    "code": "Branch code",
+    "city": "City",
+    "contact": "Contact",
+    "noEmail": "Contact head office",
+    "empty": "No branches match this city.",
+    "count": "{count, plural, one {# branch} other {# branches}}"
+  },
+  "events": {
+    "metaTitle": "Events",
+    "title": "Events",
+    "intro": "Join a branch event or come and see what volunteers do.",
+    "filterLabel": "Show",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "all": "All",
+    "branchFilter": "Branch",
+    "allBranches": "All branches",
+    "headOffice": "Head office",
+    "when": "When",
+    "where": "Where",
+    "empty": "No events to show.",
+    "titleFallback": "Shown in English: no Urdu title yet."
+  },
+  "getInvolved": {
+    "metaTitle": "Get involved",
+    "title": "Get involved",
+    "intro": "Volunteering starts with a short application. Here is what happens next.",
+    "step1Title": "Apply",
+    "step1": "Fill in the form below and choose the branch closest to you.",
+    "step2Title": "Review",
+    "step2": "Our HR team reads every application, usually within two weeks.",
+    "step3Title": "Join",
+    "step3": "If accepted, your branch lead contacts you about teams and the first activity.",
+    "formTitle": "Volunteer application",
+    "noBranches": "No branch is taking volunteers right now. Please check again soon."
+  },
+  "contact": {
+    "metaTitle": "Contact",
+    "title": "Contact us",
+    "intro": "Questions about volunteering, a branch or an event? Send us a message and head office will reply by email.",
+    "formTitle": "Send a message"
+  },
+  "privacy": {
+    "metaTitle": "Privacy",
+    "title": "Privacy",
+    "body": [
+      "We collect only what we need to process volunteer applications and contact messages: your name, email address, phone number, preferred branch, availability, skills and the reasons you give.",
+      "We never ask for a national identity card (CNIC) number or other identity documents.",
+      "Applications are visible only to our HR team and system administrators. Accepted volunteers become members of a branch; their contact details are visible to that branch's lead.",
+      "We do not sell or share your details. We keep them while you volunteer with us, and you can ask us to delete them by writing through the contact page.",
+      "The site stores no tracking cookies. Staff sign-in uses one essential session cookie."
+    ]
+  },
+  "terms": {
+    "metaTitle": "Terms",
+    "title": "Terms of use",
+    "body": [
+      "This website gives information about our volunteer branches, programs and events, and lets you apply to volunteer or contact us.",
+      "Information you send must be accurate and your own. Do not send other people's details without their permission.",
+      "Volunteering is unpaid. Submitting an application does not guarantee a place.",
+      "We may update program and event information at any time. Event dates and places can change; check this site before you travel.",
+      "The site does not take payments or donations online."
+    ]
+  },
+  "form": {
+    "fullName": "Full name",
+    "email": "Email",
+    "phone": "Phone",
+    "phoneHint": "For example +92 300 1234567 or 0300 1234567.",
+    "preferredBranch": "Preferred branch",
+    "chooseBranch": "Choose a branch",
+    "availability": "Availability",
+    "chooseOne": "Choose one",
+    "availabilityWEEKDAYS": "Weekdays",
+    "availabilityWEEKENDS": "Weekends",
+    "availabilityFLEXIBLE": "Flexible",
+    "skills": "Skills (optional)",
+    "skillsHint": "Up to 500 characters.",
+    "motivation": "Why do you want to volunteer?",
+    "motivationHint": "Between 50 and 1000 characters.",
+    "consent": "I agree that the organisation stores these details to process my application and contact me. No national ID is collected.",
+    "name": "Your name",
+    "message": "Message",
+    "messageHint": "Between 10 and 2000 characters.",
+    "honeypot": "Leave this field empty",
+    "submitApplication": "Send application",
+    "submitMessage": "Send message",
+    "sending": "Sending…",
+    "checkFields": "Please check the highlighted fields.",
+    "applicationThanks": "Thank you for applying. Our HR team reviews every application and will contact you.",
+    "applicationRejected": "We could not accept this application. If you have already applied, we will be in touch.",
+    "messageThanks": "Thank you. Your message has reached head office and we will reply by email.",
+    "failed": "Something went wrong. Please try again."
+  },
+  "errors": {
+    "fullNameShort": "Enter your full name (at least 2 characters).",
+    "fullNameLong": "Use at most 80 characters.",
+    "nameShort": "Enter your name (at least 2 characters).",
+    "nameLong": "Use at most 80 characters.",
+    "email": "Enter a valid email address.",
+    "phone": "Enter a Pakistani phone number, for example +92 300 1234567 or 0300 1234567.",
+    "branch": "Choose a branch.",
+    "availability": "Choose when you are available.",
+    "skillsLong": "Use at most 500 characters.",
+    "motivationShort": "Tell us a little more: at least 50 characters.",
+    "motivationLong": "Use at most 1000 characters.",
+    "consent": "Please agree so we can contact you.",
+    "messageShort": "Write at least 10 characters.",
+    "messageLong": "Use at most 2000 characters."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "text": "The page you are looking for does not exist or has moved.",
+    "home": "Go to the home page"
+  },
+  "admin": {
+    "nav": {
+      "label": "Admin",
+      "dashboard": "Dashboard",
+      "branches": "Branches",
+      "users": "Users",
+      "applications": "Applications",
+      "members": "Members",
+      "teams": "Teams",
+      "collections": "Collections",
+      "reports": "Reports",
+      "content": "Content",
+      "events": "Events",
+      "messages": "Messages",
+      "password": "Password",
+      "signOut": "Sign out"
+    }
+  }
+}

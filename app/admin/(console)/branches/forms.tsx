@@ -67,7 +67,7 @@ export function EditBranchForm({
         hint="Active Branch Lead users assigned to this branch."
       >
         {(props) => (
-          <Select {...props} defaultValue={branch.leadUserId ?? ""}>
+          <Select defaultValue={branch.leadUserId ?? ""} {...props}>
             <option value="">No lead</option>
             {candidates.map((user) => (
               <option key={user.id} value={user.id}>
@@ -101,7 +101,7 @@ export function BranchStatusForm({
       <FormMessages state={state} />
       <Field name="status" label="New status" state={state}>
         {(props) => (
-          <Select {...props} defaultValue={options[0]}>
+          <Select defaultValue={options[0]} {...props}>
             {options.map((status) => (
               <option key={status} value={status}>
                 {BRANCH_STATUS_LABELS[status]}

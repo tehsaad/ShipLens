@@ -45,3 +45,11 @@ export const REPORT_STATUS_LABELS = {
   RETURNED: "Returned",
   APPROVED: "Approved",
 } as const;
+
+export const CONTENT_TYPE_LABELS = {
+  PAGE: "Page",
+  PROGRAM: "Program",
+  ANNOUNCEMENT: "Announcement",
+} as const;
+
+export const LOCALE_LABELS = { en: "English", ur: "Urdu" } as const;

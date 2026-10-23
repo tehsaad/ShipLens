@@ -50,7 +50,7 @@ export function NotesForm({ report, notes }: { report: Versioned; notes: string 
       <Hidden {...report} />
       <FormMessages state={state} />
       <Field name="leadNotes" label="Notes for the reviewer (optional)" state={state}>
-        {(props) => <Textarea {...props} maxLength={2000} defaultValue={notes ?? ""} />}
+        {(props) => <Textarea maxLength={2000} defaultValue={notes ?? ""} {...props} />}
       </Field>
       <div>
         <SubmitButton variant="outline">Save notes</SubmitButton>
@@ -81,7 +81,7 @@ export function ReviewForms({ report }: { report: Versioned }) {
         <Hidden {...report} />
         <FormMessages state={approveState} />
         <Field name="comment" label="Comment (optional)" state={approveState}>
-          {(props) => <Textarea {...props} maxLength={2000} />}
+          {(props) => <Textarea maxLength={2000} {...props} />}
         </Field>
         <div>
           <SubmitButton pendingLabel="Approving…">Approve</SubmitButton>
@@ -91,7 +91,7 @@ export function ReviewForms({ report }: { report: Versioned }) {
         <Hidden {...report} />
         <FormMessages state={returnState} />
         <Field name="comment" label="What needs fixing (required)" state={returnState}>
-          {(props) => <Textarea {...props} maxLength={2000} />}
+          {(props) => <Textarea maxLength={2000} {...props} />}
         </Field>
         <div>
           <SubmitButton variant="destructive" pendingLabel="Returning…">

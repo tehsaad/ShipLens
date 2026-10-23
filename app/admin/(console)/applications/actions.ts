@@ -18,8 +18,8 @@ export async function acceptApplicationAction(
     branchId: field(formData, "branchId"),
     joinedAt: field(formData, "joinedAt"),
   });
-  if (!parsed.success) return invalid(parsed.error);
-  const state = await runForm(async () => {
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const state = await runForm(formData, async () => {
     const { memberCode } = await acceptApplication(await serviceContext(user), id, parsed.data);
     return `Accepted. Member ${memberCode} was created.`;
   });
@@ -34,8 +34,8 @@ export async function declineApplicationAction(
   const user = await requireUser();
   const id = uuidSchema.parse(field(formData, "id"));
   const parsed = declineApplicationSchema.safeParse({ reason: field(formData, "reason") });
-  if (!parsed.success) return invalid(parsed.error);
-  const state = await runForm(async () => {
+  if (!parsed.success) return invalid(parsed.error, formData);
+  const state = await runForm(formData, async () => {
     await declineApplication(await serviceContext(user), id, parsed.data.reason);
     return "Application declined.";
   });

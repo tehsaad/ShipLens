@@ -127,3 +127,64 @@
     @apply font-sans;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Public site palette (docs/design/landing-reference): green primary, warm
+   background. Scoped to .site so the admin keeps the neutral shadcn theme.
+   --------------------------------------------------------------------------- */
+.site {
+  --background: #fbfaf6;
+  --foreground: #1b2420;
+  --card: #ffffff;
+  --card-foreground: #1b2420;
+  --primary: #1f4d3a;
+  --primary-foreground: #ffffff;
+  --muted: #e9efea;
+  --muted-foreground: #4d5a54;
+  --accent: #e9efea;
+  --accent-foreground: #1b2420;
+  --border: #d6dcd6;
+  --input: #c3cbc4;
+  --ring: #7a430c;
+}
+
+.site.dark {
+  --background: #0f1a16;
+  --foreground: #eaf0ec;
+  --card: #17241f;
+  --card-foreground: #eaf0ec;
+  --primary: #6fbf94;
+  --primary-foreground: #0f1a16;
+  --muted: #1d2c26;
+  --muted-foreground: #b3bfb8;
+  --accent: #1d2c26;
+  --accent-foreground: #eaf0ec;
+  --border: #2b3a33;
+  --input: #3a4a42;
+  --ring: #e9b873;
+}
+
+/* Urdu (section 7.4): Nastaliq needs a taller line height. */
+html[lang="ur"] body {
+  font-family: var(--font-urdu), "Noto Naskh Arabic", serif;
+  line-height: 2.1;
+}
+
+html[lang="ur"] :is(h1, h2, h3, p, li, dd) {
+  line-height: 2;
+}
+
+/* Nastaliq is taller than the default control height; let form controls grow with it. */
+html[lang="ur"] :is(input:not([type="checkbox"]), select) {
+  height: auto;
+  min-height: 2.75rem;
+  line-height: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

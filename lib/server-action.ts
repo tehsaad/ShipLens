@@ -17,11 +17,25 @@ export async function serviceContext(actor: Actor): Promise<ServiceContext> {
   };
 }
 
+/** Never echoed back to the browser. */
+const SECRET_FIELD = /password/i;
+
+/** The submitted text fields, so a failed form keeps what the user typed. */
+export function submittedValues(formData: FormData): Record<string, string> {
+  const values: Record<string, string> = {};
+  for (const [key, value] of formData.entries()) {
+    if (typeof value === "string" && !key.startsWith("$") && !SECRET_FIELD.test(key))
+      values[key] = value;
+  }
+  return values;
+}
+
 /** Field errors for a failed Zod parse, in the FormState shape. */
-export function invalid(error: z.ZodError): FormState {
+export function invalid(error: z.ZodError, formData?: FormData): FormState {
   return {
     error: "Check the highlighted fields.",
     fieldErrors: z.flattenError(error).fieldErrors as FormState["fieldErrors"],
+    ...(formData ? { values: submittedValues(formData) } : {}),
   };
 }
 
@@ -29,12 +43,15 @@ export function invalid(error: z.ZodError): FormState {
  * Runs the work of a form action. An AppError becomes a message on the form; anything else
  * (including Next.js redirects) propagates, so internal errors never reach the user.
  */
-export async function runForm(work: () => Promise<string | void>): Promise<FormState> {
+export async function runForm(
+  formData: FormData,
+  work: () => Promise<string | void>,
+): Promise<FormState> {
   try {
     const success = await work();
     return { error: null, success: success ?? null };
   } catch (error) {
-    if (isAppError(error)) return { error: error.message };
+    if (isAppError(error)) return { error: error.message, values: submittedValues(formData) };
     throw error;
   }
 }

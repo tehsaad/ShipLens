@@ -46,15 +46,19 @@ export const optionalEmail = z
  * number starting with 0 and 11 digits long (for example 03001234567). Spaces, dashes and
  * brackets are ignored; the number is stored in the +92 form.
  */
-export const phoneSchema = z
-  .string()
-  .trim()
-  .max(30, "Enter a Pakistani phone number, for example +92 300 1234567 or 0300 1234567.")
-  .transform((value) => value.replace(/[\s\-()]/g, ""))
-  .refine((value) => /^(?:\+92|0092|0)\d{10}$/.test(value), {
-    message: "Enter a Pakistani phone number, for example +92 300 1234567 or 0300 1234567.",
-  })
-  .transform((value) => `+92${value.replace(/^(?:\+92|0092|0)/, "")}`);
+export function pakistaniPhone(
+  message = "Enter a Pakistani phone number, for example +92 300 1234567 or 0300 1234567.",
+) {
+  return z
+    .string()
+    .trim()
+    .max(30, message)
+    .transform((value) => value.replace(/[\s\-()]/g, ""))
+    .refine((value) => /^(?:\+92|0092|0)\d{10}$/.test(value), { message })
+    .transform((value) => `+92${value.replace(/^(?:\+92|0092|0)/, "")}`);
+}
+
+export const phoneSchema = pakistaniPhone();
 
 export function personName(min = 2, max = 80) {
   return z

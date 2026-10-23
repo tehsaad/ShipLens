@@ -51,7 +51,7 @@ function CollectionFields({
       />
       <Field name="purpose" label="Purpose" state={state}>
         {(props) => (
-          <Select {...props} defaultValue={values?.purpose ?? "GENERAL"}>
+          <Select defaultValue={values?.purpose ?? "GENERAL"} {...props}>
             {Object.entries(PURPOSE_LABELS).map(([value, label]) => (
               <option key={value} value={value}>
                 {label}
@@ -67,7 +67,7 @@ function CollectionFields({
         className="sm:col-span-3"
       >
         {(props) => (
-          <Textarea {...props} maxLength={500} defaultValue={values?.description ?? ""} />
+          <Textarea maxLength={500} defaultValue={values?.description ?? ""} {...props} />
         )}
       </Field>
       {isCorrection ? (
@@ -78,7 +78,7 @@ function CollectionFields({
           className="sm:col-span-3"
         >
           {(props) => (
-            <Textarea {...props} maxLength={500} defaultValue={values?.correctionNote ?? ""} />
+            <Textarea maxLength={500} defaultValue={values?.correctionNote ?? ""} {...props} />
           )}
         </Field>
       ) : null}
@@ -143,7 +143,7 @@ export function CorrectionForm({ id }: { id: string }) {
         hint="Use a negative amount to reduce, e.g. -500."
       />
       <Field name="correctionNote" label="Reason" state={state} className="sm:col-span-2">
-        {(props) => <Textarea {...props} maxLength={500} />}
+        {(props) => <Textarea maxLength={500} {...props} />}
       </Field>
       <div className="sm:col-span-3">
         <SubmitButton pendingLabel="Recording…">Record correction</SubmitButton>
