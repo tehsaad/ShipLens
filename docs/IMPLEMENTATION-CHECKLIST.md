@@ -82,7 +82,22 @@ Legend: `[x]` done and verified locally, `[~]` done but not fully verifiable her
 
 ## Phase 3: Reporting and dashboard
 
-- [ ] Weekly report state machine, dashboard KPIs, unrouted list, overdue indicator (decision 9)
+- [x] Weekly report state machine (`lib/rules/report.ts`): draft, submit, return with a
+      comment, resubmit, approve; APPROVED terminal and locked
+- [x] Draft created when the Branch Lead first opens a week; live totals while DRAFT or
+      RETURNED, read in one snapshot; frozen into `totalsSnapshot` on submission
+- [x] Optimistic locking on `version`; stale requests and concurrent reviews fail with a
+      conflict (integration tests)
+- [x] Every transition audited with actor, from-state, to-state, comment and version; the
+      report page shows the history from the audit log
+- [x] Report screens: week picker, list with filters, totals, notes, submit, review, the
+      week's collections
+- [x] Dashboard KPIs with the section 7.2 definitions, scoped per role
+- [x] 12-month collection line chart and new-member bar chart (Recharts)
+- [x] Unrouted list (oldest first, linked) and the overdue-report indicator (decision 9)
+- [x] `docs/sample-data-expected.md`, asserted by `tests/integration/sample-data.test.ts` on a
+      separately seeded database
+- [x] Report cycle and dashboard checked once by hand in a browser for each role
 
 ## Phase 4: Public site and content
 
