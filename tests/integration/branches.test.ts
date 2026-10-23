@@ -16,10 +16,20 @@ import { createBranch as insertBranch, pool } from "./helpers/sql";
 let prisma: PrismaClient;
 let admin: Actor;
 
-/** A city name no other test uses, so code numbering starts from 001. */
-function uniqueCity(): string {
-  const letters = Array.from({ length: 6 }, () => String.fromCharCode(97 + randomInt(26)));
-  return `Q${letters.join("")}`;
+/**
+ * A city whose three-letter code prefix no branch uses yet, so code numbering starts from
+ * 001. Other test files create branches with random codes, so the database is checked.
+ */
+async function uniqueCity(): Promise<string> {
+  for (;;) {
+    const letters = Array.from({ length: 6 }, () => String.fromCharCode(97 + randomInt(26)));
+    const city = `Q${letters.join("")}`;
+    const prefix = city.slice(0, 3).toUpperCase();
+    const { rowCount } = await pool.query(`SELECT 1 FROM branches WHERE code LIKE $1`, [
+      `BR-${prefix}-%`,
+    ]);
+    if (rowCount === 0) return city;
+  }
 }
 
 beforeAll(async () => {
@@ -34,7 +44,7 @@ afterAll(async () => {
 
 describe("createBranch", () => {
   it("generates sequential codes per city and audits the creation", async () => {
-    const city = uniqueCity();
+    const city = await uniqueCity();
     const prefix = city.slice(0, 3).toUpperCase();
     const first = await createBranch(contextFor(prisma, admin), {
       name: "One",
@@ -58,7 +68,7 @@ describe("createBranch", () => {
   });
 
   it("gives concurrent creations for one city distinct codes", async () => {
-    const city = uniqueCity();
+    const city = await uniqueCity();
     const created = await Promise.all(
       Array.from({ length: 4 }, (_, index) =>
         createBranch(contextFor(prisma, admin), { name: `B${index}`, city, contactEmail: null }),
@@ -72,7 +82,11 @@ describe("createBranch", () => {
   it("refuses roles other than SUPER_ADMIN", async () => {
     const hr = await createActor("HR_LEAD");
     await expect(
-      createBranch(contextFor(prisma, hr), { name: "X", city: uniqueCity(), contactEmail: null }),
+      createBranch(contextFor(prisma, hr), {
+        name: "X",
+        city: await uniqueCity(),
+        contactEmail: null,
+      }),
     ).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 });
@@ -81,7 +95,7 @@ describe("changeBranchStatus", () => {
   it("follows the lifecycle and sets openedAt on first activation", async () => {
     const branch = await createBranch(contextFor(prisma, admin), {
       name: "Lifecycle",
-      city: uniqueCity(),
+      city: await uniqueCity(),
       contactEmail: null,
     });
     const now = new Date("2026-10-21T20:00:00Z"); // 22 October in Asia/Karachi
@@ -106,7 +120,7 @@ describe("changeBranchStatus", () => {
   it("does not let a forming branch close", async () => {
     const branch = await createBranch(contextFor(prisma, admin), {
       name: "Never opened",
-      city: uniqueCity(),
+      city: await uniqueCity(),
       contactEmail: null,
     });
     await expect(
