@@ -11,8 +11,8 @@ approved decision below adds to, narrows or overrides `docs/SPEC.md`, the decisi
 - One approved deviation (7a) is also written into `docs/SPEC.md` as amendment A1, applied
   in commit `39f1b88`. It only appends lines after section 15; lines 1–285 still match the
   recovered source. See [SPEC.md amendment](#specmd-amendment).
-- A few implementation details for 7a are proposals, not yet approved; they are listed
-  under [7a follow-up details](#7a-follow-up-details-proposed-not-yet-approved).
+- The implementation details for 7a were adopted at the start of Phase 1; they are listed
+  under [7a follow-up details](#7a-follow-up-details-adopted).
 
 | #   | Topic                             | Spec section(s) | Decision                                                               | Status              | Applies from |
 | --- | --------------------------------- | --------------- | ---------------------------------------------------------------------- | ------------------- | ------------ |
@@ -182,10 +182,11 @@ set).
   spec's wording, it is also to be written into `docs/SPEC.md` (see
   [SPEC.md amendment](#specmd-amendment)).
 
-### 7a follow-up details (proposed, not yet approved)
+### 7a follow-up details (adopted)
 
 These follow from Option B. Each default keeps to the spec's existing wording where it
-can. They are needed in Phase 1–3, not Phase 0.
+can. They were proposed on 2026-10-22 and adopted at the start of Phase 1 under the project
+owner's instruction to make sensible decisions consistent with the specification.
 
 - **No chains:** a correction must point to an original (normal) entry, never to another
   correction, so each original has one flat list of corrections.
@@ -311,6 +312,49 @@ least three new feature-branch PRs will be merged with green CI, starting with
 `feature/phase-0-foundation`.
 
 ---
+
+## Interpretations made during implementation (for review)
+
+These resolve wording in `docs/SPEC.md` without changing it. They are encoded in
+`lib/permissions.ts` and tested; each can be changed if the project owner disagrees.
+
+- **Super Admin and collections or reports.** Section 3 gives SUPER_ADMIN "all data", while
+  section 7.2 says "SUPER_ADMIN read all" for collections. The more specific section 7.2 is
+  followed: Super Admin reads and exports collections and reports but does not enter, edit,
+  route, approve or return them. Approval stays with FINANCE_REVIEWER.
+- **Contact messages.** No role is named for them; only SUPER_ADMIN (all data) reads and
+  handles them.
+- **Branch list for staff.** Every staff role can read branch names and codes for context
+  (for example, a Content Editor linking an event to a branch); BRANCH_LEAD sees only its own.
+- **Login audit entries.** A failed sign-in for an unknown email records no identifier, only
+  the reason, so a mistyped password is never stored in the append-only audit log.
+
+Added in Phase 2:
+
+- **City letters in branch codes.** "First 3 letters of city" uses the first three Latin
+  letters, ignoring other characters and accents ("D.I. Khan" -> `DIK`). A city with fewer
+  than three Latin letters is rejected. Numbers continue from the highest code used for that
+  prefix and are never reused; 999 is the limit.
+- **Branch lifecycle.** A FORMING branch can only become ACTIVE (it never opened, so it
+  cannot be paused or closed). `openedAt` is set to the business date of the first
+  activation and never changes after that. The city cannot be edited, because the code is
+  derived from it and never changes.
+- **Branch lead.** `Branch.leadUserId` must be an active Branch Lead assigned to that branch.
+  Deactivating that user, or moving them to another role or branch, clears it.
+- **User management.** Built in Phase 2 although no phase listed it. Super Admins cannot
+  deactivate themselves (section 7.2) or change their own role. A password reset also clears
+  a lockout and sets `mustChangePassword`.
+- **Applications.** Phone numbers are stored as `+92` followed by 10 digits. The submission's
+  audit entry records only ids, not the applicant's details. HR may place the member in any
+  branch that is not CLOSED; the joining date defaults to today and cannot be in the future.
+  Declining frees the email for a new application.
+- **Member branch moves.** Teams belong to one branch, so a member moved to another branch
+  leaves its old teams (recorded in the audit entry).
+- **Teams.** Only members of the team's branch can join it. Branch Leads add and remove
+  members; a member's role in a team is free text.
+- **Collections.** An edit is refused when either the old or the new date falls in an
+  approved week. A correction takes the original's purpose. Routing is recorded once and is
+  never changed afterwards.
 
 ## Register of approved deviations from `docs/SPEC.md`
 

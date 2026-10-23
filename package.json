@@ -10,6 +10,8 @@
   "scripts": {
     "dev": "prisma generate && next dev",
     "build": "prisma generate && next build",
+    "build:seed": "esbuild prisma/seed.ts --bundle --platform=node --format=esm --target=node24 --outfile=build/seed.mjs --external:@node-rs/argon2 --external:pg --log-level=warning --banner:js=\"import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\"",
+    "db:migrate:runtime": "node scripts/migrate.mjs",
     "start": "next start",
     "typecheck": "prisma generate && next typegen && tsc --noEmit",
     "lint": "eslint . --max-warnings=0",
@@ -24,15 +26,22 @@
     "db:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "db:up": "docker compose up -d db",
-    "db:down": "docker compose down"
+    "db:down": "docker compose down",
+    "test": "vitest run",
+    "test:unit": "vitest run --project unit",
+    "test:integration": "vitest run --project integration",
+    "test:watch": "vitest",
+    "db:seed": "prisma db seed"
   },
   "dependencies": {
+    "@node-rs/argon2": "2.2.2",
     "@prisma/adapter-pg": "7.10.1",
     "@prisma/client": "7.10.1",
     "class-variance-authority": "0.7.1",
     "cn": "0.5.0",
     "lucide-react": "1.61.0",
     "next": "16.4.2",
+    "next-auth": "5.0.0-beta.32",
     "radix-ui": "1.8.1",
     "react": "19.3.1",
     "react-dom": "19.3.1",
@@ -45,18 +54,23 @@
     "@commitlint/config-conventional": "21.2.4",
     "@tailwindcss/postcss": "4.3.3",
     "@types/node": "24.19.2",
+    "@types/pg": "8.23.1",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "dotenv": "17.4.2",
+    "esbuild": "0.28.2",
     "eslint": "9.39.5",
     "eslint-config-next": "16.4.2",
     "eslint-config-prettier": "10.1.8",
     "husky": "9.1.7",
     "lint-staged": "17.6.0",
+    "pg": "8.23.1",
     "prettier": "3.9.10",
     "prisma": "7.10.1",
     "shadcn": "4.22.1",
     "tailwindcss": "4.3.3",
-    "typescript": "5.9.3"
+    "tsx": "4.23.15",
+    "typescript": "5.9.3",
+    "vitest": "5.0.5"
   }
 }

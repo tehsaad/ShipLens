@@ -17,7 +17,9 @@ function createPrismaClient(): PrismaClient {
   });
   return new PrismaClient({
     adapter,
-    log: env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
+    // Production errors reach the caller, which logs a code only (section 8, A09); Prisma's
+    // own error log would repeat database messages in the server log.
+    log: env.NODE_ENV === "development" ? ["warn", "error"] : ["warn"],
   });
 }
 

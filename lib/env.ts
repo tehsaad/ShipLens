@@ -9,6 +9,7 @@ const serverEnvSchema = z.object({
       (value) => value.startsWith("postgresql://") || value.startsWith("postgres://"),
       "DATABASE_URL must be a PostgreSQL connection string",
     ),
+  AUTH_SECRET: z.string().min(32, "AUTH_SECRET must be at least 32 characters"),
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 });
 
@@ -17,9 +18,10 @@ export type ServerEnv = z.infer<typeof serverEnvSchema>;
 let cachedEnv: ServerEnv | undefined;
 
 /**
- * Validates server environment variables on first use. Reading lazily keeps
- * `next build` independent of runtime secrets. Error messages name the
- * invalid variables but never include their values.
+ * Validates server environment variables. instrumentation.ts calls this when the server
+ * starts, so a misconfigured deployment fails at boot (section 8, A02); reading lazily keeps
+ * `next build` independent of runtime secrets. Error messages name the invalid variables
+ * but never include their values.
  */
 export function getServerEnv(): ServerEnv {
   if (cachedEnv) return cachedEnv;
