@@ -101,7 +101,29 @@ Legend: `[x]` done and verified locally, `[~]` done but not fully verifiable her
 
 ## Phase 4: Public site and content
 
-- [ ] Seven public pages in en and ur, content manager, events (decision 6)
+- [x] next-intl routing under `/en` and `/ur`; every public string and the admin navigation
+      labels in `messages/en.json` and `messages/ur.json`; unit test for matching keys,
+      placeholders and translated form errors
+- [x] Urdu: `dir="rtl"`, logical CSS properties, Noto Nastaliq Urdu, numbers isolated as
+      left-to-right inside Urdu text
+- [x] Header with language switcher and light/dark theme toggle (no flash on load); footer with
+      Privacy and Terms
+- [x] Seven pages in both languages: Home, About, Programs, Branches (city filter), Events
+      (upcoming/past and branch filters), Get Involved, Contact
+- [x] Volunteer application and contact forms: React Hook Form with the same Zod schema as the
+      server action, field-level errors in both languages, honeypot, work without JavaScript
+- [x] English fallback with a notice when the Urdu version of an entry is missing
+- [x] Public pages cached with five-minute revalidation and refreshed on publish (section 9);
+      the image still builds without a database
+- [x] Content manager: list, create, edit, Markdown preview, publish, unpublish; edits to a
+      published entry wait as a pending draft (migration `content_drafts`); slugs unique per
+      type and language
+- [x] Markdown rendered without raw HTML and sanitised with an allow-list
+- [x] Events with English and optional Urdu titles (decision 6); contact messages for Super
+      Admin
+- [x] Failed admin forms keep what the user typed (React resets forms after an action)
+- [x] Integration tests for content, events and contact messages; public pages and forms checked
+      once by hand in a browser in both languages
 
 ## Phase 5: Exports and hardening
 
@@ -119,13 +141,10 @@ Legend: `[x]` done and verified locally, `[~]` done but not fully verifiable her
 
 - Auth.js v5 (required by section 2) is only published as a beta; `next-auth@5.0.0-beta.32` is
   pinned.
-- Phase 1 admin screens (sign-in, change password) use English text; moving admin labels into
-  `messages/en.json` and `messages/ur.json` (section 7.4) is part of Phase 4.
 - Login rate limiting (section 8) is part of Phase 5; the lockout is already in place. The same
   applies to the application form's 5-per-hour limit; it has its honeypot already.
-- The public application form uses `useActionState` with server-side Zod errors, like the
-  Phase 1 forms. React Hook Form and the Urdu translation arrive with the public site in
-  Phase 4, which also moves `/get-involved` to cached rendering.
+- Admin screens other than the navigation stay in English (section 7.4 names public strings
+  and admin navigation labels only).
 - Database checks ran against PostgreSQL 16.14 (embedded) locally, and the Docker image has
   not been built here (no Docker access).
 

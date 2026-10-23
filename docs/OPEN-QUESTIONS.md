@@ -377,6 +377,25 @@ Added in Phase 3:
 - **Unrouted list.** The dashboard shows the oldest 25, with a link to the full filtered
   collections list.
 
+Added in Phase 4:
+
+- **Pending edits of published content.** Section 7.2 says edits to a published entry "save
+  as DRAFT until republished". With one row per entry and language, the edit is kept in two
+  new nullable columns (`draft_title`, `draft_body`) while the published title and body stay
+  live; publishing applies it, and it can be discarded. Unpublishing hides the entry and keeps
+  the newest text. This is a schema addition (migration `content_drafts`).
+- **Slugs.** A slug can change only until the entry is first published, because its URL is
+  public after that. The same slug is used for the English and Urdu versions of an entry.
+- **About page.** The About page shows the published PAGE entry with slug `about`.
+- **Filters on public pages.** The Branches city filter and the Events filters run in the
+  browser, so the pages themselves stay cached (section 9).
+- **Event times.** Staff enter event times in Asia/Karachi; the public site shows them in
+  Asia/Karachi in the visitor's language.
+- **Admin language.** Admin navigation labels follow the user's language setting; the rest of
+  the admin screens stay in English.
+- **Contact messages.** Only Super Admin reads them and marks them handled; the audit entry of
+  a submission records the id only.
+
 ## Register of approved deviations from `docs/SPEC.md`
 
 Every approved decision, classified against the original spec text.
