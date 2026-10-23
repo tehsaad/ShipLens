@@ -64,6 +64,12 @@ jobs:
       - name: Typecheck
         run: npm run typecheck
 
+      - name: Container start-up scripts (runtime migrations, bundled seed)
+        run: |
+          node scripts/migrate.mjs
+          npx prisma migrate status
+          npm run build:seed
+
       - name: Unit tests
         run: npm run test:unit
 

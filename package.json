@@ -10,6 +10,8 @@
   "scripts": {
     "dev": "prisma generate && next dev",
     "build": "prisma generate && next build",
+    "build:seed": "esbuild prisma/seed.ts --bundle --platform=node --format=esm --target=node24 --outfile=build/seed.mjs --external:@node-rs/argon2 --external:pg --log-level=warning --banner:js=\"import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\"",
+    "db:migrate:runtime": "node scripts/migrate.mjs",
     "start": "next start",
     "typecheck": "prisma generate && next typegen && tsc --noEmit",
     "lint": "eslint . --max-warnings=0",
@@ -56,6 +58,7 @@
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
     "dotenv": "17.4.2",
+    "esbuild": "0.28.2",
     "eslint": "9.39.5",
     "eslint-config-next": "16.4.2",
     "eslint-config-prettier": "10.1.8",

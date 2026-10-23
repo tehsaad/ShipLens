@@ -21,7 +21,7 @@ ENV HUSKY=0 \
     NEXT_TELEMETRY_DISABLED=1
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npx prisma generate && npx next build
+RUN npx prisma generate && npx next build && npm run build:seed
 
 # ---- runner: minimal runtime image, non-root user ---------------------------
 FROM ${NODE_IMAGE} AS runner
@@ -37,11 +37,17 @@ RUN addgroup -S -g 1001 nodejs \
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Start-up tasks: migrations (plain `pg`, no Prisma CLI) and the bundled seed script. Both
+# resolve `pg` and Argon2 from the standalone node_modules copied above.
+COPY --from=builder --chown=nextjs:nodejs /app/prisma/migrations ./prisma/migrations
+COPY --from=builder --chown=nextjs:nodejs /app/scripts/migrate.mjs ./scripts/migrate.mjs
+COPY --from=builder --chown=nextjs:nodejs /app/build/seed.mjs ./scripts/seed.mjs
+COPY --from=builder --chown=nextjs:nodejs --chmod=755 /app/scripts/docker-entrypoint.sh ./scripts/docker-entrypoint.sh
 
 USER nextjs
 EXPOSE 3000
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
     CMD ["node", "-e", "fetch('http://127.0.0.1:3000/api/health').then((r) => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
 
-CMD ["node", "server.js"]
+CMD ["./scripts/docker-entrypoint.sh"]
