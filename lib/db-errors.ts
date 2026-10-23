@@ -19,6 +19,8 @@ const RULE_MESSAGES: Record<string, string> = {
 
 const UNIQUE_VIOLATION = "23505";
 const CHECK_VIOLATION = "23514";
+/** Raised in REPEATABLE READ or SERIALIZABLE transactions when a concurrent write wins. */
+const SERIALIZATION_FAILURE = "40001";
 
 /** The PostgreSQL SQLSTATE behind a Prisma error, when there is one. */
 export function databaseErrorCode(error: unknown): string | null {
@@ -40,12 +42,22 @@ export function databaseErrorCode(error: unknown): string | null {
  * which callers should rethrow so it is handled as an internal error.
  */
 export function toRuleViolation(error: unknown): AppError | null {
-  const code = databaseErrorCode(error);
+  // Prisma reports a write conflict in an interactive transaction as P2034.
+  const code =
+    (error as { code?: unknown } | null)?.code === "P2034"
+      ? SERIALIZATION_FAILURE
+      : databaseErrorCode(error);
   if (!code) return null;
   const message = RULE_MESSAGES[code];
   if (message) return new AppError("RULE_VIOLATION", message);
   if (code === UNIQUE_VIOLATION) {
     return new AppError("CONFLICT", "A record with these details already exists.");
+  }
+  if (code === SERIALIZATION_FAILURE) {
+    return new AppError(
+      "CONFLICT",
+      "Someone else changed this at the same time. Reload and retry.",
+    );
   }
   if (code === CHECK_VIOLATION) {
     return new AppError("VALIDATION", "Some of the values are not valid.");

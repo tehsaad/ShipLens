@@ -356,6 +356,27 @@ Added in Phase 2:
   approved week. A correction takes the original's purpose. Routing is recorded once and is
   never changed afterwards.
 
+Added in Phase 3:
+
+- **When a week can be submitted.** A report can be opened for the current or an earlier
+  week, but submitted only once its week has ended (after Sunday, Asia/Karachi), so the
+  frozen totals cover the whole week.
+- **Active members in report totals.** `activeMembers` counts members of the branch whose
+  status is ACTIVE now and who had joined by the end of the week. Member status has no
+  history, so a draft recomputed later uses today's statuses; the figure is frozen on
+  submission.
+- **Approval comment.** The reviewer may add an optional comment when approving; returning
+  requires one (section 6.4).
+- **Who sees which dashboard figures.** Super Admin and Finance Reviewer see everything.
+  HR Lead sees active members, pending applications, active branches and the new-members
+  chart. A Branch Lead sees its own branch's figures, including pending applications that
+  name the branch, but not the active-branches count. Content Editors have no dashboard.
+- **Overdue reports.** Counted per ACTIVE branch from the Monday of the week it opened. DRAFT
+  and RETURNED reports count as overdue, since only SUBMITTED or APPROVED ones were filed.
+  Branches without an opening date have no indicator.
+- **Unrouted list.** The dashboard shows the oldest 25, with a link to the full filtered
+  collections list.
+
 ## Register of approved deviations from `docs/SPEC.md`
 
 Every approved decision, classified against the original spec text.

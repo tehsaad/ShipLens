@@ -38,3 +38,10 @@ export const PURPOSE_LABELS = {
   DONATION: "Donation",
   OTHER: "Other",
 } as const;
+
+export const REPORT_STATUS_LABELS = {
+  DRAFT: "Draft",
+  SUBMITTED: "Submitted",
+  RETURNED: "Returned",
+  APPROVED: "Approved",
+} as const;

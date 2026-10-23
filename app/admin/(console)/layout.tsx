@@ -14,6 +14,7 @@ const NAV: { href: string; label: string; action: Action }[] = [
   { href: "/admin/members", label: "Members", action: "member.read" },
   { href: "/admin/teams", label: "Teams", action: "team.read" },
   { href: "/admin/collections", label: "Collections", action: "collection.read" },
+  { href: "/admin/reports", label: "Reports", action: "report.read" },
 ];
 
 export default async function ConsoleLayout({ children }: { children: ReactNode }) {
