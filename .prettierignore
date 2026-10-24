@@ -9,6 +9,9 @@ docs/design/landing-reference/
 out/
 build/
 coverage/
+playwright-report/
+test-results/
+e2e/.auth/
 lib/generated/
 next-env.d.ts
 package-lock.json

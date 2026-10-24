@@ -406,10 +406,10 @@ Added in Phase 5:
   only once they pass validation. A limited sign-in gets the usual generic error. The limiter
   is in-process, so it holds for one instance only (section 8 allows this; recorded in
   `docs/handover.md`).
-- **Client IP.** The first `X-Forwarded-For` entry, used for the audit log and rate limiting,
-  never for authorization. On the live service this entry turned out to be client-controlled:
-  Render appends to a forwarded header the client sent. The follow-up is recorded in
-  `docs/security.md`.
+- **Client IP.** Used for the audit log and rate limiting, never for authorization. On Render
+  it comes from `CF-Connecting-IP`, set by Render's Cloudflare edge, because Render keeps a
+  client-supplied `X-Forwarded-For` (`TRUSTED_CLIENT_IP_HEADER`, see `docs/security.md`).
+  Locally the first `X-Forwarded-For` entry is used.
 - **What each CSV export contains.** Each export takes the list page's current filters and
   covers every matching row, not only the visible page. A Branch Lead's export is always
   limited to its own branch. Collections, members and weekly reports carry their list columns

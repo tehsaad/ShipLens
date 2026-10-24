@@ -176,22 +176,23 @@ database, whose URL comes from the environment.
 - **Single instance.** The limiter keeps its counters in memory, so it holds for one instance
   (documented in `docs/handover.md`). Section 8 allows this. Its store is capped at 10,000
   keys.
-- **Client IP: known weakness.** The IP is the first `X-Forwarded-For` entry, and that entry can
-  be forged on Render.
-  - **The check (24 October 2026):** a sign-in on the live site with
-    `X-Forwarded-For: 203.0.113.77` was recorded in the audit log with IP `203.0.113.77`.
-    Render keeps a client-supplied header and appends to it.
-  - **Impact:** a client that sends a different made-up address with each request avoids the
-    per-IP limits, and the IP in its audit entries is the one it chose.
-  - **What still holds:** the per-account lockout and the one-open-application-per-email rule,
-    which do not depend on the IP.
-  - **Fix:** `TRUSTED_CLIENT_IP_HEADER` names the one header the hosting proxy sets itself
-    (`lib/request-context.ts`). When it is set, only that header is read, and a request
-    without it has no known address. Values that are not IP addresses are discarded.
-    Behind Cloudflare the header is `CF-Connecting-IP`.
-  - **Choosing the header:** the server logs once per start which forwarding headers arrive
-    (`"event":"clientIp.headers"`, names and counts only), and the spoofing check above is
-    repeated after the setting changes.
+- **Client IP.** On Render the IP comes from `CF-Connecting-IP`, the header Render's
+  Cloudflare edge sets (`TRUSTED_CLIENT_IP_HEADER=cf-connecting-ip`, `lib/request-context.ts`).
+  - **Why not `X-Forwarded-For`:** Render keeps a client-supplied `X-Forwarded-For` and appends
+    to it, so its first entry is whatever the client sent. A live sign-in with a made-up
+    `X-Forwarded-For` was recorded with that address before the fix.
+  - **How the header was chosen:** the server logs once per start which forwarding headers
+    arrive (`"event":"clientIp.headers"`, names and counts only). On Render these are
+    `CF-Connecting-IP`, `True-Client-IP` and `X-Forwarded-For`.
+  - **Checks on the live site (24 October 2026):**
+    - Cloudflare refuses (403) any request that already carries a `CF-Connecting-IP` header,
+      so a client cannot forge it.
+    - A sign-in with made-up `X-Forwarded-For` and `True-Client-IP` headers was recorded with
+      the real client address.
+  - **Behaviour:** when the setting is present, only that header is read. A request without it
+    has no known address and shares one rate-limit key. Values that are not IP addresses are
+    discarded. Without the setting (local development), the first `X-Forwarded-For` entry is
+    used.
 
 ## Data minimisation
 

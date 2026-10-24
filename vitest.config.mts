@@ -15,6 +15,16 @@ const shared = {
 
 export default defineConfig({
   test: {
+    // Section 11: at least 60% line coverage on backend code (lib/, server actions, route
+    // handlers), measured over the unit and integration projects together. Files no test
+    // reaches count at 0%.
+    coverage: {
+      provider: "v8",
+      include: ["lib/**/*.ts", "app/**/actions.ts", "app/**/route.ts"],
+      exclude: ["lib/generated/**", "**/*.d.ts"],
+      reporter: ["text-summary", "html"],
+      thresholds: { lines: 60 },
+    },
     projects: [
       {
         ...shared,
