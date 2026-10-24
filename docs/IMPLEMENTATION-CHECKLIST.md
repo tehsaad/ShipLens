@@ -56,8 +56,9 @@ Legend: `[x]` done and verified locally, `[~]` done but not fully verifiable her
       advisory lock); the image stays without the 250 MB Prisma CLI
 - [x] Sample data loads at container start when `SEED_DEMO_PASSWORD` is set, so the live link
       has the five demo logins; `render.yaml` asks for the value in the dashboard
-- [ ] Render Blueprint applied by the project owner (needs the Render dashboard); deploy hook
-      workflow on `main` is Phase 6
+- [ ] Render Blueprint applied by the project owner (needs the Render dashboard); the
+      service was set up by hand and through the Render API instead
+- [x] Deploy hook workflow on `main` (Phase 6): deploys the commit CI tested once CI passes
 
 ## Phase 2: Branches and members
 
@@ -157,7 +158,25 @@ Legend: `[x]` done and verified locally, `[~]` done but not fully verifiable her
 
 ## Phase 6: Testing and deployment
 
-- [ ] Coverage threshold, Playwright, axe, deploy workflow (deployment needs explicit approval)
+- [x] Coverage gate in `vitest.config.mts`: 60% of lines over `lib/`, server actions and route
+      handlers, unit and integration tests together; 67.1% measured; CI fails below it
+- [x] Playwright against the production build on its own reset-and-seeded database
+      (`scripts/e2e-server.mjs`), signed in once per role through the login form
+- [x] One test per role proving refusals by HTTP status (403 outside the role, 404 for
+      another branch's records), plus a replayed Approve form proving the server refuses
+      Super Admin
+- [x] The full report cycle: draft, submit, return (a comment is required), resubmit, approve,
+      then locked (the week's entries read-only, new entries in that week refused), with every
+      step and the PDF export in Super Admin's audit log
+- [x] axe on every public page, English and Urdu, light and dark theme, WCAG 2.1 A and AA
+- [x] Bugs the new tests found and fixed: the Approve and Return comment fields shared one id
+      (the label pointed at the wrong field); the language switcher's accessible name did not
+      contain its visible text
+- [x] CI runs the coverage gate and the Playwright suite before the Docker image check
+- [x] `Deploy` workflow calls the Render deploy hook after CI passes on `main` (the user
+      approved the switch from Render's own auto-deploy)
+- [ ] `RENDER_DEPLOY_HOOK_URL` secret added by the repository owner; then Render's own
+      auto-deploy is turned off so each commit deploys once
 
 ## Phase 7: Documentation and submission
 

@@ -15,7 +15,7 @@ jobs:
   quality:
     name: Lint, typecheck, test and build
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 35
     services:
       postgres:
         image: postgres:16.15-alpine3.23
@@ -80,14 +80,38 @@ jobs:
           npx prisma migrate status
           npm run build:seed
 
-      - name: Unit tests
-        run: npm run test:unit
-
-      - name: Integration tests (migrations, database rules, auth, seed)
-        run: npm run test:integration
+      # Section 11: unit and integration tests in one run, so their coverage is measured
+      # together; the run fails below 60% of backend lines (vitest.config.mts).
+      - name: Tests with coverage (unit, integration, migrations, database rules, seed)
+        run: npm run test:coverage
 
       - name: Production build
         run: npm run build
+
+      # Section 11: Playwright against the production build, on its own database that
+      # scripts/e2e-server.mjs resets and seeds: the role access tests, the weekly report
+      # cycle and the axe checks of the public pages.
+      - name: End-to-end database
+        run: docker exec ${{ job.services.postgres.id }} createdb -U ci shiplens_e2e
+
+      - name: Install Playwright's Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: End-to-end and accessibility tests
+        env:
+          # CI-only value for the throwaway service container; not a secret.
+          E2E_DATABASE_URL: postgresql://ci:ci@localhost:5432/shiplens_e2e?schema=public
+        run: npm run test:e2e
+
+      - name: Keep the Playwright report of a failed run
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
 
       # Section 12: build the image Render deploys, keep it under 300 MB, and start it against
       # an empty database so migrations, the seed and the server are proven on the real image.

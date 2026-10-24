@@ -445,6 +445,29 @@ Added in Phase 5:
   request, and its policy allows only scripts that carry the response's nonce. Inline styles
   are allowed in both, because chart and font styles cannot carry a nonce.
 
+Added in Phase 6:
+
+- **Coverage scope.** Section 11's "backend code" is measured as every TypeScript file in
+  `lib/` (generated Prisma code excluded), every server action file and every route handler,
+  over the unit and integration tests together. Files no test reaches count as 0%. The gate is
+  60% of lines; the measured figure on 24 October 2026 was 67.1%. Server actions are thin
+  wrappers that need the Next.js request context, so they are exercised by the Playwright
+  suite rather than counted by unit coverage.
+- **"Blocked actions return 403 or 404".** The role tests check the HTTP status of pages and
+  exports: 403 outside the role's permissions, 404 for another branch's records. A refused
+  server action answers 200 with an error message on the form, as every form error does, so
+  where a role has no forbidden page (Super Admin) the test replays the Finance Reviewer's
+  Approve form under the Super Admin session and checks that nothing changed and no approval
+  was audited; the same replay as the reviewer approves, proving the request was valid.
+- **Report cycle week.** The end-to-end cycle uses the week of 2026-09-21 for BR-KAR-001,
+  which has no report in the sample data and is complete whatever today's date. Each run
+  starts from a freshly seeded database.
+- **Accessibility scope.** axe checks every public page against WCAG 2.1 A and AA in both
+  languages and in both the light and the dark theme. The admin area is not part of the
+  automated check (section 11 names the public pages).
+- **What the end-to-end tests run against.** The production build (the standalone server the
+  image runs) with its own database, reset and seeded on every run, never the dev server.
+
 ## Register of approved deviations from `docs/SPEC.md`
 
 Every approved decision, classified against the original spec text.
