@@ -1,7 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Select } from "@/components/admin/form";
-import { Badge, Cell, DataTable, PageHeader, Pagination, Section } from "@/components/admin/page";
+import {
+  Badge,
+  Cell,
+  DataTable,
+  ExportLink,
+  PageHeader,
+  Pagination,
+  Section,
+  exportHref,
+} from "@/components/admin/page";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { requirePermission } from "@/lib/auth/session";
@@ -44,6 +53,13 @@ export default async function CollectionsPage({ searchParams }: { searchParams: 
       <PageHeader
         title="Collections"
         description="Entries can be edited for 7 days and until their week's report is approved. Corrections are new entries; nothing is deleted."
+        actions={
+          can(user, "collection.export") ? (
+            <ExportLink href={exportHref("/admin/collections/export", search)}>
+              Download CSV
+            </ExportLink>
+          ) : null
+        }
       />
       {can(user, "collection.create") ? (
         <Section title="New collection">

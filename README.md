@@ -7,16 +7,23 @@ The full product specification is in [`docs/SPEC.md`](docs/SPEC.md), with approv
 
 ## Status
 
-**Phases 0 and 1.** Implemented so far:
+**Phases 0 to 5.** Implemented so far, live at <https://shiplens.onrender.com>:
 
-- Project tooling, Docker and CI, and the health endpoint
+- Project tooling, Docker and CI, the health endpoint, and deployment on Render
 - The full data model, plus database rules enforced in PostgreSQL: the 7-day collection lock,
   approved-week checks, correction limits, an append-only audit log and a restricted app role
 - Staff sign-in with a lockout after failed attempts and a forced first-login password change
 - The role permission matrix, the audit service, and the sample-data seed
+- Admin screens for branches, users, applications, members, teams, collections, weekly
+  reports (with the review cycle), the dashboard, content, events, contact messages and the
+  audit log
+- The bilingual public site (English and Urdu, right-to-left) with the volunteer and contact
+  forms
+- CSV and PDF exports scoped by role and audited, security headers with a content security
+  policy, rate limits and structured logs (see [`docs/security.md`](docs/security.md))
 
-Admin screens beyond sign-in, the public website, reports, exports and deployment come in
-later phases (see [`docs/IMPLEMENTATION-CHECKLIST.md`](docs/IMPLEMENTATION-CHECKLIST.md)).
+The end-to-end and accessibility tests, the coverage gate and the remaining documentation come
+in later phases (see [`docs/IMPLEMENTATION-CHECKLIST.md`](docs/IMPLEMENTATION-CHECKLIST.md)).
 
 ## Stack
 

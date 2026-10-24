@@ -47,3 +47,27 @@ except team assignments. To run the app with these restricted privileges:
 
 If the migration user may not create roles, the migration skips this step. Database triggers
 still enforce the append-only audit log, the 7-day collection lock, and the other rules.
+
+## Security operations
+
+The full OWASP mapping is in [security.md](security.md).
+
+- **Rate limits are per instance.** Failed sign-ins (10 per 15 minutes), the volunteer
+  application and the contact form (5 per hour each) are counted per client IP in the
+  server's memory.
+  - With more than one instance, each counts separately; a shared store (for example Redis)
+    would be needed. A restart clears the counters.
+  - The per-account lockout (5 failures, 15 minutes) is stored in the database and is not
+    affected.
+- **Logs.** The server writes one JSON object per line: server errors (`request.failed`, with
+  the digest shown on the error page), exports, rate-limit refusals and health-check
+  failures. Each line has a `requestId`.
+  - On Render they are in the service's Logs tab.
+  - Search for a digest a user reports, or for `"event":"request.failed"`.
+- **Audit log.** Super Admins read it at `/admin/audit`. Every change and every export is
+  there; filter the action by `export` to see who downloaded what.
+- **Dependencies.**
+  - CI fails when a production dependency has a high or critical advisory.
+  - Dependabot opens weekly update pull requests, each of which must pass CI before merging.
+  - Turn on Dependabot alerts and security updates in the repository settings
+    (Settings → Code security).

@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Select } from "@/components/admin/form";
-import { Cell, DataTable, PageHeader, Pagination } from "@/components/admin/page";
+import {
+  Cell,
+  DataTable,
+  ExportLink,
+  PageHeader,
+  Pagination,
+  exportHref,
+} from "@/components/admin/page";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { requirePermission } from "@/lib/auth/session";
 import { formatDateOnly } from "@/lib/dates";
 import { MEMBER_STATUS_LABELS } from "@/lib/labels";
-import { scopeFor } from "@/lib/permissions";
+import { can, scopeFor } from "@/lib/permissions";
 import { serviceContext } from "@/lib/server-action";
 import { listBranches } from "@/lib/services/branches";
 import { listMembers } from "@/lib/services/members";
@@ -47,6 +54,11 @@ export default async function MembersPage({ searchParams }: { searchParams: Prom
       <PageHeader
         title="Members"
         description="Members are created by accepting volunteer applications."
+        actions={
+          can(user, "member.export") ? (
+            <ExportLink href={exportHref("/admin/members/export", search)}>Download CSV</ExportLink>
+          ) : null
+        }
       />
       <form className="flex flex-wrap items-end gap-3" role="search">
         <Input

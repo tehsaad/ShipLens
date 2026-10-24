@@ -1,12 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Select } from "@/components/admin/form";
-import { Cell, DataTable, PageHeader, Pagination } from "@/components/admin/page";
+import {
+  Cell,
+  DataTable,
+  ExportLink,
+  PageHeader,
+  Pagination,
+  exportHref,
+} from "@/components/admin/page";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { requirePermission } from "@/lib/auth/session";
 import { formatBusinessDate } from "@/lib/dates";
 import { APPLICATION_STATUS_LABELS, AVAILABILITY_LABELS } from "@/lib/labels";
+import { can } from "@/lib/permissions";
 import { serviceContext } from "@/lib/server-action";
 import { listApplications } from "@/lib/services/applications";
 import { listBranches } from "@/lib/services/branches";
@@ -43,6 +51,13 @@ export default async function ApplicationsPage({
       <PageHeader
         title="Applications"
         description="Volunteer applications from the public form, newest first."
+        actions={
+          can(user, "application.export") ? (
+            <ExportLink href={exportHref("/admin/applications/export", search)}>
+              Download CSV
+            </ExportLink>
+          ) : null
+        }
       />
       <form className="flex flex-wrap items-end gap-3" role="search">
         <Select

@@ -105,3 +105,16 @@ export function field(formData: FormData, name: string): string {
   const value = formData.get(name);
   return typeof value === "string" ? value : "";
 }
+
+/**
+ * Parses list filters from query parameters with the list's schema: blank values mean "no
+ * filter", as on the list pages, so an export link reproduces the page's filters exactly.
+ */
+export function filtersFrom<Schema extends z.ZodObject>(
+  schema: Schema,
+  params: URLSearchParams,
+): z.output<Schema> {
+  return schema.parse(
+    Object.fromEntries(Object.keys(schema.shape).map((key) => [key, params.get(key) || null])),
+  );
+}

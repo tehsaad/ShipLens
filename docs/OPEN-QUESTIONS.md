@@ -396,6 +396,55 @@ Added in Phase 4:
 - **Contact messages.** Only Super Admin reads them and marks them handled; the audit entry of
   a submission records the id only.
 
+Added in Phase 5:
+
+- **Rate limits.** Section 7.1 fixes the application form at 5 per hour per IP; the spec gives
+  no figure for the others. The contact form uses the same limit. Sign-in allows 10 failed
+  attempts per 15 minutes per IP, on top of the per-account lockout; successful sign-ins do
+  not count, so staff switching between accounts (or a test suite signing in as each role)
+  are never held up. Form submissions count
+  only once they pass validation. A limited sign-in gets the usual generic error. The limiter
+  is in-process, so it holds for one instance only (section 8 allows this; recorded in
+  `docs/handover.md`).
+- **Client IP.** The first `X-Forwarded-For` entry, which Render's proxy is expected to set to
+  the client it saw. It is used for the audit log and rate limiting, never for authorization.
+  Whether Render overwrites or appends to a forwarded header the client sent is checked on the
+  live service after deployment (see `docs/security.md`).
+- **What each CSV export contains.** Each export takes the list page's current filters and
+  covers every matching row, not only the visible page. A Branch Lead's export is always
+  limited to its own branch. Collections, members and weekly reports carry their list columns
+  plus identifiers, dates and totals. Applications leave out the free-text answers (skills,
+  motivation) for data minimisation; these stay on the detail screen. The dashboard's
+  unrouted export has every unrouted collection, not only the 25 the dashboard shows. More
+  than 10,000 rows are refused with a request to narrow the filters. Times are in Asia/Karachi.
+- **CSV injection.** Text cells that a spreadsheet would run as a formula (starting with `=`,
+  `+`, `-`, `@`, tab or carriage return) get a leading apostrophe. Plain numbers such as
+  `-50.00` and phone numbers such as `+923001234567` are left as they are.
+- **Export audit entries.** Each export writes one entry whose action names the permission
+  (`collection.export`, `member.export`, `application.export`, `report.export`,
+  `dashboard.exportUnrouted`). It records the format, the filters and the row count, never the
+  rows. PDF downloads of a report are audited but are not listed in the report's history,
+  which shows transitions only.
+- **Which reports have a PDF.** Only APPROVED weekly reports (section 7.3: "approved weekly
+  report"). Branch Leads, Finance Reviewers and Super Admins can download them; a Branch
+  Lead only for its own branch.
+- **Monthly branch summary.** The summary covers one branch and one calendar month: net
+  collections (corrections included), routed and unrouted totals, totals by purpose, members
+  who joined in the month, and active members (status ACTIVE today, joined by the end of the
+  month). It lists the weekly reports of the weeks that start in the month. A month that has
+  not started is refused, and the current month is marked as partial. It uses the
+  report.export permission.
+- **Fonts in PDFs.** The PDFs use the standard PDF fonts, which need no font files. They cover
+  Windows-1252, so characters in another script (for example Urdu typed into a note) print
+  as `?`. The admin screens and CSV exports show such text in full.
+- **Audit log viewer.** It shows every entry, newest first, 25 per page. The action filter
+  matches any part of the action name, so "export" lists every export. Dates are business
+  days in Asia/Karachi.
+- **Content security policy.** The public pages are cached (section 9), so they cannot carry
+  a per-request nonce, and their policy allows inline scripts. The admin area renders on every
+  request, and its policy allows only scripts that carry the response's nonce. Inline styles
+  are allowed in both, because chart and font styles cannot carry a nonce.
+
 ## Register of approved deviations from `docs/SPEC.md`
 
 Every approved decision, classified against the original spec text.
