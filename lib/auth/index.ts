@@ -3,6 +3,8 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { authConfig } from "@/lib/auth/config";
 import { getPrisma } from "@/lib/db";
+import { logEvent } from "@/lib/log";
+import { checkRateLimit } from "@/lib/rate-limit";
 import { requestContextFrom } from "@/lib/request-context";
 import { authenticate } from "@/lib/services/authentication";
 import { loginSchema } from "@/lib/validation/auth";
@@ -15,14 +17,26 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
+      // Every sign-in, through the login form or a direct POST to the Auth.js callback,
+      // passes here, so the per-IP limit (section 8, A07) is checked first. A limited
+      // attempt gets the same generic failure as a wrong password.
       async authorize(credentials, request) {
+        const context = requestContextFrom(request.headers);
+        if (!checkRateLimit("login", context.ipAddress).ok) {
+          logEvent("warn", "rateLimit.exceeded", {
+            bucket: "login",
+            ip: context.ipAddress,
+            requestId: context.requestId,
+          });
+          return null;
+        }
         const parsed = loginSchema.safeParse(credentials);
         if (!parsed.success) return null;
         const user = await authenticate(
           getPrisma(),
           parsed.data.email,
           parsed.data.password,
-          requestContextFrom(request.headers),
+          context,
         );
         return user ? { id: user.id } : null;
       },

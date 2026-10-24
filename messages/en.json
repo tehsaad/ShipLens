@@ -157,6 +157,7 @@
     "applicationThanks": "Thank you for applying. Our HR team reviews every application and will contact you.",
     "applicationRejected": "We could not accept this application. If you have already applied, we will be in touch.",
     "messageThanks": "Thank you. Your message has reached head office and we will reply by email.",
+    "rateLimited": "Too many submissions from your connection. Please try again in an hour.",
     "failed": "Something went wrong. Please try again."
   },
   "errors": {

@@ -4,6 +4,7 @@ import { z } from "zod";
 import { getPrisma } from "@/lib/db";
 import { isAppError } from "@/lib/errors";
 import type { PublicFormState } from "@/lib/public-form";
+import { rateLimitedForm } from "@/lib/public-rate-limit";
 import { getRequestContext } from "@/lib/request-context";
 import { submitApplication } from "@/lib/services/applications";
 import { applicationSchema } from "@/lib/validation/applications";
@@ -11,8 +12,8 @@ import { field } from "@/lib/validation/common";
 
 /**
  * Public volunteer application (section 7.1). No session is needed. A filled honeypot field
- * means a bot: it gets the normal thank-you and nothing is stored. The limit of 5 per hour
- * per IP is added with the other rate limits in Phase 5.
+ * means a bot: it gets the normal thank-you and nothing is stored. Valid submissions are
+ * limited to 5 per hour per IP.
  */
 export async function submitApplicationAction(
   _: PublicFormState,
@@ -36,8 +37,10 @@ export async function submitApplicationAction(
       fieldErrors: z.flattenError(parsed.error).fieldErrors,
     };
   }
+  const context = await getRequestContext();
+  if (rateLimitedForm("application", context)) return { ok: false, formError: "rateLimited" };
   try {
-    await submitApplication(getPrisma(), parsed.data, await getRequestContext());
+    await submitApplication(getPrisma(), parsed.data, context);
     return { ok: true, formError: null };
   } catch (error) {
     if (isAppError(error) && error.code === "CONFLICT")

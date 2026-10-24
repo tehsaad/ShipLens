@@ -3,12 +3,16 @@
 import { z } from "zod";
 import { getPrisma } from "@/lib/db";
 import type { PublicFormState } from "@/lib/public-form";
+import { rateLimitedForm } from "@/lib/public-rate-limit";
 import { getRequestContext } from "@/lib/request-context";
 import { submitContactMessage } from "@/lib/services/contact";
 import { contactSchema } from "@/lib/validation/applications";
 import { field } from "@/lib/validation/common";
 
-/** Public contact form (section 7.1), with the same honeypot as the application form. */
+/**
+ * Public contact form (section 7.1), with the same honeypot as the application form and a
+ * limit of 5 valid messages per hour per IP.
+ */
 export async function submitContactAction(
   _: PublicFormState,
   formData: FormData,
@@ -26,6 +30,8 @@ export async function submitContactAction(
       fieldErrors: z.flattenError(parsed.error).fieldErrors,
     };
   }
-  await submitContactMessage(getPrisma(), parsed.data, await getRequestContext());
+  const context = await getRequestContext();
+  if (rateLimitedForm("contact", context)) return { ok: false, formError: "rateLimited" };
+  await submitContactMessage(getPrisma(), parsed.data, context);
   return { ok: true, formError: null };
 }
