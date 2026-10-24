@@ -1,0 +1,39 @@
+name: Deploy
+
+# Section 12: deploy on push to main after CI passes, through the Render deploy hook. The hook
+# deploys the exact commit CI tested (Render's `ref` parameter). The hook URL is a secret:
+# Render → service → Settings → Deploy Hook, stored in GitHub as RENDER_DEPLOY_HOOK_URL.
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
+
+permissions: {}
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to Render
+    if: github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Trigger the Render deploy hook
+        env:
+          HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            # Until the secret is set, Render's own auto-deploy still deploys main; a failing
+            # check here would hold that deploy back, so this only warns.
+            echo "::warning::RENDER_DEPLOY_HOOK_URL is not set; no deploy was triggered."
+            exit 0
+          fi
+          # The hook URL already carries ?key=..., so the commit is appended with &.
+          curl -fsS -X POST "$HOOK&ref=$SHA" > /dev/null
+          echo "Deploy of $SHA requested."
