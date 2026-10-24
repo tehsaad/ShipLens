@@ -71,3 +71,55 @@ The full OWASP mapping is in [security.md](security.md).
   - Dependabot opens weekly update pull requests, each of which must pass CI before merging.
   - Turn on Dependabot alerts and security updates in the repository settings
     (Settings → Code security).
+
+## Tests
+
+| Command                    | What it runs                                                        |
+| -------------------------- | ------------------------------------------------------------------- |
+| `npm run test:unit`        | Unit tests (rules, permissions, validation, CSV, PDF, headers)      |
+| `npm run test:integration` | Services, database rules and the seed against `TEST_DATABASE_URL`   |
+| `npm run test:coverage`    | Both of the above; fails below 60% of backend lines (section 11)    |
+| `npm run test:e2e`         | Playwright: each role's refusals, the report cycle, axe on the site |
+
+CI runs all of them on every push and pull request (`.github/workflows/ci.yml`).
+
+### End-to-end tests
+
+The suite (`e2e/`) runs against the production build, not the dev server:
+
+1. Create an empty, throwaway database and set `E2E_DATABASE_URL` to it. Every run drops and
+   recreates its schema, so never point it at data you want to keep.
+2. `npm run e2e:prepare` builds the app and the seed script. Run it again after code changes.
+3. `npm run test:e2e`. `scripts/e2e-server.mjs` applies the migrations, loads the sample data
+   with a fixed test password and starts the standalone server on port 3200, as the container
+   does at start. It reads no `.env` file.
+
+The first run needs a browser: `npx playwright install chromium`. Where a Chromium is already
+installed, set `PLAYWRIGHT_CHROMIUM_PATH` to its executable instead. A failed run leaves
+screenshots and traces in `test-results/` (`npx playwright show-trace <trace.zip>`); in CI they
+are kept as the `playwright-report` artifact for a week.
+
+## Deployment
+
+The service deploys `main` only, and only after CI passes on it:
+
+1. A push to `main` (normally a merged pull request) runs CI.
+2. When CI succeeds, the `Deploy` workflow (`.github/workflows/deploy.yml`) calls the Render
+   deploy hook with `ref=<commit>`, so Render deploys exactly the commit CI tested.
+3. Render builds the image; the container applies migrations, loads any missing sample data
+   (while `SEED_DEMO_PASSWORD` is set) and starts. Render switches traffic once
+   `GET /api/health` answers 200.
+
+**The deploy hook is a secret.** Anyone with the URL can trigger a deploy. It is stored as the
+repository secret `RENDER_DEPLOY_HOOK_URL` (Settings → Secrets and variables → Actions). To
+rotate it: in Render open the service → Settings → Deploy Hook → regenerate, then paste the new
+URL into the GitHub secret.
+
+**Deploying by hand.** In Render, open the service → Manual Deploy → Deploy latest commit (or
+a specific one). Use this to redeploy after a change of environment variables, or if the
+`Deploy` workflow cannot reach Render. Re-running a failed `Deploy` workflow run in GitHub
+retries the hook for the same commit.
+
+**Rolling back.** In Render, open the service → Events, pick an earlier successful deploy and
+choose Rollback. Migrations are not reversed by a rollback, so a migration that is not
+backward compatible needs a follow-up migration instead.

@@ -7,7 +7,7 @@ The full product specification is in [`docs/SPEC.md`](docs/SPEC.md), with approv
 
 ## Status
 
-**Phases 0 to 5.** Implemented so far, live at <https://shiplens.onrender.com>:
+**Phases 0 to 6.** Implemented so far, live at <https://shiplens.onrender.com>:
 
 - Project tooling, Docker and CI, the health endpoint, and deployment on Render
 - The full data model, plus database rules enforced in PostgreSQL: the 7-day collection lock,
@@ -21,9 +21,12 @@ The full product specification is in [`docs/SPEC.md`](docs/SPEC.md), with approv
   forms
 - CSV and PDF exports scoped by role and audited, security headers with a content security
   policy, rate limits and structured logs (see [`docs/security.md`](docs/security.md))
+- Tests in CI: unit and integration tests with a 60% backend coverage gate, Playwright
+  end-to-end tests (each role's refusals and the full weekly report cycle) and axe checks of
+  the public pages; deploys go out through a Render deploy hook once CI passes on `main`
 
-The end-to-end and accessibility tests, the coverage gate and the remaining documentation come
-in later phases (see [`docs/IMPLEMENTATION-CHECKLIST.md`](docs/IMPLEMENTATION-CHECKLIST.md)).
+The remaining documentation comes in Phase 7 (see
+[`docs/IMPLEMENTATION-CHECKLIST.md`](docs/IMPLEMENTATION-CHECKLIST.md)).
 
 ## Stack
 
@@ -57,6 +60,8 @@ npm run dev               # http://localhost:3000, staff sign-in at /admin/login
 | `AUTH_TRUST_HOST`          | App              | `true` behind a trusted reverse proxy                   |
 | `TRUSTED_CLIENT_IP_HEADER` | App              | Header the proxy sets to the client IP (see security)   |
 | `TEST_DATABASE_URL`        | Tests            | Disposable database; its name must end in `_test`       |
+| `E2E_DATABASE_URL`         | E2E tests        | Disposable database; its schema is reset on every run   |
+| `PLAYWRIGHT_CHROMIUM_PATH` | E2E tests        | Optional path to an already installed Chromium          |
 | `SEED_DEMO_PASSWORD`       | Seed             | Password for every demo login (12+ characters)          |
 | `POSTGRES_USER`            | `docker compose` | Database user for the local container                   |
 | `POSTGRES_PASSWORD`        | `docker compose` | Database password for the local container               |
@@ -96,6 +101,9 @@ docker compose --profile app up --build
 | `npm run test`             | Run unit and integration tests                      |
 | `npm run test:unit`        | Unit tests only                                     |
 | `npm run test:integration` | Integration tests against `TEST_DATABASE_URL`       |
+| `npm run test:coverage`    | Unit and integration tests with the coverage gate   |
+| `npm run e2e:prepare`      | Build the app and the seed script for the E2E run   |
+| `npm run test:e2e`         | Playwright end-to-end and axe tests (see handover)  |
 | `npm run db:seed`          | Load the sample data (safe to re-run)               |
 | `npm run db:validate`      | Validate the Prisma schema                          |
 | `npm run db:generate`      | Generate the Prisma client                          |
@@ -165,7 +173,10 @@ free plans. No secrets are stored in the file: `DATABASE_URL` comes from the dat
 
 Notes:
 
-- New commits deploy only after the GitHub checks pass (`autoDeployTrigger: checksPass`).
+- Commits on `main` deploy only after CI passes. The `Deploy` workflow
+  (`.github/workflows/deploy.yml`) calls the service's deploy hook for the commit CI tested;
+  the hook URL is the `RENDER_DEPLOY_HOOK_URL` repository secret (see
+  [docs/handover.md](docs/handover.md#deployment)).
 - The database accepts no connections from the internet, only from Render services.
 - Free web services sleep when idle, so the first request after a pause is slow, and Render
   limits how long a free database is kept. Check Render's current free-tier terms, or change

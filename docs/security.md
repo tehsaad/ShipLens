@@ -24,6 +24,10 @@ prove it. Paths are relative to the repository root.
   - IDOR and scope: `tests/integration/members-teams.test.ts`, `collections.test.ts`,
     `exports.test.ts` and `pdf-exports.test.ts`.
   - Super Admin–only audit log: `audit-log.test.ts`.
+  - In the browser (`e2e/access.spec.ts`): for each role, the pages and exports outside its
+    permissions answer 403 and another branch's records answer 404. For Super Admin, the
+    Finance Reviewer's Approve form replayed under the Super Admin session changes nothing
+    and writes no approval.
 
 ## A02 Cryptographic failures
 
@@ -118,8 +122,11 @@ prove it. Paths are relative to the repository root.
 
 ## A08 Software and data integrity failures
 
-- **Deploys.** Render deploys `main` only after CI passes (`render.yaml`:
-  `autoDeployTrigger: checksPass`).
+- **Deploys.** Only `main` is deployed, and only after CI passes on it: the `Deploy` workflow
+  (`.github/workflows/deploy.yml`) calls the Render deploy hook for the exact commit CI
+  tested. CI covers lint, types, the coverage gate, the Playwright suite, the audit and the
+  Docker image. The hook URL is a repository secret (`RENDER_DEPLOY_HOOK_URL`), and the
+  workflow has no repository permissions.
 - **Pinned inputs.**
   - `package-lock.json` is committed and CI installs with `npm ci`.
   - The Node.js base image is pinned to an exact release.
