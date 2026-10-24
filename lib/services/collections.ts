@@ -99,11 +99,15 @@ const listSelect = {
 
 export type CollectionListItem = Prisma.CollectionGetPayload<{ select: typeof listSelect }>;
 
-export async function listCollections(
-  { db, actor }: ServiceContext,
-  filters: Partial<CollectionFilters> & { page?: number } = {},
-): Promise<Page<CollectionListItem> & { totalAmount: string }> {
-  const scope = listScope(actor, "collection.read");
+/**
+ * The list filters as a query, inside the actor's branch scope (from `listScope`): a Branch
+ * Lead's own branch replaces whatever branch the request asks for. Shared by the list and
+ * its CSV export, so both always cover the same rows.
+ */
+export function collectionWhere(
+  scope: { branchId?: string },
+  filters: Partial<CollectionFilters>,
+): Prisma.CollectionWhereInput {
   const where: Prisma.CollectionWhereInput = {};
   if (filters.branchId) where.branchId = filters.branchId;
   Object.assign(where, scope);
@@ -116,6 +120,14 @@ export async function listCollections(
       ...(filters.to ? { lte: filters.to } : {}),
     };
   }
+  return where;
+}
+
+export async function listCollections(
+  { db, actor }: ServiceContext,
+  filters: Partial<CollectionFilters> & { page?: number } = {},
+): Promise<Page<CollectionListItem> & { totalAmount: string }> {
+  const where = collectionWhere(listScope(actor, "collection.read"), filters);
   const page = filters.page ?? 1;
   const [items, total, sum] = await Promise.all([
     db.collection.findMany({

@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { addDays, businessToday, formatDateOnly, parseDateOnly, weekStartOf } from "@/lib/dates";
+import {
+  addDays,
+  businessToday,
+  formatBusinessDateTime,
+  formatDateOnly,
+  parseDateOnly,
+  weekStartOf,
+} from "@/lib/dates";
 
 describe("date-only helpers", () => {
   it("round-trips YYYY-MM-DD and rejects impossible dates", () => {
@@ -24,5 +31,10 @@ describe("date-only helpers", () => {
     // 20:30 UTC on 21 October is 01:30 on 22 October in Karachi (UTC+5).
     expect(formatDateOnly(businessToday(new Date("2026-10-21T20:30:00Z")))).toBe("2026-10-22");
     expect(formatDateOnly(businessToday(new Date("2026-10-21T18:59:00Z")))).toBe("2026-10-21");
+  });
+
+  it("formats timestamps in Asia/Karachi (UTC+5) for exports", () => {
+    expect(formatBusinessDateTime(new Date("2026-10-18T19:30:00Z"))).toBe("2026-10-19 00:30");
+    expect(formatBusinessDateTime(new Date("2026-01-01T06:05:00Z"))).toBe("2026-01-01 11:05");
   });
 });

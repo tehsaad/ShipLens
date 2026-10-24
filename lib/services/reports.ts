@@ -59,23 +59,37 @@ const listSelect = {
 
 export type ReportListItem = Prisma.WeeklyReportGetPayload<{ select: typeof listSelect }>;
 
-export async function listReports(
-  { db, actor }: ServiceContext,
-  filters: { status?: ReportStatus | null; branchId?: string | null; page?: number } = {},
-): Promise<Page<ReportListItem>> {
-  const scope = listScope(actor, "report.read");
-  const where: Prisma.WeeklyReportWhereInput = {
+export type ReportFilters = { status?: ReportStatus | null; branchId?: string | null };
+
+/** The list filters as a query inside the actor's branch scope; shared with the CSV export. */
+export function reportWhere(
+  scope: { branchId?: string },
+  filters: ReportFilters,
+): Prisma.WeeklyReportWhereInput {
+  return {
     ...(filters.branchId ? { branchId: filters.branchId } : {}),
     ...scope,
     ...(filters.status ? { status: filters.status } : {}),
   };
+}
+
+/** Reports waiting for review first (oldest submission first), then newest weeks. */
+export const REPORT_LIST_ORDER = [
+  { submittedAt: { sort: "asc", nulls: "last" } },
+  { weekStart: "desc" },
+] satisfies Prisma.WeeklyReportOrderByWithRelationInput[];
+
+export async function listReports(
+  { db, actor }: ServiceContext,
+  filters: ReportFilters & { page?: number } = {},
+): Promise<Page<ReportListItem>> {
+  const where = reportWhere(listScope(actor, "report.read"), filters);
   const page = filters.page ?? 1;
   const [items, total] = await Promise.all([
     db.weeklyReport.findMany({
       where,
       select: listSelect,
-      // Reports waiting for review first (oldest submission first), then newest weeks.
-      orderBy: [{ submittedAt: { sort: "asc", nulls: "last" } }, { weekStart: "desc" }],
+      orderBy: REPORT_LIST_ORDER,
       ...pageArgs(page),
     }),
     db.weeklyReport.count({ where }),

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Cell, DataTable, PageHeader, Section } from "@/components/admin/page";
+import { Cell, DataTable, ExportLink, PageHeader, Section } from "@/components/admin/page";
 import { CollectionTrend, NewMemberTrend } from "@/components/admin/trend-charts";
 import { requireUser } from "@/lib/auth/session";
 import { formatBusinessDate } from "@/lib/dates";
@@ -130,13 +130,16 @@ export default async function AdminHomePage() {
                 </tr>
               ))}
             </DataTable>
-            {finance.unrouted.count > finance.unroutedList.length ? (
-              <p className="text-sm">
+            <div className="flex flex-wrap items-center gap-4 text-sm">
+              {finance.unrouted.count > finance.unroutedList.length ? (
                 <Link href="/admin/collections?routed=no" className="text-primary underline">
                   See all {finance.unrouted.count} unrouted collections
                 </Link>
-              </p>
-            ) : null}
+              ) : null}
+              {can(user, "dashboard.exportUnrouted") && finance.unrouted.count > 0 ? (
+                <ExportLink href="/admin/export/unrouted">Download all as CSV</ExportLink>
+              ) : null}
+            </div>
           </Section>
         </>
       ) : null}

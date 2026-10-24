@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { cn } from "cn";
+import { buttonVariants } from "@/components/ui/button";
 
 export function PageHeader({
   title,
@@ -132,4 +133,25 @@ export function Pagination({
       ) : null}
     </nav>
   );
+}
+
+/**
+ * A download link for a file export (section 7.3). A plain anchor, never next/link: a
+ * prefetch would run the export and write an audit entry nobody asked for.
+ */
+export function ExportLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a href={href} download className={buttonVariants({ variant: "outline", size: "sm" })}>
+      {children}
+    </a>
+  );
+}
+
+/** An export URL carrying the list's current filters (the page number is dropped). */
+export function exportHref(path: string, params: Record<string, string | undefined>): string {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params))
+    if (value && key !== "page") query.set(key, value);
+  const text = query.toString();
+  return text ? `${path}?${text}` : path;
 }

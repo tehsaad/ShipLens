@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Select } from "@/components/admin/form";
-import { Cell, DataTable, PageHeader, Pagination, Section } from "@/components/admin/page";
+import {
+  Cell,
+  DataTable,
+  ExportLink,
+  PageHeader,
+  Pagination,
+  Section,
+  exportHref,
+} from "@/components/admin/page";
 import { Button } from "@/components/ui/button";
 import { requirePermission } from "@/lib/auth/session";
 import { addDays, businessToday, formatBusinessDate, formatDateOnly } from "@/lib/dates";
@@ -39,6 +47,11 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
       <PageHeader
         title="Weekly reports"
         description="Draft → submitted → approved, or returned with a comment and resubmitted. Approved reports are locked."
+        actions={
+          can(user, "report.export") ? (
+            <ExportLink href={exportHref("/admin/reports/export", search)}>Download CSV</ExportLink>
+          ) : null
+        }
       />
       {can(user, "report.draft") ? (
         <Section title="Open a week">

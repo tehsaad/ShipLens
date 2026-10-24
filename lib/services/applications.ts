@@ -107,11 +107,8 @@ function startOfBusinessDay(date: Date): Date {
   return new Date(date.getTime() - 5 * 60 * 60 * 1000);
 }
 
-export async function listApplications(
-  { db, actor }: ServiceContext,
-  filters: ApplicationFilters = {},
-): Promise<Page<ApplicationListItem>> {
-  authorize(actor, "application.read");
+/** The list filters as a query; shared with the CSV export. */
+export function applicationWhere(filters: ApplicationFilters): Prisma.ApplicationWhereInput {
   const where: Prisma.ApplicationWhereInput = {};
   if (filters.status) where.status = filters.status;
   if (filters.branchId) where.preferredBranchId = filters.branchId;
@@ -121,6 +118,15 @@ export async function listApplications(
       ...(filters.to ? { lt: startOfBusinessDay(addDays(filters.to, 1)) } : {}),
     };
   }
+  return where;
+}
+
+export async function listApplications(
+  { db, actor }: ServiceContext,
+  filters: ApplicationFilters = {},
+): Promise<Page<ApplicationListItem>> {
+  authorize(actor, "application.read");
+  const where = applicationWhere(filters);
   const page = filters.page ?? 1;
   const [items, total] = await Promise.all([
     db.application.findMany({

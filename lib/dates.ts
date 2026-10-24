@@ -50,3 +50,21 @@ export function businessToday(now: Date = new Date()): Date {
 export function formatBusinessDate(timestamp: Date): string {
   return formatDateOnly(businessToday(timestamp));
 }
+
+const BUSINESS_DATE_TIME = new Intl.DateTimeFormat("en-CA", {
+  timeZone: BUSINESS_TIME_ZONE,
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
+
+/** A timestamp in Asia/Karachi as "YYYY-MM-DD HH:mm", for exports. */
+export function formatBusinessDateTime(timestamp: Date): string {
+  const part = Object.fromEntries(
+    BUSINESS_DATE_TIME.formatToParts(timestamp).map(({ type, value }) => [type, value]),
+  );
+  return `${part["year"]}-${part["month"]}-${part["day"]} ${part["hour"]}:${part["minute"]}`;
+}

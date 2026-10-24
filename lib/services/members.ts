@@ -38,7 +38,25 @@ export async function listMembers(
   { db, actor }: ServiceContext,
   filters: Partial<MemberFilters> & { page?: number } = {},
 ): Promise<Page<MemberListItem>> {
-  const scope = listScope(actor, "member.read");
+  const where = memberWhere(listScope(actor, "member.read"), filters);
+  const page = filters.page ?? 1;
+  const [items, total] = await Promise.all([
+    db.member.findMany({
+      where,
+      select: listSelect,
+      orderBy: { memberCode: "asc" },
+      ...pageArgs(page),
+    }),
+    db.member.count({ where }),
+  ]);
+  return toPage(items, total, page);
+}
+
+/** The list filters as a query inside the actor's branch scope; shared with the CSV export. */
+export function memberWhere(
+  scope: { branchId?: string },
+  filters: Partial<MemberFilters>,
+): Prisma.MemberWhereInput {
   const where: Prisma.MemberWhereInput = {};
   if (filters.branchId) where.branchId = filters.branchId;
   Object.assign(where, scope);
@@ -62,17 +80,7 @@ export async function listMembers(
         : []),
     ];
   }
-  const page = filters.page ?? 1;
-  const [items, total] = await Promise.all([
-    db.member.findMany({
-      where,
-      select: listSelect,
-      orderBy: { memberCode: "asc" },
-      ...pageArgs(page),
-    }),
-    db.member.count({ where }),
-  ]);
-  return toPage(items, total, page);
+  return where;
 }
 
 const detailSelect = {
