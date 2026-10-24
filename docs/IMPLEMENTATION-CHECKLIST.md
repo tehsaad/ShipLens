@@ -147,6 +147,8 @@ Legend: `[x]` done and verified locally, `[~]` done but not fully verifiable her
 - [x] `npm audit` in CI (fails on production dependencies), Dependabot for npm, Actions and
       Docker
 - [x] OWASP checklist: `docs/security.md`
+- [x] PDFKit is bundled into the standalone build; the Docker image built in CI is 213 MB
+      (budget 300 MB) and starts against an empty database
 - [ ] Check on the live service whether Render passes a client-supplied `X-Forwarded-For`
       through (needs the deployment; procedure in `docs/security.md`)
 

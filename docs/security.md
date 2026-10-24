@@ -92,10 +92,11 @@ prove it. Paths are relative to the repository root.
 
 - **npm audit in CI.** `.github/workflows/ci.yml` fails on a high or critical advisory in
   production dependencies, and reports the whole tree without failing.
-  - On 24 October 2026 the full tree had one high advisory: `body-parser` 2.3.0, a dev-only
-    transitive dependency (`shadcn` → `@modelcontextprotocol/sdk` → `express`) that the image
-    does not ship. The fixed release came out on 22 October; Dependabot proposes it once it is
-    a week old.
+  - On 24 October 2026, production dependencies had no advisories. A local `npm audit` of the
+    whole tree also reported one high advisory: `body-parser` 2.3.0, a dev-only transitive
+    dependency (`shadcn` → `@modelcontextprotocol/sdk` → `express`) that the image does not
+    ship. The fixed release came out on 22 October; Dependabot proposes it once it is a week
+    old.
 - **Dependabot.** `.github/dependabot.yml` proposes weekly updates for npm, GitHub Actions and
   Docker. New releases wait a week first.
   - Security alerts and security updates must also be switched on in the repository settings
