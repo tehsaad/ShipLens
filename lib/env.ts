@@ -14,7 +14,7 @@ const serverEnvSchema = z.object({
   /** The header the hosting proxy sets to the client's IP (lib/request-context.ts). */
   TRUSTED_CLIENT_IP_HEADER: z
     .string()
-    .regex(/^[a-z0-9-]{1,64}$/, "TRUSTED_CLIENT_IP_HEADER must be a lowercase header name")
+    .regex(/^[A-Za-z0-9-]{1,64}$/, "TRUSTED_CLIENT_IP_HEADER must be a header name")
     .optional(),
 });
 
