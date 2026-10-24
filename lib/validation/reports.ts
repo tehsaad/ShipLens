@@ -35,3 +35,11 @@ export const reportFiltersSchema = z.object({
   status: z.enum(ReportStatus).nullable().catch(null),
   branchId: z.uuid().nullable().catch(null),
 });
+
+/** The monthly branch summary PDF: a branch (ignored for a Branch Lead) and a YYYY-MM month. */
+export const monthlySummarySchema = z.object({
+  branchId: z.uuid({ message: "Choose a branch." }).nullable(),
+  month: z.string().regex(/^\d{4}-(?:0[1-9]|1[0-2])$/, "Choose a month."),
+});
+
+export type MonthlySummaryInput = z.infer<typeof monthlySummarySchema>;

@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { formatPkr, fromPaisa, isAmount, normaliseAmount, toPaisa } from "@/lib/money";
+import {
+  formatAmount,
+  formatPkr,
+  fromPaisa,
+  isAmount,
+  normaliseAmount,
+  toPaisa,
+} from "@/lib/money";
 
 describe("money", () => {
   it.each([
@@ -27,6 +34,9 @@ describe("money", () => {
   it("formats PKR for display", () => {
     expect(formatPkr("1234567.5")).toBe("PKR 1,234,567.50");
     expect(formatPkr("-100")).toBe("-PKR 100.00");
+    expect(formatAmount("1234567.5")).toBe("1,234,567.50");
+    expect(formatAmount("-150")).toBe("-150.00");
+    expect(formatAmount("0")).toBe("0.00");
     expect(formatPkr({ toString: () => "15.00" })).toBe("PKR 15.00");
   });
 });

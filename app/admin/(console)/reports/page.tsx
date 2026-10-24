@@ -11,6 +11,7 @@ import {
   exportHref,
 } from "@/components/admin/page";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { requirePermission } from "@/lib/auth/session";
 import { addDays, businessToday, formatBusinessDate, formatDateOnly } from "@/lib/dates";
 import { REPORT_STATUS_LABELS } from "@/lib/labels";
@@ -56,6 +57,40 @@ export default async function ReportsPage({ searchParams }: { searchParams: Prom
       {can(user, "report.draft") ? (
         <Section title="Open a week">
           <WeekPicker today={formatDateOnly(businessToday())} />
+        </Section>
+      ) : null}
+      {can(user, "report.export") ? (
+        <Section title="Monthly branch summary (PDF)">
+          {/* A plain GET form: the browser downloads the PDF and stays on this page. */}
+          <form
+            action="/admin/reports/monthly-summary"
+            method="get"
+            className="flex flex-wrap items-end gap-3"
+          >
+            {allBranches ? (
+              <Select name="branchId" aria-label="Branch" className="w-48" required>
+                {branches.map((branch) => (
+                  <option key={branch.id} value={branch.id}>
+                    {branch.code} · {branch.name}
+                  </option>
+                ))}
+              </Select>
+            ) : null}
+            <label className="grid gap-1 text-sm">
+              Month
+              <Input
+                type="month"
+                name="month"
+                required
+                defaultValue={formatDateOnly(businessToday()).slice(0, 7)}
+                max={formatDateOnly(businessToday()).slice(0, 7)}
+                className="w-44"
+              />
+            </label>
+            <Button type="submit" variant="outline">
+              Download PDF
+            </Button>
+          </form>
         </Section>
       ) : null}
       <form className="flex flex-wrap items-end gap-3" role="search">

@@ -46,6 +46,16 @@ export const REPORT_STATUS_LABELS = {
   APPROVED: "Approved",
 } as const;
 
+/** Report history entries (audit actions on a weekly report). */
+export const REPORT_ACTION_LABELS: Record<string, string> = {
+  "report.create": "Draft opened",
+  "report.updateNotes": "Notes changed",
+  "report.submit": "Submitted",
+  "report.resubmit": "Resubmitted",
+  "report.approve": "Approved",
+  "report.return": "Returned",
+};
+
 export const CONTENT_TYPE_LABELS = {
   PAGE: "Page",
   PROGRAM: "Program",

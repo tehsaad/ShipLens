@@ -31,10 +31,16 @@ export function normaliseAmount(value: string): string {
   return fromPaisa(toPaisa(value));
 }
 
-/** Display format for PKR, e.g. "PKR 1,234.50". */
-export function formatPkr(value: string | { toString(): string }): string {
+/** Two decimals with thousands separators and no currency, e.g. "-1,234.50", for tables. */
+export function formatAmount(value: string | { toString(): string }): string {
   const paisa = toPaisa(value.toString());
   const sign = paisa < 0n ? "-" : "";
   const [whole, fraction] = fromPaisa(paisa < 0n ? -paisa : paisa).split(".");
-  return `${sign}PKR ${whole!.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}.${fraction}`;
+  return `${sign}${whole!.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}.${fraction}`;
+}
+
+/** Display format for PKR, e.g. "PKR 1,234.50". */
+export function formatPkr(value: string | { toString(): string }): string {
+  const amount = formatAmount(value);
+  return amount.startsWith("-") ? `-PKR ${amount.slice(1)}` : `PKR ${amount}`;
 }

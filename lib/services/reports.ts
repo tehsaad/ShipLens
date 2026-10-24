@@ -168,7 +168,8 @@ export async function getReport({ db, actor }: ServiceContext, id: string): Prom
       orderBy: [{ collectedOn: "asc" }, { createdAt: "asc" }],
     }),
     db.auditLog.findMany({
-      where: { entityType: "WeeklyReport", entityId: id },
+      // Transitions and edits only; PDF exports of the report are audited but not history.
+      where: { entityType: "WeeklyReport", entityId: id, action: { not: "report.export" } },
       select: {
         createdAt: true,
         action: true,

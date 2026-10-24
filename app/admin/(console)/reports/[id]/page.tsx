@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Badge, Cell, DataTable, PageHeader, Section } from "@/components/admin/page";
+import { Badge, Cell, DataTable, ExportLink, PageHeader, Section } from "@/components/admin/page";
 import { requirePermission } from "@/lib/auth/session";
 import { addDays, businessToday, formatDateOnly } from "@/lib/dates";
-import { PURPOSE_LABELS, REPORT_STATUS_LABELS } from "@/lib/labels";
+import { PURPOSE_LABELS, REPORT_ACTION_LABELS, REPORT_STATUS_LABELS } from "@/lib/labels";
 import { formatPkr } from "@/lib/money";
 import { can } from "@/lib/permissions";
 import { notesEditable, submissionFor, weekIsComplete } from "@/lib/rules/report";
@@ -19,15 +19,6 @@ const dateTime = new Intl.DateTimeFormat("en-GB", {
   dateStyle: "medium",
   timeStyle: "short",
 });
-
-const ACTION_LABELS: Record<string, string> = {
-  "report.create": "Draft opened",
-  "report.updateNotes": "Notes changed",
-  "report.submit": "Submitted",
-  "report.resubmit": "Resubmitted",
-  "report.approve": "Approved",
-  "report.return": "Returned",
-};
 
 function statusLabel(status: string | null): string {
   return status
@@ -61,6 +52,11 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
             {formatDateOnly(report.weekStart)} – {formatDateOnly(weekEnd)} ·{" "}
             <ReportStatusBadge status={report.status} /> · version {report.version}
           </>
+        }
+        actions={
+          report.status === "APPROVED" && can(user, "report.export", scope) ? (
+            <ExportLink href={`/admin/reports/${report.id}/pdf`}>Download PDF</ExportLink>
+          ) : null
         }
       />
       <Section
@@ -147,7 +143,7 @@ export default async function ReportPage({ params }: { params: Promise<{ id: str
           {report.history.map((entry, index) => (
             <tr key={index}>
               <Cell>{dateTime.format(entry.at)}</Cell>
-              <Cell>{ACTION_LABELS[entry.action] ?? entry.action}</Cell>
+              <Cell>{REPORT_ACTION_LABELS[entry.action] ?? entry.action}</Cell>
               <Cell>{entry.actor ?? "—"}</Cell>
               <Cell>{statusLabel(entry.from)}</Cell>
               <Cell>{statusLabel(entry.to)}</Cell>
