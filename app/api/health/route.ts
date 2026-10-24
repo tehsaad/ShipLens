@@ -1,4 +1,5 @@
 import { getPrisma } from "@/lib/db";
+import { logEvent } from "@/lib/log";
 
 // Always run on request, on the Node.js runtime: the result must reflect the
 // database right now, and the build must never try to connect.
@@ -46,7 +47,7 @@ export async function GET(): Promise<Response> {
       error instanceof Error && "code" in error && typeof error.code === "string"
         ? error.code
         : "UNKNOWN";
-    console.error(JSON.stringify({ level: "error", event: "health.database_unreachable", code }));
+    logEvent("error", "health.databaseUnreachable", { code });
     return respond({ status: "error", database: "down" }, 503);
   }
 }

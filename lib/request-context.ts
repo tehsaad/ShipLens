@@ -1,6 +1,7 @@
 import "server-only";
 import { randomUUID } from "node:crypto";
 import { headers } from "next/headers";
+import { upstreamRequestId } from "@/lib/log";
 
 export type RequestContext = {
   ipAddress: string | null;
@@ -10,9 +11,6 @@ export type RequestContext = {
 };
 
 const MAX_USER_AGENT_LENGTH = 512;
-
-/** Request IDs from upstream are echoed into logs, so only plain tokens are accepted. */
-const REQUEST_ID = /^[A-Za-z0-9._:-]{8,128}$/;
 
 /**
  * The client's IP address: the first X-Forwarded-For entry, which the reverse proxy in front
@@ -26,11 +24,7 @@ export function clientIpFrom(source: Headers): string | null {
 
 /** The upstream request ID (X-Request-Id, or Render's Rndr-Id) when valid, else a new one. */
 export function requestIdFrom(source: Headers): string {
-  for (const name of ["x-request-id", "rndr-id"]) {
-    const value = source.get(name)?.trim();
-    if (value && REQUEST_ID.test(value)) return value;
-  }
-  return randomUUID();
+  return upstreamRequestId((name) => source.get(name)) ?? randomUUID();
 }
 
 /** Client details for the audit log and logs. */

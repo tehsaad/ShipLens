@@ -49,6 +49,16 @@ jobs:
       - name: Install locked dependencies
         run: npm ci --ignore-scripts --no-audit --no-fund
 
+      # Section 8, A06: no known high or critical vulnerability in what the image ships. The
+      # whole tree, build and development tools included, is reported without failing the
+      # build; Dependabot proposes the updates.
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
+      - name: Audit all dependencies (report only)
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
       - name: Validate Prisma schema
         run: npx prisma validate
 

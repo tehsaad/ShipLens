@@ -16,3 +16,17 @@ export function logEvent(
   else if (level === "warn") console.warn(line);
   else console.log(line);
 }
+
+/** Request IDs from upstream are echoed into logs, so only plain tokens are accepted. */
+const REQUEST_ID = /^[A-Za-z0-9._:-]{8,128}$/;
+
+/** The upstream request ID (X-Request-Id, or Render's Rndr-Id) when one is valid. */
+export function upstreamRequestId(
+  header: (name: string) => string | null | undefined,
+): string | null {
+  for (const name of ["x-request-id", "rndr-id"]) {
+    const value = header(name)?.trim();
+    if (value && REQUEST_ID.test(value)) return value;
+  }
+  return null;
+}
