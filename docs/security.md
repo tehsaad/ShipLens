@@ -192,6 +192,11 @@ database, whose URL comes from the environment.
   - **Choosing the header:** the server logs once per start which forwarding headers arrive
     (`"event":"clientIp.headers"`, names and counts only), and the spoofing check above is
     repeated after the setting changes.
+  - **On Render (24 October 2026):** requests arrive with `CF-Connecting-IP`,
+    `True-Client-IP` and `X-Forwarded-For`. A request sent with one made-up
+    `X-Forwarded-For` entry arrived with 4 entries. The setting for Render is
+    `TRUSTED_CLIENT_IP_HEADER=cf-connecting-ip`, to be confirmed by the spoofing check once it
+    is set.
 
 ## Data minimisation
 
