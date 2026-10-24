@@ -127,7 +127,28 @@ Legend: `[x]` done and verified locally, `[~]` done but not fully verifiable her
 
 ## Phase 5: Exports and hardening
 
-- [ ] CSV and PDF exports, rate limiting, security headers, OWASP checklist
+- [x] CSV exports (section 7.3) for collections, members, applications and weekly reports with
+      the list's current filters, and the dashboard's full unrouted list. RFC 4180 with a
+      UTF-8 BOM, formula-injection guard, a 10,000-row ceiling
+- [x] PDFs generated on the server: the approved weekly report (cover, frozen totals,
+      collections, review history) and a monthly branch summary
+- [x] Every export respects the role's scope (the list and its export share one query
+      builder) and writes an EXPORT audit entry with filters and row count; integration tests
+      for scope, refusals and audit entries
+- [x] Audit log viewer for Super Admin (section 7.2): filters by actor, entity, action and
+      date; read-only
+- [x] Security headers on every response; a static CSP for the cached public site and a
+      per-request nonce CSP for the admin area; no violations in Chromium on the production
+      build
+- [x] Rate limits: sign-in 10 per 15 minutes, application and contact forms 5 per hour, per
+      IP; in-process (single instance)
+- [x] Structured JSON logs with request IDs, including every server error (`onRequestError`),
+      without messages, stacks or personal data
+- [x] `npm audit` in CI (fails on production dependencies), Dependabot for npm, Actions and
+      Docker
+- [x] OWASP checklist: `docs/security.md`
+- [ ] Check on the live service whether Render passes a client-supplied `X-Forwarded-For`
+      through (needs the deployment; procedure in `docs/security.md`)
 
 ## Phase 6: Testing and deployment
 
@@ -141,8 +162,6 @@ Legend: `[x]` done and verified locally, `[~]` done but not fully verifiable her
 
 - Auth.js v5 (required by section 2) is only published as a beta; `next-auth@5.0.0-beta.32` is
   pinned.
-- Login rate limiting (section 8) is part of Phase 5; the lockout is already in place. The same
-  applies to the application form's 5-per-hour limit; it has its honeypot already.
 - Admin screens other than the navigation stay in English (section 7.4 names public strings
   and admin navigation labels only).
 - Database checks ran against PostgreSQL 16.14 (embedded) locally, and the Docker image has
