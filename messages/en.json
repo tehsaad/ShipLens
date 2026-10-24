@@ -195,6 +195,7 @@
       "content": "Content",
       "events": "Events",
       "messages": "Messages",
+      "audit": "Audit log",
       "password": "Password",
       "signOut": "Sign out"
     }

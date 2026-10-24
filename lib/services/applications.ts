@@ -1,6 +1,6 @@
 import "server-only";
 import type { ApplicationStatus, PrismaClient, Prisma } from "@/lib/generated/prisma/client";
-import { addDays, businessToday } from "@/lib/dates";
+import { addDays, businessToday, startOfBusinessDay } from "@/lib/dates";
 import { databaseErrorCode } from "@/lib/db-errors";
 import { AppError } from "@/lib/errors";
 import { authorize } from "@/lib/permissions";
@@ -101,11 +101,6 @@ export type ApplicationFilters = {
   to?: Date | null;
   page?: number;
 };
-
-/** Karachi is UTC+5 all year (no daylight saving), so a business day starts at 19:00 UTC. */
-function startOfBusinessDay(date: Date): Date {
-  return new Date(date.getTime() - 5 * 60 * 60 * 1000);
-}
 
 /** The list filters as a query; shared with the CSV export. */
 export function applicationWhere(filters: ApplicationFilters): Prisma.ApplicationWhereInput {

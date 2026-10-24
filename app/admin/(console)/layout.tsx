@@ -22,6 +22,7 @@ const NAV = [
   { href: "/admin/content", key: "content", action: "content.read" },
   { href: "/admin/events", key: "events", action: "event.read" },
   { href: "/admin/messages", key: "messages", action: "contactMessage.read" },
+  { href: "/admin/audit", key: "audit", action: "audit.read" },
 ] as const satisfies { href: string; key: string; action: Action }[];
 
 export default async function ConsoleLayout({ children }: { children: ReactNode }) {

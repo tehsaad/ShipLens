@@ -46,6 +46,14 @@ export function businessToday(now: Date = new Date()): Date {
   return parseDateOnly(parts);
 }
 
+/**
+ * The instant a business day (a date-only value) starts in Asia/Karachi. Karachi is UTC+5
+ * all year (no daylight saving), so that is 19:00 UTC the day before.
+ */
+export function startOfBusinessDay(date: Date): Date {
+  return new Date(date.getTime() - 5 * 60 * 60 * 1000);
+}
+
 /** A timestamp's calendar date in Asia/Karachi, as YYYY-MM-DD, for display. */
 export function formatBusinessDate(timestamp: Date): string {
   return formatDateOnly(businessToday(timestamp));
