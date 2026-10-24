@@ -3,7 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getPrisma } from "@/lib/db";
 import { localeFrom } from "@/lib/locale-params";
 import { pageMetadata } from "@/lib/page-meta";
-import { renderedAt } from "@/lib/public-format";
+import { eventTimeFormat, renderedAt } from "@/lib/public-format";
 import { listPublishedEvents } from "@/lib/services/events";
 import { EventList } from "./event-list";
 
@@ -18,6 +18,7 @@ export default async function EventsPage({ params }: Props) {
   setRequestLocale(locale);
   const t = await getTranslations("events");
   const events = await listPublishedEvents(getPrisma());
+  const when = eventTimeFormat(locale);
 
   return (
     <div className="grid gap-8">
@@ -31,6 +32,7 @@ export default async function EventsPage({ params }: Props) {
           ...event,
           startsAt: event.startsAt.toISOString(),
           endsAt: event.endsAt.toISOString(),
+          when: when.format(event.startsAt),
         }))}
       />
     </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import "@/lib/zod-jitless";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { startTransition, useActionState } from "react";

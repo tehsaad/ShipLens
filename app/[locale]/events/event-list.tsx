@@ -5,7 +5,6 @@ import { useState } from "react";
 import { Select } from "@/components/admin/form";
 import { Label } from "@/components/ui/label";
 import type { AppLocale } from "@/i18n/routing";
-import { eventTimeFormat } from "@/lib/public-format";
 
 export type EventItem = {
   id: string;
@@ -13,6 +12,8 @@ export type EventItem = {
   titleUr: string | null;
   startsAt: string;
   endsAt: string;
+  /** The start time, formatted on the server: browsers' date formatting differs from Node's. */
+  when: string;
   location: string;
   branch: { code: string; city: string } | null;
 };
@@ -28,7 +29,6 @@ export function EventList({ events, now }: { events: EventItem[]; now: number })
   const locale = useLocale() as AppLocale;
   const [show, setShow] = useState<Show>("upcoming");
   const [branch, setBranch] = useState("");
-  const when = eventTimeFormat(locale);
   const branches = [...new Set(events.map((event) => event.branch?.code ?? ""))]
     .filter(Boolean)
     .sort();
@@ -104,7 +104,7 @@ export function EventList({ events, now }: { events: EventItem[]; now: number })
               <dl className="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1 text-sm">
                 <dt className="text-muted-foreground">{t("when")}</dt>
                 <dd>
-                  <time dateTime={event.startsAt}>{when.format(new Date(event.startsAt))}</time>
+                  <time dateTime={event.startsAt}>{event.when}</time>
                 </dd>
                 <dt className="text-muted-foreground">{t("where")}</dt>
                 <dd dir="auto">
