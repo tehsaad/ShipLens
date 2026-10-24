@@ -185,10 +185,13 @@ database, whose URL comes from the environment.
     per-IP limits, and the IP in its audit entries is the one it chose.
   - **What still holds:** the per-account lockout and the one-open-application-per-email rule,
     which do not depend on the IP.
-  - **Fix:** take the IP from a header the client cannot set. Behind Cloudflare that is
-    `CF-Connecting-IP`. Render does not document which header it passes on, so one deployment
-    that logs the header names and the length of the forwarded chain (not their values) is
-    needed to confirm the choice.
+  - **Fix:** `TRUSTED_CLIENT_IP_HEADER` names the one header the hosting proxy sets itself
+    (`lib/request-context.ts`). When it is set, only that header is read, and a request
+    without it has no known address. Values that are not IP addresses are discarded.
+    Behind Cloudflare the header is `CF-Connecting-IP`.
+  - **Choosing the header:** the server logs once per start which forwarding headers arrive
+    (`"event":"clientIp.headers"`, names and counts only), and the spoofing check above is
+    repeated after the setting changes.
 
 ## Data minimisation
 
