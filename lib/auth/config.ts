@@ -21,10 +21,7 @@ export const authConfig = {
   trustHost: process.env["AUTH_TRUST_HOST"] === "true",
   providers: [],
   callbacks: {
-    authorized({ auth, request }) {
-      if (request.nextUrl.pathname === LOGIN_PATH) return true;
-      return Boolean(auth?.user);
-    },
+    // The redirect of signed-out visitors to the login page lives in proxy.ts.
     jwt({ token, user }) {
       // On sign-in, start a fresh token with only the user id (no name, email or picture).
       if (user?.id) return { sub: user.id };

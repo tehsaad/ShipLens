@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
-import { securityHeaders } from "./lib/security-headers";
+import { PUBLIC_CSP_SOURCE, contentSecurityPolicy, securityHeaders } from "./lib/security-headers";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
@@ -17,9 +17,16 @@ const nextConfig: NextConfig = {
     // app/global-not-found.tsx.
     globalNotFound: true,
   },
-  // Section 8, A05: on every response, including static files and API routes.
+  // Section 8, A05: on every response, including static files and API routes. /admin gets a
+  // nonce-based policy from proxy.ts instead of the public one.
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders({ isDev }) }];
+    return [
+      { source: "/:path*", headers: securityHeaders({ isDev }) },
+      {
+        source: PUBLIC_CSP_SOURCE,
+        headers: [{ key: "Content-Security-Policy", value: contentSecurityPolicy(isDev) }],
+      },
+    ];
   },
 };
 
