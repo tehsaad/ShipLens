@@ -49,19 +49,20 @@ npm run dev               # http://localhost:3000, staff sign-in at /admin/login
 
 ### Environment variables
 
-| Variable                 | Used by          | Description                                             |
-| ------------------------ | ---------------- | ------------------------------------------------------- |
-| `DATABASE_URL`           | App, Prisma      | PostgreSQL connection string                            |
-| `DATABASE_MIGRATION_URL` | Prisma           | Optional owner connection for migrations (see handover) |
-| `AUTH_SECRET`            | App              | Session signing key, at least 32 random characters      |
-| `AUTH_TRUST_HOST`        | App              | `true` behind a trusted reverse proxy                   |
-| `TEST_DATABASE_URL`      | Tests            | Disposable database; its name must end in `_test`       |
-| `SEED_DEMO_PASSWORD`     | Seed             | Password for every demo login (12+ characters)          |
-| `POSTGRES_USER`          | `docker compose` | Database user for the local container                   |
-| `POSTGRES_PASSWORD`      | `docker compose` | Database password for the local container               |
-| `POSTGRES_DB`            | `docker compose` | Database name for the local container                   |
-| `POSTGRES_PORT`          | `docker compose` | Host port for PostgreSQL, bound to `127.0.0.1` (`5432`) |
-| `APP_PORT`               | `docker compose` | Host port for the optional app container (`3000`)       |
+| Variable                   | Used by          | Description                                             |
+| -------------------------- | ---------------- | ------------------------------------------------------- |
+| `DATABASE_URL`             | App, Prisma      | PostgreSQL connection string                            |
+| `DATABASE_MIGRATION_URL`   | Prisma           | Optional owner connection for migrations (see handover) |
+| `AUTH_SECRET`              | App              | Session signing key, at least 32 random characters      |
+| `AUTH_TRUST_HOST`          | App              | `true` behind a trusted reverse proxy                   |
+| `TRUSTED_CLIENT_IP_HEADER` | App              | Header the proxy sets to the client IP (see security)   |
+| `TEST_DATABASE_URL`        | Tests            | Disposable database; its name must end in `_test`       |
+| `SEED_DEMO_PASSWORD`       | Seed             | Password for every demo login (12+ characters)          |
+| `POSTGRES_USER`            | `docker compose` | Database user for the local container                   |
+| `POSTGRES_PASSWORD`        | `docker compose` | Database password for the local container               |
+| `POSTGRES_DB`              | `docker compose` | Database name for the local container                   |
+| `POSTGRES_PORT`            | `docker compose` | Host port for PostgreSQL, bound to `127.0.0.1` (`5432`) |
+| `APP_PORT`                 | `docker compose` | Host port for the optional app container (`3000`)       |
 
 `.env.example` contains placeholders only. Never commit `.env`. The server validates
 `DATABASE_URL` and `AUTH_SECRET` at startup and exits if either is missing or invalid.

@@ -28,6 +28,11 @@ services:
       # At least 12 characters. Remove it to stop seeding.
       - key: SEED_DEMO_PASSWORD
         sync: false
+      # The header Render's edge sets to the client's IP, used for rate limiting and the audit
+      # log (docs/security.md). Render keeps a client-supplied X-Forwarded-For, so that header
+      # cannot be trusted. Set in the dashboard once the header is confirmed on the live service.
+      - key: TRUSTED_CLIENT_IP_HEADER
+        sync: false
 
 databases:
   - name: shiplens-db

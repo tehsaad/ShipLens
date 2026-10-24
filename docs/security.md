@@ -176,12 +176,22 @@ database, whose URL comes from the environment.
 - **Single instance.** The limiter keeps its counters in memory, so it holds for one instance
   (documented in `docs/handover.md`). Section 8 allows this. Its store is capped at 10,000
   keys.
-- **Client IP.** The IP is the first `X-Forwarded-For` entry. Whether Render replaces a
-  client-supplied `X-Forwarded-For` or appends to it is still to be checked on the live site.
-  - **The check:** sign in with a made-up `X-Forwarded-For` header, then read the IP that the
-    `auth.login.succeeded` entry records in the audit log.
-  - **If Render appends:** the per-account lockout and the one-open-application-per-email
-    rule still apply.
+- **Client IP: known weakness.** The IP is the first `X-Forwarded-For` entry, and that entry can
+  be forged on Render.
+  - **The check (24 October 2026):** a sign-in on the live site with
+    `X-Forwarded-For: 203.0.113.77` was recorded in the audit log with IP `203.0.113.77`.
+    Render keeps a client-supplied header and appends to it.
+  - **Impact:** a client that sends a different made-up address with each request avoids the
+    per-IP limits, and the IP in its audit entries is the one it chose.
+  - **What still holds:** the per-account lockout and the one-open-application-per-email rule,
+    which do not depend on the IP.
+  - **Fix:** `TRUSTED_CLIENT_IP_HEADER` names the one header the hosting proxy sets itself
+    (`lib/request-context.ts`). When it is set, only that header is read, and a request
+    without it has no known address. Values that are not IP addresses are discarded.
+    Behind Cloudflare the header is `CF-Connecting-IP`.
+  - **Choosing the header:** the server logs once per start which forwarding headers arrive
+    (`"event":"clientIp.headers"`, names and counts only), and the spoofing check above is
+    repeated after the setting changes.
 
 ## Data minimisation
 

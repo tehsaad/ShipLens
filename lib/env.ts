@@ -11,6 +11,11 @@ const serverEnvSchema = z.object({
     ),
   AUTH_SECRET: z.string().min(32, "AUTH_SECRET must be at least 32 characters"),
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+  /** The header the hosting proxy sets to the client's IP (lib/request-context.ts). */
+  TRUSTED_CLIENT_IP_HEADER: z
+    .string()
+    .regex(/^[A-Za-z0-9-]{1,64}$/, "TRUSTED_CLIENT_IP_HEADER must be a header name")
+    .optional(),
 });
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>;
