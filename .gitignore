@@ -25,6 +25,7 @@ lib/generated/
 coverage/
 playwright-report/
 test-results/
+e2e/.auth/
 
 # Logs and OS files
 npm-debug.log*
