@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { RATE_LIMITS, RateLimiter, checkRateLimit } from "@/lib/rate-limit";
+import { describe, expect, it, vi } from "vitest";
+import { RATE_LIMITS, RateLimiter, checkRateLimit, limitFailures } from "@/lib/rate-limit";
 
 const rule = { limit: 3, windowMs: 1_000 };
 
@@ -55,5 +55,48 @@ describe("rate limiter (section 8)", () => {
     expect(checkRateLimit("contact", ip, start).ok).toBe(true);
     expect(checkRateLimit("application", "203.0.113.9", start).ok).toBe(true);
     expect(checkRateLimit("application", ip, start + 60 * 60 * 1000).ok).toBe(true);
+  });
+
+  it("peeks without counting", () => {
+    const limiter = new RateLimiter();
+    for (let i = 0; i < 5; i++) expect(limiter.peek("ip", rule, 0).ok).toBe(true);
+    for (let i = 0; i < 3; i++) limiter.consume("ip", rule, 0);
+    expect(limiter.peek("ip", rule, 400)).toEqual({ ok: false, retryAfterMs: 600 });
+  });
+
+  it("never holds up successful sign-ins (section 8, A07)", async () => {
+    const ip = "198.51.100.201";
+    for (let i = 0; i < 15; i++) {
+      expect(
+        await limitFailures(
+          "login",
+          ip,
+          async () => ({ id: "user" }),
+          () => 0,
+        ),
+      ).toEqual({
+        result: { id: "user" },
+        limited: false,
+      });
+    }
+  });
+
+  it("stops trying after 10 failed sign-ins per IP in 15 minutes", async () => {
+    const ip = "198.51.100.202";
+    const fail = vi.fn(async () => null);
+    for (let i = 0; i < 10; i++) {
+      expect((await limitFailures("login", ip, fail, () => 0)).limited).toBe(false);
+    }
+    const succeed = vi.fn(async () => ({ id: "user" }));
+    expect(await limitFailures("login", ip, succeed, () => 60_000)).toEqual({
+      result: null,
+      limited: true,
+    });
+    expect(succeed).not.toHaveBeenCalled();
+    expect(fail).toHaveBeenCalledTimes(10);
+    // Once the window has passed, sign-in works again.
+    expect((await limitFailures("login", ip, succeed, () => 15 * 60_000)).result).toEqual({
+      id: "user",
+    });
   });
 });

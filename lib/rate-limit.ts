@@ -11,7 +11,10 @@ export type RateLimitRule = { limit: number; windowMs: number };
 const MINUTE = 60_000;
 
 export const RATE_LIMITS = {
-  /** Staff sign-in, on top of the per-account lockout (5 failures, 15 minutes). */
+  /**
+   * Failed staff sign-ins, on top of the per-account lockout (5 failures, 15 minutes).
+   * Successful sign-ins do not count, so staff switching accounts are never held up.
+   */
   login: { limit: 10, windowMs: 15 * MINUTE },
   /** Volunteer applications: 5 per hour per IP (section 7.1). */
   application: { limit: 5, windowMs: 60 * MINUTE },
@@ -35,6 +38,15 @@ export class RateLimiter {
 
   get size(): number {
     return this.windows.size;
+  }
+
+  /** Whether the key's window is full, without counting an attempt. */
+  peek(key: string, rule: RateLimitRule, now = Date.now()): RateLimitResult {
+    const current = this.windows.get(key);
+    if (current && current.resetAt > now && current.count >= rule.limit) {
+      return { ok: false, retryAfterMs: current.resetAt - now };
+    }
+    return { ok: true, retryAfterMs: 0 };
   }
 
   /** Counts one attempt for the key, unless its window is already full. */
@@ -65,16 +77,37 @@ export class RateLimiter {
 
 const store = globalThis as typeof globalThis & { shiplensRateLimiter?: RateLimiter };
 
-/** Counts one attempt for the client in the bucket. Clients without an IP share one key. */
+function limiter(): RateLimiter {
+  store.shiplensRateLimiter ??= new RateLimiter();
+  return store.shiplensRateLimiter;
+}
+
+/** Clients without an IP share one key. */
+const keyFor = (bucket: RateLimitBucket, ipAddress: string | null) =>
+  `${bucket}:${ipAddress ?? "unknown"}`;
+
+/** Counts one attempt for the client in the bucket. */
 export function checkRateLimit(
   bucket: RateLimitBucket,
   ipAddress: string | null,
   now?: number,
 ): RateLimitResult {
-  store.shiplensRateLimiter ??= new RateLimiter();
-  return store.shiplensRateLimiter.consume(
-    `${bucket}:${ipAddress ?? "unknown"}`,
-    RATE_LIMITS[bucket],
-    now,
-  );
+  return limiter().consume(keyFor(bucket, ipAddress), RATE_LIMITS[bucket], now);
+}
+
+/**
+ * Runs an attempt unless the client's failures already fill the bucket's window. Only failed
+ * attempts (a null result) are counted; `limited` is true when the attempt was not run.
+ */
+export async function limitFailures<T>(
+  bucket: RateLimitBucket,
+  ipAddress: string | null,
+  attempt: () => Promise<T | null>,
+  now: () => number = Date.now,
+): Promise<{ result: T | null; limited: boolean }> {
+  const key = keyFor(bucket, ipAddress);
+  if (!limiter().peek(key, RATE_LIMITS[bucket], now()).ok) return { result: null, limited: true };
+  const result = await attempt();
+  if (result === null) limiter().consume(key, RATE_LIMITS[bucket], now());
+  return { result, limited: false };
 }

@@ -140,8 +140,8 @@ Legend: `[x]` done and verified locally, `[~]` done but not fully verifiable her
 - [x] Security headers on every response; a static CSP for the cached public site and a
       per-request nonce CSP for the admin area; no violations in Chromium on the production
       build
-- [x] Rate limits: sign-in 10 per 15 minutes, application and contact forms 5 per hour, per
-      IP; in-process (single instance)
+- [x] Rate limits per IP: 10 failed sign-ins per 15 minutes (successful ones do not count),
+      application and contact forms 5 per hour; in-process (single instance)
 - [x] Structured JSON logs with request IDs, including every server error (`onRequestError`),
       without messages, stacks or personal data
 - [x] `npm audit` in CI (fails on production dependencies), Dependabot for npm, Actions and

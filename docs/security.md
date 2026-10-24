@@ -105,9 +105,10 @@ prove it. Paths are relative to the repository root.
 
 - **Lockout.** An account locks for 15 minutes after 5 failed sign-ins
   (`lib/services/authentication.ts`). Every failure shows the same generic message.
-- **Rate limiting.** Sign-in is limited to 10 attempts per 15 minutes per IP
-  (`lib/rate-limit.ts`). The check runs in the credentials provider, so a direct POST to the
-  Auth.js callback is limited too.
+- **Rate limiting.** After 10 failed sign-ins from one IP in 15 minutes, further attempts
+  from that IP are refused until the window ends (`lib/rate-limit.ts`). Successful sign-ins
+  do not count, so staff switching accounts are never held up. The check runs in the
+  credentials provider, so a direct POST to the Auth.js callback is limited too.
 - **Sessions.** A new token is issued on sign-in. Sessions expire after 8 hours of inactivity,
   and account status is re-checked on every request.
 - **Passwords.** At least 12 characters (`lib/validation/limits.ts`). Passwords set by an admin
@@ -167,7 +168,7 @@ database, whose URL comes from the environment.
 
 | Endpoint                     | Limit                    | Where                                  |
 | ---------------------------- | ------------------------ | -------------------------------------- |
-| Staff sign-in                | 10 per 15 minutes per IP | `lib/auth/index.ts`                    |
+| Staff sign-in (failures)     | 10 per 15 minutes per IP | `lib/auth/index.ts`                    |
 | Volunteer application (§7.1) | 5 per hour per IP        | `app/[locale]/get-involved/actions.ts` |
 | Contact form                 | 5 per hour per IP        | `app/[locale]/contact/actions.ts`      |
 

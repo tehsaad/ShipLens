@@ -52,8 +52,9 @@ still enforce the append-only audit log, the 7-day collection lock, and the othe
 
 The full OWASP mapping is in [security.md](security.md).
 
-- **Rate limits are per instance.** Sign-in (10 per 15 minutes), the volunteer application
-  and the contact form (5 per hour each) are counted per client IP in the server's memory.
+- **Rate limits are per instance.** Failed sign-ins (10 per 15 minutes), the volunteer
+  application and the contact form (5 per hour each) are counted per client IP in the
+  server's memory.
   - With more than one instance, each counts separately; a shared store (for example Redis)
     would be needed. A restart clears the counters.
   - The per-account lockout (5 failures, 15 minutes) is stored in the database and is not

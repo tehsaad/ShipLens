@@ -399,8 +399,10 @@ Added in Phase 4:
 Added in Phase 5:
 
 - **Rate limits.** Section 7.1 fixes the application form at 5 per hour per IP; the spec gives
-  no figure for the others. The contact form uses the same limit, and sign-in allows 10
-  attempts per 15 minutes per IP on top of the per-account lockout. Form submissions count
+  no figure for the others. The contact form uses the same limit. Sign-in allows 10 failed
+  attempts per 15 minutes per IP, on top of the per-account lockout; successful sign-ins do
+  not count, so staff switching between accounts (or a test suite signing in as each role)
+  are never held up. Form submissions count
   only once they pass validation. A limited sign-in gets the usual generic error. The limiter
   is in-process, so it holds for one instance only (section 8 allows this; recorded in
   `docs/handover.md`).
