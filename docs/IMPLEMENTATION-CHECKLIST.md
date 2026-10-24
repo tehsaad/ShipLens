@@ -151,7 +151,9 @@ Legend: `[x]` done and verified locally, `[~]` done but not fully verifiable her
       (budget 300 MB) and starts against an empty database
 - [x] Checked on the live service (24 October 2026): Render keeps a client-supplied
       `X-Forwarded-For` and appends to it, so the first entry can be forged
-- [ ] Take the client IP from a header the client cannot set (see `docs/security.md`)
+- [x] Client IP taken from `CF-Connecting-IP` on Render (`TRUSTED_CLIENT_IP_HEADER`); a
+      live sign-in with forged `X-Forwarded-For` and `True-Client-IP` was recorded with the
+      real address, and Cloudflare refuses a forged `CF-Connecting-IP`
 
 ## Phase 6: Testing and deployment
 
