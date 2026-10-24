@@ -406,10 +406,10 @@ Added in Phase 5:
   only once they pass validation. A limited sign-in gets the usual generic error. The limiter
   is in-process, so it holds for one instance only (section 8 allows this; recorded in
   `docs/handover.md`).
-- **Client IP.** The first `X-Forwarded-For` entry, which Render's proxy is expected to set to
-  the client it saw. It is used for the audit log and rate limiting, never for authorization.
-  Whether Render overwrites or appends to a forwarded header the client sent is checked on the
-  live service after deployment (see `docs/security.md`).
+- **Client IP.** The first `X-Forwarded-For` entry, used for the audit log and rate limiting,
+  never for authorization. On the live service this entry turned out to be client-controlled:
+  Render appends to a forwarded header the client sent. The follow-up is recorded in
+  `docs/security.md`.
 - **What each CSV export contains.** Each export takes the list page's current filters and
   covers every matching row, not only the visible page. A Branch Lead's export is always
   limited to its own branch. Collections, members and weekly reports carry their list columns

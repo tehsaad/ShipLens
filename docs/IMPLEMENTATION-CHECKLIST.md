@@ -149,8 +149,9 @@ Legend: `[x]` done and verified locally, `[~]` done but not fully verifiable her
 - [x] OWASP checklist: `docs/security.md`
 - [x] PDFKit is bundled into the standalone build; the Docker image built in CI is 213 MB
       (budget 300 MB) and starts against an empty database
-- [ ] Check on the live service whether Render passes a client-supplied `X-Forwarded-For`
-      through (needs the deployment; procedure in `docs/security.md`)
+- [x] Checked on the live service (24 October 2026): Render keeps a client-supplied
+      `X-Forwarded-For` and appends to it, so the first entry can be forged
+- [ ] Take the client IP from a header the client cannot set (see `docs/security.md`)
 
 ## Phase 6: Testing and deployment
 

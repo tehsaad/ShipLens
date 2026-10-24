@@ -176,12 +176,19 @@ database, whose URL comes from the environment.
 - **Single instance.** The limiter keeps its counters in memory, so it holds for one instance
   (documented in `docs/handover.md`). Section 8 allows this. Its store is capped at 10,000
   keys.
-- **Client IP.** The IP is the first `X-Forwarded-For` entry. Whether Render replaces a
-  client-supplied `X-Forwarded-For` or appends to it is still to be checked on the live site.
-  - **The check:** sign in with a made-up `X-Forwarded-For` header, then read the IP that the
-    `auth.login.succeeded` entry records in the audit log.
-  - **If Render appends:** the per-account lockout and the one-open-application-per-email
-    rule still apply.
+- **Client IP: known weakness.** The IP is the first `X-Forwarded-For` entry, and that entry can
+  be forged on Render.
+  - **The check (24 October 2026):** a sign-in on the live site with
+    `X-Forwarded-For: 203.0.113.77` was recorded in the audit log with IP `203.0.113.77`.
+    Render keeps a client-supplied header and appends to it.
+  - **Impact:** a client that sends a different made-up address with each request avoids the
+    per-IP limits, and the IP in its audit entries is the one it chose.
+  - **What still holds:** the per-account lockout and the one-open-application-per-email rule,
+    which do not depend on the IP.
+  - **Fix:** take the IP from a header the client cannot set. Behind Cloudflare that is
+    `CF-Connecting-IP`. Render does not document which header it passes on, so one deployment
+    that logs the header names and the length of the forwarded chain (not their values) is
+    needed to confirm the choice.
 
 ## Data minimisation
 
