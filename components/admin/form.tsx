@@ -1,6 +1,6 @@
 "use client";
 
-import type { ComponentProps, ReactNode } from "react";
+import { useId, type ComponentProps, type ReactNode } from "react";
 import { useFormStatus } from "react-dom";
 import { cn } from "cn";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -44,12 +44,15 @@ type FieldProps = {
 
 /**
  * A labelled input (or custom control) with its field error from the form state. After a
- * failed submission the control starts from what the user typed (FormState.values).
+ * failed submission the control starts from what the user typed (FormState.values). The id is
+ * unique on the page, so forms that share a field name (Approve and Return on a report) keep
+ * each label on its own control.
  */
 export function Field({ name, label, state, hint, children, className, ...input }: FieldProps) {
   const errors = state.fieldErrors?.[name];
   const restored = state.values?.[name];
-  const id = `field-${name}`;
+  const unique = useId();
+  const id = `field-${name}-${unique}`;
   const describedBy = [errors ? `${id}-error` : null, hint ? `${id}-hint` : null]
     .filter(Boolean)
     .join(" ");
