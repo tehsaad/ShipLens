@@ -191,14 +191,15 @@ The FAQ answers are existing Urdu sentences from Privacy, Terms and Get Involved
 
 ## Commands run
 
-On 26 October 2026, in the development container (Node 22, PostgreSQL 16), on the final tree:
+On 26 October 2026, in the development container (Node 22, PostgreSQL 16), on the final committed tree:
 
 | Command                                                                    | Result                                 |
 | -------------------------------------------------------------------------- | -------------------------------------- |
+| `npm run db:validate`                                                      | Pass                                   |
 | `npm run format:check`                                                     | Pass                                   |
 | `npm run lint`                                                             | Pass                                   |
 | `npm run typecheck`                                                        | Pass                                   |
-| `npm run test:coverage` (unit and integration)                             | 34 files, 631 tests pass; lines 68.86% |
+| `npm run test:coverage` (unit and integration)                             | 34 files, 632 tests pass; lines 68.86% |
 | `npm run build`                                                            | Pass                                   |
 | `npx playwright test` (all E2E, local production build)                    | 79 pass                                |
 | `npm run seo:check -- http://127.0.0.1:3200 https://shiplens.onrender.com` | 0 failures (226 before the change)     |
