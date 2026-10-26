@@ -33,6 +33,7 @@
     "test:coverage": "vitest run --coverage",
     "e2e:prepare": "npm run build && npm run build:seed",
     "test:e2e": "playwright test",
+    "docs:permissions": "tsx scripts/permissions-doc.mts",
     "test:watch": "vitest",
     "db:seed": "prisma db seed"
   },
