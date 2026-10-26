@@ -65,6 +65,24 @@ describe("canonical origin", () => {
   });
 });
 
+describe("Get Involved answers", () => {
+  // app/[locale]/get-involved/page.tsx answers questions with published Privacy and Terms
+  // sentences, picked by position. Reordering those paragraphs must not swap the answers.
+  const sentence = (locale: AppLocale, namespace: "privacy" | "terms", index: number) =>
+    (messages[locale][namespace]!["body"] as unknown as string[])[index]!;
+
+  it.each([
+    ["en", "terms", 2, /unpaid/],
+    ["en", "privacy", 1, /CNIC/],
+    ["en", "privacy", 2, /HR team/],
+    ["ur", "terms", 2, /بلا معاوضہ/],
+    ["ur", "privacy", 1, /CNIC/],
+    ["ur", "privacy", 2, /ایچ آر ٹیم/],
+  ] as const)("%s %s paragraph %i is the one the answer quotes", (locale, ns, index, topic) => {
+    expect(sentence(locale, ns, index)).toMatch(topic);
+  });
+});
+
 describe("page titles and descriptions", () => {
   const documentTitle = (locale: AppLocale, page: (typeof PUBLIC_PAGES)[number]) =>
     page.key === "home"
