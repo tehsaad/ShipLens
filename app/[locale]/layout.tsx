@@ -5,7 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { SiteFooter } from "@/components/site/footer";
 import { SiteHeader } from "@/components/site/header";
-import { THEME_SCRIPT } from "@/components/site/theme-toggle";
+import { THEME_SCRIPT } from "@/components/site/theme-script";
 import { directionOf, routing } from "@/i18n/routing";
 import { inter, nastaliq } from "@/lib/fonts";
 import { SITE_URL } from "@/lib/site-url";

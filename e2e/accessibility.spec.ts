@@ -1,23 +1,12 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { LOCALES, PUBLIC_PAGES as PAGES } from "./helpers";
 
 /**
  * Section 11: axe checks on the public pages, against WCAG 2.1 A and AA. Every page is checked
  * in both languages and in both themes, since colour contrast differs between them.
  */
 
-const PAGES = [
-  "",
-  "/about",
-  "/programs",
-  "/branches",
-  "/events",
-  "/get-involved",
-  "/contact",
-  "/privacy",
-  "/terms",
-];
-const LOCALES = ["en", "ur"];
 const TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];
 
 for (const theme of ["light", "dark"] as const) {

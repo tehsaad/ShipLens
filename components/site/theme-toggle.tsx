@@ -4,9 +4,6 @@ import { Moon, Sun } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 
-/** Runs before the page paints, so the stored or system theme applies without a flash. */
-export const THEME_SCRIPT = `try{var t=localStorage.getItem("theme");if(t==="dark"||(!t&&matchMedia("(prefers-color-scheme: dark)").matches))document.documentElement.classList.add("dark")}catch(e){}`;
-
 export function ThemeToggle() {
   const t = useTranslations("theme");
   function toggle() {
