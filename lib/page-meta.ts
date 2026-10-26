@@ -14,7 +14,7 @@ export async function pageMetadata(
     title: t("metaTitle"),
     alternates: {
       canonical: `/${locale}${path}`,
-      languages: { en: `/en${path}`, ur: `/ur${path}` },
+      languages: { en: `/en${path}`, ur: `/ur${path}`, "x-default": `/en${path}` },
     },
   };
 }
