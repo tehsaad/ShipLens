@@ -25,7 +25,7 @@ The [README](../README.md#local-setup) has the full local setup. In short:
 | `AUTH_TRUST_HOST`          | `true`                                              | `true`                          | No     |
 | `TRUSTED_CLIENT_IP_HEADER` | `cf-connecting-ip`                                  | Unset (first `X-Forwarded-For`) | No     |
 | `SEED_DEMO_PASSWORD`       | Set in the Render dashboard while demo logins exist | Shell, for `npm run db:seed`    | Yes    |
-| `SITE_URL`                 | Unset: defaults to `https://shiplens.onrender.com`  | Optional                        | No     |
+| `SITE_URL`                 | Unset: defaults to `https://shiplens.onrender.com`  | Optional; a bare HTTPS origin   | No     |
 | `DATABASE_MIGRATION_URL`   | Unset (the app connects as the database owner)      | Optional                        | Yes    |
 | `TEST_DATABASE_URL`        | Not used                                            | Integration tests               | No     |
 | `E2E_DATABASE_URL`         | Not used                                            | End-to-end tests                | No     |
