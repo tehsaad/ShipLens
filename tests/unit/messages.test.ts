@@ -34,6 +34,28 @@ describe("messages/en.json and messages/ur.json", () => {
     }
   });
 
+  it("have every public Urdu text translated, not left in English", () => {
+    // The admin area is in English by decision (section 7.4 covers navigation labels only).
+    // The language switcher's Urdu label names the other language, English, in English.
+    const englishOnPurpose = new Set(["language.switchTo"]);
+    const texts = [...urdu].filter(
+      (entry): entry is [string, string] =>
+        !entry[0].startsWith("admin.") && typeof entry[1] === "string",
+    );
+    for (const [key, value] of texts) {
+      if (englishOnPurpose.has(key)) continue;
+      expect(value, key).not.toBe(english.get(key));
+      expect(value, key).toMatch(/[\u0600-\u06FF]/);
+    }
+    for (const [key, value] of urdu) {
+      if (!Array.isArray(value)) continue;
+      value.forEach((paragraph: unknown, index) => {
+        expect(paragraph, `${key}[${index}]`).toMatch(/[\u0600-\u06FF]/);
+        expect(paragraph, `${key}[${index}]`).not.toBe((english.get(key) as unknown[])[index]);
+      });
+    }
+  });
+
   it("use the same placeholders and list lengths", () => {
     for (const [key, value] of english) {
       const other = urdu.get(key);
