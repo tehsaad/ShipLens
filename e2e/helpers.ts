@@ -8,6 +8,29 @@ export const ROLES = Object.keys(demoLogins) as Role[];
 /** The demo password of the throwaway E2E database (playwright.config.ts). */
 export const DEMO_PASSWORD = process.env.E2E_DEMO_PASSWORD!;
 
+/** The public pages of section 7.1 plus Privacy and Terms, each served under /en and /ur. */
+export const PUBLIC_PAGES = [
+  "",
+  "/about",
+  "/programs",
+  "/branches",
+  "/events",
+  "/get-involved",
+  "/contact",
+  "/privacy",
+  "/terms",
+];
+export const LOCALES = ["en", "ur"];
+
+/**
+ * The React Server Components payload that Next.js inlines in a page's HTML: the rows passed
+ * to `self.__next_f.push([1, "..."])`, decoded and joined.
+ */
+export function flightPayload(html: string): string {
+  const rows = html.matchAll(/self\.__next_f\.push\(\[1,("(?:[^"\\]|\\.)*")\]\)/g);
+  return [...rows].map((row) => JSON.parse(row[1]!) as string).join("");
+}
+
 /** The signed-in browser state for a role, written by auth.setup.ts. */
 export const storageStateFor = (role: Role) => `e2e/.auth/${role}.json`;
 

@@ -28,7 +28,8 @@ The specification is [`docs/SPEC.md`](docs/SPEC.md). Approved decisions are in
 
 ## Status
 
-**Phases 0 to 7 are complete.** Live at <https://shiplens.onrender.com>:
+**Phases 0 to 7 are implemented**; what is left for the project owner is listed in
+[`docs/ACCEPTANCE.md`](docs/ACCEPTANCE.md). Live at <https://shiplens.onrender.com>:
 
 - Project tooling, Docker and CI, the health endpoint, and deployment on Render
 - The full data model, plus database rules enforced in PostgreSQL: the 7-day collection lock,
@@ -40,6 +41,9 @@ The specification is [`docs/SPEC.md`](docs/SPEC.md). Approved decisions are in
   audit log
 - The bilingual public site (English and Urdu, right-to-left) with the volunteer and contact
   forms
+- Search and sharing: unique titles and descriptions in both languages, canonical and hreflang
+  links, Open Graph and X cards, structured data, `robots.txt`, `sitemap.xml` and `llms.txt`
+  (see [Search and discoverability](#search-and-discoverability))
 - CSV and PDF exports scoped by role and audited, security headers with a content security
   policy, rate limits and structured logs (see [`docs/security.md`](docs/security.md))
 - Tests in CI: unit and integration tests with a 60% backend coverage gate, Playwright
@@ -61,17 +65,18 @@ Render. [ADR 0001](docs/architecture/0001-stack.md) has the versions and the rea
 
 ## Documentation
 
-| Document                                                     | What it covers                                                      |
-| ------------------------------------------------------------ | ------------------------------------------------------------------- |
-| [docs/architecture/](docs/architecture/README.md)            | System diagrams and the ADRs                                        |
-| [docs/api/](docs/api/README.md)                              | Every server action and route handler: inputs, outputs, permissions |
-| [docs/permissions.md](docs/permissions.md)                   | Role × action table, generated from `lib/permissions.ts`            |
-| [docs/handover.md](docs/handover.md)                         | Setup, environment, demo logins, deployment, runbook, limitations   |
-| [docs/security.md](docs/security.md)                         | OWASP Top 10 mapping                                                |
-| [docs/sample-data-expected.md](docs/sample-data-expected.md) | Expected dashboard values for the sample data                       |
-| [docs/demo-script.md](docs/demo-script.md)                   | Five-minute walkthrough outline                                     |
-| [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md)                     | Section 14 acceptance checklist with evidence                       |
-| [AI-USAGE.md](AI-USAGE.md)                                   | How AI tools were used, and what a human decided                    |
+| Document                                                     | What it covers                                                       |
+| ------------------------------------------------------------ | -------------------------------------------------------------------- |
+| [docs/architecture/](docs/architecture/README.md)            | System diagrams and the ADRs                                         |
+| [docs/api/](docs/api/README.md)                              | Every server action and route handler: inputs, outputs, permissions  |
+| [docs/permissions.md](docs/permissions.md)                   | Role × action table, generated from `lib/permissions.ts`             |
+| [docs/handover.md](docs/handover.md)                         | Setup, environment, demo logins, deployment, runbook, limitations    |
+| [docs/security.md](docs/security.md)                         | OWASP Top 10 mapping                                                 |
+| [docs/sample-data-expected.md](docs/sample-data-expected.md) | Expected dashboard values for the sample data                        |
+| [docs/demo-script.md](docs/demo-script.md)                   | Five-minute walkthrough outline                                      |
+| [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md)                     | Section 14 acceptance checklist with evidence                        |
+| [docs/seo/](docs/seo/IMPLEMENTATION.md)                      | Search, social and AI discoverability: baseline, design, owner steps |
+| [AI-USAGE.md](AI-USAGE.md)                                   | How AI tools were used, and what a human decided                     |
 
 ## Prerequisites
 
@@ -91,23 +96,23 @@ npm run dev               # http://localhost:3000, staff sign-in at /admin/login
 
 ### Environment variables
 
-| Variable                   | Used by          | Description                                             |
-| -------------------------- | ---------------- | ------------------------------------------------------- |
-| `DATABASE_URL`             | App, Prisma      | PostgreSQL connection string                            |
-| `DATABASE_MIGRATION_URL`   | Prisma           | Optional owner connection for migrations (see handover) |
-| `AUTH_SECRET`              | App              | Session signing key, at least 32 random characters      |
-| `AUTH_TRUST_HOST`          | App              | `true` behind a trusted reverse proxy                   |
-| `TRUSTED_CLIENT_IP_HEADER` | App              | Header the proxy sets to the client IP (see security)   |
-| `SITE_URL`                 | App (build)      | Origin for canonical links; defaults to the live site   |
-| `TEST_DATABASE_URL`        | Tests            | Disposable database; its name must end in `_test`       |
-| `E2E_DATABASE_URL`         | E2E tests        | Disposable database; its schema is reset on every run   |
-| `PLAYWRIGHT_CHROMIUM_PATH` | E2E tests        | Optional path to an already installed Chromium          |
-| `SEED_DEMO_PASSWORD`       | Seed             | Password for every demo login (12+ characters)          |
-| `POSTGRES_USER`            | `docker compose` | Database user for the local container                   |
-| `POSTGRES_PASSWORD`        | `docker compose` | Database password for the local container               |
-| `POSTGRES_DB`              | `docker compose` | Database name for the local container                   |
-| `POSTGRES_PORT`            | `docker compose` | Host port for PostgreSQL, bound to `127.0.0.1` (`5432`) |
-| `APP_PORT`                 | `docker compose` | Host port for the optional app container (`3000`)       |
+| Variable                   | Used by          | Description                                              |
+| -------------------------- | ---------------- | -------------------------------------------------------- |
+| `DATABASE_URL`             | App, Prisma      | PostgreSQL connection string                             |
+| `DATABASE_MIGRATION_URL`   | Prisma           | Optional owner connection for migrations (see handover)  |
+| `AUTH_SECRET`              | App              | Session signing key, at least 32 random characters       |
+| `AUTH_TRUST_HOST`          | App              | `true` behind a trusted reverse proxy                    |
+| `TRUSTED_CLIENT_IP_HEADER` | App              | Header the proxy sets to the client IP (see security)    |
+| `SITE_URL`                 | App              | Canonical origin (bare HTTPS); defaults to the live site |
+| `TEST_DATABASE_URL`        | Tests            | Disposable database; its name must end in `_test`        |
+| `E2E_DATABASE_URL`         | E2E tests        | Disposable database; its schema is reset on every run    |
+| `PLAYWRIGHT_CHROMIUM_PATH` | E2E tests        | Optional path to an already installed Chromium           |
+| `SEED_DEMO_PASSWORD`       | Seed             | Password for every demo login (12+ characters)           |
+| `POSTGRES_USER`            | `docker compose` | Database user for the local container                    |
+| `POSTGRES_PASSWORD`        | `docker compose` | Database password for the local container                |
+| `POSTGRES_DB`              | `docker compose` | Database name for the local container                    |
+| `POSTGRES_PORT`            | `docker compose` | Host port for PostgreSQL, bound to `127.0.0.1` (`5432`)  |
+| `APP_PORT`                 | `docker compose` | Host port for the optional app container (`3000`)        |
 
 `.env.example` contains placeholders only. Never commit `.env`. The server validates
 `DATABASE_URL` and `AUTH_SECRET` at startup and exits if either is missing or invalid.
@@ -144,6 +149,8 @@ docker compose --profile app up --build
 | `npm run test:coverage`    | Unit and integration tests with the coverage gate   |
 | `npm run e2e:prepare`      | Build the app and the seed script for the E2E run   |
 | `npm run test:e2e`         | Playwright end-to-end and axe tests (see handover)  |
+| `npm run seo:check -- URL` | SEO audit of a running site (see below)             |
+| `npm run og:images`        | Render the social preview images in `public/og/`    |
 | `npm run db:seed`          | Load the sample data (safe to re-run)               |
 | `npm run db:validate`      | Validate the Prisma schema                          |
 | `npm run db:generate`      | Generate the Prisma client                          |
@@ -159,15 +166,36 @@ hook lints and formats staged files.
 
 ## Tests
 
-| Suite       | Command                    | What it proves                                                                                                                                                                  |
-| ----------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Unit        | `npm run test:unit`        | Permission matrix, state machines, lock rules, codes, money, CSV escaping, validation, security headers, PDFs                                                                   |
-| Integration | `npm run test:integration` | Every service against a real PostgreSQL: transactions, the database triggers, scope (IDOR) checks, the seed and its expected dashboard values                                   |
-| Coverage    | `npm run test:coverage`    | Both of the above, failing below 60% of backend lines (67% at last count)                                                                                                       |
-| End-to-end  | `npm run test:e2e`         | Playwright on the production build: each role's 403 and 404 responses, the full weekly report cycle with its audit trail, axe on every public page in both languages and themes |
+| Suite       | Command                    | What it proves                                                                                                                                                                                                            |
+| ----------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unit        | `npm run test:unit`        | Permission matrix, state machines, lock rules, codes, money, CSV escaping, validation, security headers, PDFs                                                                                                             |
+| Integration | `npm run test:integration` | Every service against a real PostgreSQL: transactions, the database triggers, scope (IDOR) checks, the seed and its expected dashboard values                                                                             |
+| Coverage    | `npm run test:coverage`    | Both of the above, failing below 60% of backend lines (69% at last count)                                                                                                                                                 |
+| End-to-end  | `npm run test:e2e`         | Playwright on the production build: each role's 403 and 404 responses, the full weekly report cycle with its audit trail, axe on every public page in both languages and themes, clean hydration, and the SEO audit below |
 
 CI runs all four on every push and pull request. Running the end-to-end suite locally is
 described in [docs/handover.md](docs/handover.md#end-to-end-tests).
+
+## Search and discoverability
+
+The public pages describe themselves to search engines, social networks and AI-assisted
+search with the Next.js Metadata API and next-intl; no SEO library is used.
+[`docs/seo/IMPLEMENTATION.md`](docs/seo/IMPLEMENTATION.md) has the design and the reasons.
+
+- `lib/seo/pages.ts` lists the public pages once. Metadata, `sitemap.xml`, structured data,
+  `llms.txt` and the tests all read it.
+- Each page has a unique title and description in its language (`metaTitle` and
+  `metaDescription` in `messages/*.json`), a self-referencing canonical on `SITE_URL`,
+  `en`/`ur`/`x-default` alternates, Open Graph and X cards with a per-language image
+  (`public/og/`), and one JSON-LD graph (organisation, website, page, and the branches or
+  upcoming events it lists).
+- `robots.txt` keeps crawlers out of `/api/`. The staff area answers `noindex` in a header and a
+  meta tag instead of being blocked, so crawlers can see that.
+- `sitemap.xml` lists the 18 public URLs, dated from published records only.
+
+Check a deployment with `npm run seo:check -- https://shiplens.onrender.com`. The same audit
+runs in CI against the production build (`e2e/seo.spec.ts`). The owner's Search Console and
+Bing steps are in [`docs/seo/POST-DEPLOYMENT.md`](docs/seo/POST-DEPLOYMENT.md).
 
 ## Health endpoint
 

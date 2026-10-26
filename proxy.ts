@@ -16,9 +16,11 @@ const { auth } = NextAuth(authConfig);
 // it from the request header and puts the nonce on its scripts (section 8, A05).
 const adminProxy = auth((request) => {
   if (!request.auth?.user && request.nextUrl.pathname !== LOGIN_PATH) {
+    // A bare redirect: signing in always lands on /admin. Behind Render's proxy the request URL
+    // carries the container's own address (0.0.0.0:10000), which must not appear in links.
     const signIn = request.nextUrl.clone();
     signIn.pathname = LOGIN_PATH;
-    signIn.searchParams.set("callbackUrl", request.nextUrl.href);
+    signIn.search = "";
     return NextResponse.redirect(signIn);
   }
   const policy = adminContentSecurityPolicy(createNonce(), isDev);

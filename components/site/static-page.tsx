@@ -1,4 +1,5 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { PageJsonLd } from "@/components/seo/page-json-ld";
 import type { AppLocale } from "@/i18n/routing";
 
 /** Privacy and Terms (section 7.1): static text from messages/{en,ur}.json. */
@@ -20,6 +21,7 @@ export async function StaticPage({
           {paragraph}
         </p>
       ))}
+      <PageJsonLd locale={locale} page={namespace} />
     </article>
   );
 }

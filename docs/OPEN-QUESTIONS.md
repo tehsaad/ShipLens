@@ -474,10 +474,25 @@ Added in Phase 7:
   in both languages; the English versions meet 90+ in every category, and the Urdu versions
   are recorded with their scores and the font trade-off (`docs/ACCEPTANCE.md`).
 - **Site address for canonical links.** Canonical and hreflang links are absolute. They use
-  `SITE_URL`, which defaults to the live address, so forks or new domains set it at build
-  time.
+  `SITE_URL`, which defaults to the live address, so forks or new domains set it. Since the
+  SEO change it is read when pages are served and must be a bare HTTPS origin on a public
+  host; anything else is logged and replaced by the live address.
 - **English inside Urdu pages.** Untranslated entries and the language switcher's "English"
   use the English font, not the Urdu font stack.
+
+Added with the SEO change request (26 October 2026, details in
+[`docs/seo/IMPLEMENTATION.md`](seo/IMPLEMENTATION.md)):
+
+- **x-default** points at the English page (the routing default), not at the redirecting
+  unprefixed URL.
+- **The staff area is not disallowed in `robots.txt`.** It answers `noindex` in a header and a
+  meta tag instead, because a crawler blocked by robots.txt cannot see `noindex`. Only `/api/`
+  is disallowed.
+- **Structured data** uses `Organization` (legal status is not published), describes only
+  active branches and upcoming published events, and has no FAQPage or BreadcrumbList markup.
+- **Get Involved answers** reuse published sentences from the page, Privacy and Terms; only the
+  questions are new, in both languages, pending owner review.
+- **Social images** are one per language, rendered from the site name and tagline.
 
 ## Register of approved deviations from `docs/SPEC.md`
 

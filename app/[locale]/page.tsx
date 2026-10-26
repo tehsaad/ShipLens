@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Markdown } from "@/components/markdown";
+import { PageJsonLd } from "@/components/seo/page-json-ld";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { getPrisma } from "@/lib/db";
 import { localeFrom } from "@/lib/locale-params";
-import { pageMetadata } from "@/lib/page-meta";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { eventTimeFormat, renderedAt } from "@/lib/public-format";
 import { listPublicBranches } from "@/lib/services/branches";
 import { listPublishedEntries } from "@/lib/services/content";
@@ -14,7 +15,7 @@ import { listPublishedEvents } from "@/lib/services/events";
 type Props = { params: Promise<{ locale: string }> };
 
 export function generateMetadata({ params }: Props): Promise<Metadata> {
-  return pageMetadata(params, "home", "");
+  return pageMetadata(params, "home");
 }
 
 /** Section 7.1 Home: mission, call to action, programs preview, active branch count, latest events. */
@@ -131,6 +132,7 @@ export default async function HomePage({ params }: Props) {
           </ul>
         )}
       </section>
+      <PageJsonLd locale={locale} page="home" />
     </div>
   );
 }

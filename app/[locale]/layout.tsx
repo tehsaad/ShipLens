@@ -5,10 +5,11 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { SiteFooter } from "@/components/site/footer";
 import { SiteHeader } from "@/components/site/header";
-import { THEME_SCRIPT } from "@/components/site/theme-toggle";
+import { THEME_SCRIPT } from "@/components/site/theme-script";
 import { directionOf, routing } from "@/i18n/routing";
 import { inter, nastaliq } from "@/lib/fonts";
-import { SITE_URL } from "@/lib/site-url";
+import { titleTemplate } from "@/lib/seo/metadata";
+import { SITE_URL } from "@/lib/seo/site";
 import { cn } from "@/lib/utils";
 import "../globals.css";
 
@@ -29,11 +30,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "site" });
+  // Defaults for pages without their own metadata (the not-found page). Each public page sets
+  // its description, canonical, alternates and social cards (lib/seo/metadata.ts); relative
+  // URLs in them resolve against the canonical origin here.
   return {
-    title: { template: `%s · ${t("name")}`, default: t("name") },
+    title: { template: titleTemplate(t("name")), default: t("name") },
     description: t("tagline"),
     metadataBase: SITE_URL,
-    alternates: { languages: { en: "/en", ur: "/ur", "x-default": "/en" } },
   };
 }
 

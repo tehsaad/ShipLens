@@ -1,0 +1,125 @@
+{
+  "tool": "Lighthouse",
+  "formFactor": "mobile",
+  "throttling": "simulated (Lighthouse default)",
+  "environment": "Local production build (node .next/standalone/server.js) in the development container, seeded E2E database",
+  "base": "http://127.0.0.1:3200",
+  "commit": "working tree after the SEO commits",
+  "pages": [
+    {
+      "path": "/en",
+      "fetchTime": "2026-10-26T18:28:48.643Z",
+      "scores": {
+        "performance": 96,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "first-contentful-paint": "0.8 s",
+        "largest-contentful-paint": "2.7 s",
+        "total-blocking-time": "90 ms",
+        "cumulative-layout-shift": "0",
+        "speed-index": "0.8 s"
+      },
+      "failedSeoAudits": ["canonical"],
+      "consoleErrors": []
+    },
+    {
+      "path": "/en/programs",
+      "fetchTime": "2026-10-26T18:29:01.510Z",
+      "scores": {
+        "performance": 96,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "first-contentful-paint": "0.8 s",
+        "largest-contentful-paint": "2.7 s",
+        "total-blocking-time": "70 ms",
+        "cumulative-layout-shift": "0",
+        "speed-index": "0.8 s"
+      },
+      "failedSeoAudits": ["canonical"],
+      "consoleErrors": []
+    },
+    {
+      "path": "/en/branches",
+      "fetchTime": "2026-10-26T18:29:14.347Z",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "first-contentful-paint": "0.8 s",
+        "largest-contentful-paint": "1.7 s",
+        "total-blocking-time": "120 ms",
+        "cumulative-layout-shift": "0",
+        "speed-index": "0.8 s"
+      },
+      "failedSeoAudits": ["canonical"],
+      "consoleErrors": []
+    },
+    {
+      "path": "/ur",
+      "fetchTime": "2026-10-26T18:29:27.582Z",
+      "scores": {
+        "performance": 86,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "first-contentful-paint": "2.3 s",
+        "largest-contentful-paint": "3.5 s",
+        "total-blocking-time": "130 ms",
+        "cumulative-layout-shift": "0.075",
+        "speed-index": "2.3 s"
+      },
+      "failedSeoAudits": ["canonical"],
+      "consoleErrors": []
+    },
+    {
+      "path": "/ur/programs",
+      "fetchTime": "2026-10-26T18:29:40.529Z",
+      "scores": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "first-contentful-paint": "1.1 s",
+        "largest-contentful-paint": "2.0 s",
+        "total-blocking-time": "50 ms",
+        "cumulative-layout-shift": "0.012",
+        "speed-index": "1.1 s"
+      },
+      "failedSeoAudits": ["canonical"],
+      "consoleErrors": []
+    },
+    {
+      "path": "/ur/branches",
+      "fetchTime": "2026-10-26T18:29:53.776Z",
+      "scores": {
+        "performance": 86,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "first-contentful-paint": "2.3 s",
+        "largest-contentful-paint": "3.4 s",
+        "total-blocking-time": "200 ms",
+        "cumulative-layout-shift": "0.018",
+        "speed-index": "2.3 s"
+      },
+      "failedSeoAudits": ["canonical"],
+      "consoleErrors": []
+    }
+  ],
+  "lighthouseVersion": "13.5.0"
+}
