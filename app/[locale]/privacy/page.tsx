@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { StaticPage } from "@/components/site/static-page";
 import { localeFrom } from "@/lib/locale-params";
-import { pageMetadata } from "@/lib/page-meta";
+import { pageMetadata } from "@/lib/seo/metadata";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export function generateMetadata({ params }: Props): Promise<Metadata> {
-  return pageMetadata(params, "privacy", "/privacy");
+  return pageMetadata(params, "privacy");
 }
 
 export default async function Page({ params }: Props) {

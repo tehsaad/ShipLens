@@ -26,6 +26,12 @@ const nextConfig: NextConfig = {
         source: PUBLIC_CSP_SOURCE,
         headers: [{ key: "Content-Security-Policy", value: contentSecurityPolicy(isDev) }],
       },
+      // Never indexed. Admin pages also carry a robots meta tag; API responses are not HTML,
+      // so the header is the only way to say it for them.
+      ...["/admin", "/admin/:path*", "/api/:path*"].map((source) => ({
+        source,
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
+      })),
     ];
   },
 };

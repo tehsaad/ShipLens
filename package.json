@@ -34,6 +34,8 @@
     "e2e:prepare": "npm run build && npm run build:seed",
     "test:e2e": "playwright test",
     "docs:permissions": "tsx scripts/permissions-doc.mts",
+    "og:images": "node scripts/og-images.mjs",
+    "seo:check": "tsx scripts/seo-check.mts",
     "test:watch": "vitest",
     "db:seed": "prisma db seed"
   },

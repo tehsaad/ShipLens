@@ -33,6 +33,9 @@ test("the root layout's <head> hydrates without waiting for client JavaScript", 
   // then waited for the module's JavaScript, and when it arrived late React lost its place in
   // the document and failed with error 418 (seen on about one live page load in five).
   const payload = flightPayload(await (await request.get("/en")).text());
-  expect(payload).toContain(`"__html":${JSON.stringify(THEME_SCRIPT)}`);
-  expect(payload).not.toMatch(/"__html":"\$/);
+  const head = payload.slice(payload.indexOf('["$","head"'), payload.indexOf('["$","body"'));
+  expect(head).toContain(`"__html":${JSON.stringify(THEME_SCRIPT)}`);
+  // Nothing in <head> may be a reference ("$1f", "$L1f") to data or code that arrives later.
+  // Element markers are the bare string "$".
+  expect(head).not.toMatch(/"\$[^"]/);
 });

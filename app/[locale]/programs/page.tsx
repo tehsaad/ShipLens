@@ -2,15 +2,17 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { FallbackNotice } from "@/components/site/fallback-notice";
 import { Markdown } from "@/components/markdown";
+import { PageJsonLd } from "@/components/seo/page-json-ld";
+import { RelatedLinks } from "@/components/site/related-links";
 import { getPrisma } from "@/lib/db";
 import { localeFrom } from "@/lib/locale-params";
-import { pageMetadata } from "@/lib/page-meta";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { listPublishedEntries } from "@/lib/services/content";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export function generateMetadata({ params }: Props): Promise<Metadata> {
-  return pageMetadata(params, "programs", "/programs");
+  return pageMetadata(params, "programs");
 }
 
 /** Section 7.1 Programs: published PROGRAM entries. */
@@ -45,6 +47,8 @@ export default async function ProgramsPage({ params }: Props) {
           </article>
         ))}
       </div>
+      <RelatedLinks pages={["branches", "events", "getInvolved"]} />
+      <PageJsonLd locale={locale} page="programs" />
     </div>
   );
 }

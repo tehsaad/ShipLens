@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { PageJsonLd } from "@/components/seo/page-json-ld";
+import { RelatedLinks } from "@/components/site/related-links";
 import { localeFrom } from "@/lib/locale-params";
-import { pageMetadata } from "@/lib/page-meta";
+import { pageMetadata } from "@/lib/seo/metadata";
 import { ContactForm } from "./contact-form";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export function generateMetadata({ params }: Props): Promise<Metadata> {
-  return pageMetadata(params, "contact", "/contact");
+  return pageMetadata(params, "contact");
 }
 
 export default async function ContactPage({ params }: Props) {
@@ -26,6 +28,8 @@ export default async function ContactPage({ params }: Props) {
         </h2>
         <ContactForm />
       </section>
+      <RelatedLinks pages={["getInvolved", "branches"]} />
+      <PageJsonLd locale={locale} page="contact" />
     </div>
   );
 }

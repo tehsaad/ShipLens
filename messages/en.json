@@ -35,7 +35,8 @@
     "notice": "This page is not available in Urdu yet, so it is shown in English."
   },
   "home": {
-    "metaTitle": "Home",
+    "metaTitle": "ShipLens Volunteers: volunteer branches across Pakistan",
+    "metaDescription": "ShipLens Volunteers connects volunteer branches across Pakistan to one head office. Our branches run tutoring, food and clothing drives and community events.",
     "heroTitle": "Serve your community with a branch near you",
     "heroText": "Our volunteer branches run tutoring, food and clothing drives and community events. Head office supports every branch so volunteers can focus on the work.",
     "ctaApply": "Become a volunteer",
@@ -50,17 +51,20 @@
   },
   "about": {
     "metaTitle": "About us",
+    "metaDescription": "About ShipLens Volunteers: we connect volunteer branches across Pakistan to one head office, which supports every branch.",
     "missingTitle": "About us",
     "missing": "This page is being written."
   },
   "programs": {
     "metaTitle": "Programs",
+    "metaDescription": "What ShipLens Volunteers branches do week after week: tutoring, food and clothing drives and community events.",
     "title": "Programs",
     "intro": "What our branches do, week after week.",
     "empty": "Programs will be listed here soon."
   },
   "branches": {
     "metaTitle": "Branches",
+    "metaDescription": "Active ShipLens Volunteers branches across Pakistan, with each branch's code, city and contact email. Filter the list by city.",
     "title": "Branches",
     "intro": "Active branches and how to reach them.",
     "filterLabel": "City",
@@ -74,6 +78,7 @@
   },
   "events": {
     "metaTitle": "Events",
+    "metaDescription": "Upcoming and past events of ShipLens Volunteers branches and head office, with the date, time and place of each.",
     "title": "Events",
     "intro": "Join a branch event or come and see what volunteers do.",
     "filterLabel": "Show",
@@ -90,6 +95,7 @@
   },
   "getInvolved": {
     "metaTitle": "Get involved",
+    "metaDescription": "How to volunteer with ShipLens Volunteers: apply online and choose a branch, our HR team reads every application, and if you are accepted your branch lead contacts you.",
     "title": "Get involved",
     "intro": "Volunteering starts with a short application. Here is what happens next.",
     "step1Title": "Apply",
@@ -99,16 +105,26 @@
     "step3Title": "Join",
     "step3": "If accepted, your branch lead contacts you about teams and the first activity.",
     "formTitle": "Volunteer application",
-    "noBranches": "No branch is taking volunteers right now. Please check again soon."
+    "noBranches": "No branch is taking volunteers right now. Please check again soon.",
+    "faqTitle": "Questions about volunteering",
+    "faqReview": "Who reads my application, and how long does it take?",
+    "faqAccepted": "What happens if I am accepted?",
+    "faqPaid": "Is volunteering paid?",
+    "faqId": "Do I need to give my national ID (CNIC) number?",
+    "faqDetails": "Who can see the details I send?",
+    "faqOther": "I have another question. How do I ask it?",
+    "faqContactLink": "Go to the contact page"
   },
   "contact": {
     "metaTitle": "Contact",
+    "metaDescription": "Questions about volunteering, a branch or an event? Send ShipLens Volunteers head office a message and we will reply by email.",
     "title": "Contact us",
     "intro": "Questions about volunteering, a branch or an event? Send us a message and head office will reply by email.",
     "formTitle": "Send a message"
   },
   "privacy": {
     "metaTitle": "Privacy",
+    "metaDescription": "What ShipLens Volunteers collects when you apply to volunteer or send a message, who can see it, and how to ask us to delete it. No national ID number is collected.",
     "title": "Privacy",
     "body": [
       "We collect only what we need to process volunteer applications and contact messages: your name, email address, phone number, preferred branch, availability, skills and the reasons you give.",
@@ -120,6 +136,7 @@
   },
   "terms": {
     "metaTitle": "Terms",
+    "metaDescription": "Terms of use of the ShipLens Volunteers website: send only accurate details, volunteering is unpaid, event details can change, and no payments are taken online.",
     "title": "Terms of use",
     "body": [
       "This website gives information about our volunteer branches, programs and events, and lets you apply to volunteer or contact us.",
@@ -180,6 +197,18 @@
     "title": "Page not found",
     "text": "The page you are looking for does not exist or has moved.",
     "home": "Go to the home page"
+  },
+  "seo": {
+    "imageAlt": "ShipLens Volunteers logo and the words: Volunteer branches across Pakistan, one head office."
+  },
+  "related": {
+    "label": "Related pages",
+    "about": "About us",
+    "programs": "See our programs",
+    "branches": "Find a branch near you",
+    "events": "Upcoming and past events",
+    "getInvolved": "How volunteering works",
+    "contact": "Contact head office"
   },
   "admin": {
     "nav": {
