@@ -1,13 +1,34 @@
-# Branch-to-Head-Office Management Platform
+# ShipLens: Branch-to-Head-Office Management Platform
 
-A web platform that will connect volunteer branches to head office and run the organisation's
-public website, replacing spreadsheet and WhatsApp reporting with approved, auditable records.
-The full product specification is in [`docs/SPEC.md`](docs/SPEC.md), with approved decisions in
-[`docs/OPEN-QUESTIONS.md`](docs/OPEN-QUESTIONS.md).
+ShipLens connects a volunteer organisation's branches to its head office and runs its public
+website. Branch Leads record collections and submit weekly reports. The Finance Reviewer
+checks and approves them. HR turns volunteer applications into members. Head office sees the
+whole picture on one dashboard, with every change and export kept in an audit log that cannot
+be edited. It replaces spreadsheet and WhatsApp reporting with approved, auditable records.
+
+**Live:** <https://shiplens.onrender.com>. The demo logins for the five roles are in
+[docs/handover.md](docs/handover.md#sample-data-and-demo-logins). The free plan sleeps when
+idle, so the first page can take up to a minute.
+
+The specification is [`docs/SPEC.md`](docs/SPEC.md). Approved decisions are in
+[`docs/OPEN-QUESTIONS.md`](docs/OPEN-QUESTIONS.md), and the acceptance record is
+[`docs/ACCEPTANCE.md`](docs/ACCEPTANCE.md).
+
+## Screenshots
+
+| Public site (English)                                 | Public site (Urdu, right to left)                  |
+| ----------------------------------------------------- | -------------------------------------------------- |
+| ![Home page in English](docs/screenshots/home-en.png) | ![Home page in Urdu](docs/screenshots/home-ur.png) |
+
+| Head-office dashboard                        | Weekly report with its review history                |
+| -------------------------------------------- | ---------------------------------------------------- |
+| ![Dashboard](docs/screenshots/dashboard.png) | ![Weekly report](docs/screenshots/weekly-report.png) |
+
+![Audit log, showing a report cycle and its PDF export](docs/screenshots/audit-log.png)
 
 ## Status
 
-**Phases 0 to 6.** Implemented so far, live at <https://shiplens.onrender.com>:
+**Phases 0 to 7 are complete.** Live at <https://shiplens.onrender.com>:
 
 - Project tooling, Docker and CI, the health endpoint, and deployment on Render
 - The full data model, plus database rules enforced in PostgreSQL: the 7-day collection lock,
@@ -25,14 +46,32 @@ The full product specification is in [`docs/SPEC.md`](docs/SPEC.md), with approv
   end-to-end tests (each role's refusals and the full weekly report cycle) and axe checks of
   the public pages; deploys go out through a Render deploy hook once CI passes on `main`
 
-The remaining documentation comes in Phase 7 (see
-[`docs/IMPLEMENTATION-CHECKLIST.md`](docs/IMPLEMENTATION-CHECKLIST.md)).
+- Documentation: ADRs, the API reference, the generated permission table, a handover with a
+  runbook, the demo script and the acceptance record
+
+[`docs/IMPLEMENTATION-CHECKLIST.md`](docs/IMPLEMENTATION-CHECKLIST.md) tracks every phase, and
+[`docs/ACCEPTANCE.md`](docs/ACCEPTANCE.md) lists what is left for the project owner.
 
 ## Stack
 
-Next.js (App Router) with strict TypeScript, Tailwind CSS v4, shadcn/ui, Prisma ORM with
-PostgreSQL 16, ESLint, Prettier, Husky, lint-staged and commitlint. See `docs/SPEC.md`
-section 2 for the full stack.
+Next.js 16 (App Router, server components and server actions) with strict TypeScript,
+PostgreSQL 16 with Prisma, Auth.js v5, Zod, Tailwind CSS v4 with shadcn/ui, next-intl, Recharts
+and PDFKit. Tests use Vitest and Playwright with axe. Delivery is Docker, GitHub Actions and
+Render. [ADR 0001](docs/architecture/0001-stack.md) has the versions and the reasons.
+
+## Documentation
+
+| Document                                                     | What it covers                                                      |
+| ------------------------------------------------------------ | ------------------------------------------------------------------- |
+| [docs/architecture/](docs/architecture/README.md)            | System diagrams and the ADRs                                        |
+| [docs/api/](docs/api/README.md)                              | Every server action and route handler: inputs, outputs, permissions |
+| [docs/permissions.md](docs/permissions.md)                   | Role × action table, generated from `lib/permissions.ts`            |
+| [docs/handover.md](docs/handover.md)                         | Setup, environment, demo logins, deployment, runbook, limitations   |
+| [docs/security.md](docs/security.md)                         | OWASP Top 10 mapping                                                |
+| [docs/sample-data-expected.md](docs/sample-data-expected.md) | Expected dashboard values for the sample data                       |
+| [docs/demo-script.md](docs/demo-script.md)                   | Five-minute walkthrough outline                                     |
+| [docs/ACCEPTANCE.md](docs/ACCEPTANCE.md)                     | Section 14 acceptance checklist with evidence                       |
+| [AI-USAGE.md](AI-USAGE.md)                                   | How AI tools were used, and what a human decided                    |
 
 ## Prerequisites
 
@@ -59,6 +98,7 @@ npm run dev               # http://localhost:3000, staff sign-in at /admin/login
 | `AUTH_SECRET`              | App              | Session signing key, at least 32 random characters      |
 | `AUTH_TRUST_HOST`          | App              | `true` behind a trusted reverse proxy                   |
 | `TRUSTED_CLIENT_IP_HEADER` | App              | Header the proxy sets to the client IP (see security)   |
+| `SITE_URL`                 | App (build)      | Origin for canonical links; defaults to the live site   |
 | `TEST_DATABASE_URL`        | Tests            | Disposable database; its name must end in `_test`       |
 | `E2E_DATABASE_URL`         | E2E tests        | Disposable database; its schema is reset on every run   |
 | `PLAYWRIGHT_CHROMIUM_PATH` | E2E tests        | Optional path to an already installed Chromium          |
@@ -116,6 +156,18 @@ docker compose --profile app up --build
 
 Commits must follow [Conventional Commits](https://www.conventionalcommits.org/). A pre-commit
 hook lints and formats staged files.
+
+## Tests
+
+| Suite       | Command                    | What it proves                                                                                                                                                                  |
+| ----------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Unit        | `npm run test:unit`        | Permission matrix, state machines, lock rules, codes, money, CSV escaping, validation, security headers, PDFs                                                                   |
+| Integration | `npm run test:integration` | Every service against a real PostgreSQL: transactions, the database triggers, scope (IDOR) checks, the seed and its expected dashboard values                                   |
+| Coverage    | `npm run test:coverage`    | Both of the above, failing below 60% of backend lines (67% at last count)                                                                                                       |
+| End-to-end  | `npm run test:e2e`         | Playwright on the production build: each role's 403 and 404 responses, the full weekly report cycle with its audit trail, axe on every public page in both languages and themes |
+
+CI runs all four on every push and pull request. Running the end-to-end suite locally is
+described in [docs/handover.md](docs/handover.md#end-to-end-tests).
 
 ## Health endpoint
 

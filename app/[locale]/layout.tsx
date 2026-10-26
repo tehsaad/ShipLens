@@ -8,6 +8,7 @@ import { SiteHeader } from "@/components/site/header";
 import { THEME_SCRIPT } from "@/components/site/theme-toggle";
 import { directionOf, routing } from "@/i18n/routing";
 import { inter, nastaliq } from "@/lib/fonts";
+import { SITE_URL } from "@/lib/site-url";
 import { cn } from "@/lib/utils";
 import "../globals.css";
 
@@ -31,7 +32,8 @@ export async function generateMetadata({
   return {
     title: { template: `%s · ${t("name")}`, default: t("name") },
     description: t("tagline"),
-    alternates: { languages: { en: "/en", ur: "/ur" } },
+    metadataBase: SITE_URL,
+    alternates: { languages: { en: "/en", ur: "/ur", "x-default": "/en" } },
   };
 }
 

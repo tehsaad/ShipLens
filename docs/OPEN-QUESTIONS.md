@@ -468,6 +468,17 @@ Added in Phase 6:
 - **What the end-to-end tests run against.** The production build (the standalone server the
   image runs) with its own database, reset and seeded on every run, never the dev server.
 
+Added in Phase 7:
+
+- **Lighthouse "key pages".** Section 9 names Home, Programs and Branches. They are measured
+  in both languages; the English versions meet 90+ in every category, and the Urdu versions
+  are recorded with their scores and the font trade-off (`docs/ACCEPTANCE.md`).
+- **Site address for canonical links.** Canonical and hreflang links are absolute. They use
+  `SITE_URL`, which defaults to the live address, so forks or new domains set it at build
+  time.
+- **English inside Urdu pages.** Untranslated entries and the language switcher's "English"
+  use the English font, not the Urdu font stack.
+
 ## Register of approved deviations from `docs/SPEC.md`
 
 Every approved decision, classified against the original spec text.
@@ -486,6 +497,8 @@ Every approved decision, classified against the original spec text.
 | 7        | Addition      | §5 Collection; §6.3 corrections                                     | New fields `correctsCollectionId`, `correctionNote`; audited         | Amendment A1 (`39f1b88`) |
 | 8        | Addition      | §6.3 lock trigger                                                   | Reject new collections dated in an approved week (app and database)  | No (recorded here)       |
 | 9        | Addition      | §7.2 Dashboard                                                      | Computed overdue-report indicator; listed KPIs unchanged             | No (recorded here)       |
+| ADR 0009 | Deviation     | §2 "PDF: @react-pdf/renderer"                                       | PDFKit generates the PDFs (pending the owner's approval)             | No (recorded in ADR)     |
+| ADR 0010 | Deviation     | §2 "TanStack Table"                                                 | Server-rendered tables instead (pending the owner's approval)        | No (recorded in ADR)     |
 | 1        | Addition      | §12, §13 (repository, README)                                       | Landing page moved to `docs/design/landing-reference/`; History note | Not needed               |
 | 2        | Clarification | §3 "exactly five" roles                                             | PUBLIC is anonymous access, not a stored role                        | Not needed               |
 | 3        | Clarification | §3 "manages"; §7.2 "read and edit own branch"                       | Field-level split between Branch Lead, HR Lead and Super Admin       | Not needed               |

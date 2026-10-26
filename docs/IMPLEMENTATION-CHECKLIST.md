@@ -180,7 +180,24 @@ Legend: `[x]` done and verified locally, `[~]` done but not fully verifiable her
 
 ## Phase 7: Documentation and submission
 
-- [ ] Section 13 documents and the section 14 acceptance checklist
+- [x] ADRs in `docs/architecture/` for the stack, authentication, the permission model, the
+      audit log, the collection lock, the report state machine, i18n and deployment, plus
+      ADR 0009 (PDFKit) and ADR 0010 (server-rendered tables) for the two stack deviations
+- [x] Architecture overview with diagrams of the system, one request and the delivery pipeline
+- [x] `docs/api/`: all 37 server actions and 9 route handlers with inputs, outputs and
+      permissions
+- [x] `docs/permissions.md` generated from `lib/permissions.ts` (`npm run docs:permissions`),
+      with a unit test that fails when it drifts
+- [x] `docs/handover.md`: setup, environment variables, runbook and known limitations added
+- [x] `docs/demo-script.md`, README with screenshots and a docs index, `AI-USAGE.md`
+- [x] Lighthouse measured: English key pages 97–99 performance and 100 accessibility and best
+      practices, after removing two needless font preloads and making canonical and hreflang
+      links absolute; Urdu pages 74–87 performance (the Nastaliq font; options in
+      `docs/ACCEPTANCE.md`)
+- [x] Section 14 checked item by item in `docs/ACCEPTANCE.md`, with evidence; five live
+      sign-ins checked on 26 October 2026
+- [ ] Owner: walkthrough video, deploy-hook secret, branch protection, two more commit days,
+      and decisions on ADR 0009, ADR 0010 and the Urdu font
 
 ## Notes
 
