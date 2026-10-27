@@ -3,7 +3,7 @@
 #   docker compose --profile app up     -> PostgreSQL and the production app image
 # Values come from .env (copy .env.example). Nothing here is used in production.
 
-name: shiplens
+name: hamqadam
 
 services:
   db:

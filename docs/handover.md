@@ -54,17 +54,37 @@ reports, 6 published content entries, 2 events and 1 contact message.
 
 | Role             | Email                                 |
 | ---------------- | ------------------------------------- |
-| Super Admin      | `super.admin@demo.shiplens.test`      |
-| Finance Reviewer | `finance.reviewer@demo.shiplens.test` |
-| Content Editor   | `content.editor@demo.shiplens.test`   |
-| HR Lead          | `hr.lead@demo.shiplens.test`          |
-| Branch Lead      | `lead.kar001@demo.shiplens.test`      |
+| Super Admin      | `super.admin@demo.hamqadam.test`      |
+| Finance Reviewer | `finance.reviewer@demo.hamqadam.test` |
+| Content Editor   | `content.editor@demo.hamqadam.test`   |
+| HR Lead          | `hr.lead@demo.hamqadam.test`          |
+| Branch Lead      | `lead.kar001@demo.hamqadam.test`      |
 
 > **Warning:** the demo accounts share one known password. Before real use, change every demo
 > password (or deactivate the demo accounts) and set a new `SEED_DEMO_PASSWORD`.
 
 The other five Branch Lead accounts (`lead.kar002@…`, `lead.lah001@…`, `lead.isl001@…`,
 `lead.pes001@…`, `lead.mul001@…`) exist for branch-scope testing.
+
+Databases seeded before the rename (below) have the demo accounts on `@demo.shiplens.test`.
+The seed moves each one that still has its original address to `@demo.hamqadam.test`, with
+the current `SEED_DEMO_PASSWORD`, and records `seed.demoLoginsMoved` in the audit log. It
+changes nothing on later runs.
+
+## Names
+
+The project was built under a competition name, ShipLens, and renamed **Hamqadam**
+(ہم قدم, "walking together") on 27 October 2026. Every name people see uses Hamqadam. These
+identifiers keep the old name because changing them would break the running system:
+
+| Identifier                                                                               | Why it stays                                                                                                 |
+| ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `https://shiplens.onrender.com`                                                          | Render fixes a service's address when it is created. A new address needs a new service or a custom domain.   |
+| Render resources `shiplens`, `shiplens-db`; database and user `shiplens` (`render.yaml`) | Names of the existing resources; `render.yaml` must match them.                                              |
+| Database role `shiplens_app`                                                             | Created by an applied migration; migrations are never edited, and renaming a role can invalidate its logins. |
+| Seed id salt `shiplens-seed` (`prisma/seed/data.ts`)                                     | The live demo records' ids derive from it; a new salt would duplicate every demo record.                     |
+| `LEGACY_DEMO_DOMAIN` (`demo.shiplens.test`)                                              | Used once by the seed to move the old demo accounts (above).                                                 |
+| GitHub repository `tehsaad/ShipLens`                                                     | The owner can rename it in the repository settings; GitHub redirects the old address.                        |
 
 ## Database roles
 
@@ -74,7 +94,7 @@ except team assignments. To run the app with these restricted privileges:
 
 1. Run migrations as the database owner (`DATABASE_MIGRATION_URL`).
 2. Create a login role for the app:
-   `CREATE ROLE shiplens_web LOGIN PASSWORD '<strong password>' IN ROLE shiplens_app;`
+   `CREATE ROLE hamqadam_web LOGIN PASSWORD '<strong password>' IN ROLE shiplens_app;`
 3. Point `DATABASE_URL` at that role.
 
 If the migration user may not create roles, the migration skips this step. Database triggers

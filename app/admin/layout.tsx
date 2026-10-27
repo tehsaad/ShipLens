@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import "../globals.css";
 
 export const metadata: Metadata = {
-  title: { template: "%s · Admin · ShipLens", default: "Admin · ShipLens" },
+  title: { template: "%s · Admin · Hamqadam", default: "Admin · Hamqadam" },
   robots: { index: false, follow: false },
 };
 

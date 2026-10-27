@@ -13,10 +13,10 @@ and every step is audited.
 
   | Role             | Email                                 |
   | ---------------- | ------------------------------------- |
-  | Super Admin      | `super.admin@demo.shiplens.test`      |
-  | Finance Reviewer | `finance.reviewer@demo.shiplens.test` |
-  | HR Lead          | `hr.lead@demo.shiplens.test`          |
-  | Branch Lead      | `lead.kar001@demo.shiplens.test`      |
+  | Super Admin      | `super.admin@demo.hamqadam.test`      |
+  | Finance Reviewer | `finance.reviewer@demo.hamqadam.test` |
+  | HR Lead          | `hr.lead@demo.hamqadam.test`          |
+  | Branch Lead      | `lead.kar001@demo.hamqadam.test`      |
 
 - **Use separate windows.** Open one private window per role to switch between people without
   signing out.

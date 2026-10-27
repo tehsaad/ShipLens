@@ -36,7 +36,7 @@ describe("request context", () => {
   });
 
   it("logs once which forwarding headers arrive, by name only", () => {
-    (globalThis as { shiplensForwardingLogged?: boolean }).shiplensForwardingLogged = false;
+    (globalThis as { hamqadamForwardingLogged?: boolean }).hamqadamForwardingLogged = false;
     const log = vi.spyOn(console, "log").mockImplementation(() => {});
     const source = new Headers({
       "x-forwarded-for": "203.0.113.77, 198.51.100.4, 10.0.0.2",

@@ -51,8 +51,8 @@ export class PdfReport {
       compress: options.compress ?? true,
       info: {
         Title: pdfText(options.title),
-        Author: "ShipLens",
-        Creator: "ShipLens",
+        Author: "Hamqadam",
+        Creator: "Hamqadam",
         CreationDate: options.createdAt,
       },
     });

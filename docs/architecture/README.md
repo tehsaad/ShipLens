@@ -1,6 +1,6 @@
 # Architecture
 
-ShipLens is one Next.js application backed by one PostgreSQL database. It serves:
+Hamqadam is one Next.js application backed by one PostgreSQL database. It serves:
 
 - **a public site** in English and Urdu, cached and revalidated;
 - **an admin area for five staff roles**, rendered on the server per request;

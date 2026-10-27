@@ -1,5 +1,5 @@
 /**
- * SEO audit of a running ShipLens site, from what crawlers fetch: robots.txt, sitemap.xml,
+ * SEO audit of a running Hamqadam site, from what crawlers fetch: robots.txt, sitemap.xml,
  * llms.txt, the server HTML of every page in the sitemap (no JavaScript runs), the links
  * between pages, and a few indexability probes. Used by the E2E suite against the local
  * production build, and by `npm run seo:check -- <url>` against a deployment.
