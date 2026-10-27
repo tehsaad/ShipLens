@@ -2,7 +2,7 @@
 
 Operational notes for running the platform: setup, configuration, sample data, deployment, a
 runbook and the known limitations. Architecture decisions are in
-[architecture/](architecture/README.md), every server action and route in [api/](api/README.md),
+[adr/](adr/README.md), every server action and route in [api.md](api.md),
 and the role × action table in [permissions.md](permissions.md).
 
 ## Setup
@@ -12,7 +12,8 @@ The [README](../README.md#local-setup) has the full local setup. In short:
 1. Install Node.js 24 (`.nvmrc`), then run `npm ci`.
 2. Copy `.env.example` to `.env` and fill in `DATABASE_URL`, `AUTH_SECRET` and
    `TEST_DATABASE_URL`.
-3. Start PostgreSQL 16 (`docker compose up -d`), apply the migrations (`npm run db:deploy`)
+3. Start PostgreSQL 16 (`docker compose up -d`), generate the Prisma client
+   (`npm run db:generate`), apply the migrations (`npm run db:deploy`)
    and load the sample data (`SEED_DEMO_PASSWORD=… npm run db:seed`).
 4. Run `npm run dev` and open <http://localhost:3000/en> or <http://localhost:3000/admin>.
 
@@ -238,7 +239,7 @@ request from that user is refused, even with a valid session cookie.
   instance, each counts separately, and a restart clears them. A shared store such as Redis
   would be needed (see [Security operations](#security-operations)).
 - **Urdu in PDFs.** PDFs use the standard PDF fonts, so Urdu typed into a note prints as "?".
-  Screens and CSV exports show it in full ([ADR 0009](architecture/0009-pdf-generation.md)).
+  Screens and CSV exports show it in full ([ADR 0009](adr/0009-pdf-generation.md)).
 - **Urdu page speed.** The Nastaliq font is about 230 KB. Urdu pages score lower in Lighthouse
   mobile performance than English pages ([ACCEPTANCE.md](ACCEPTANCE.md)).
 - **Free hosting plan.** The web service sleeps when idle, so the first request after a pause
@@ -248,5 +249,5 @@ request from that user is refused, even with a valid session cookie.
 - **Admin language.** The admin area is in English; only its navigation labels are
   translated (section 7.4).
 - **Interface choices.** Tables cannot be re-sorted in the browser
-  ([ADR 0010](architecture/0010-tables.md)). Dashboard figures follow the current date, so
+  ([ADR 0010](adr/0010-tables.md)). Dashboard figures follow the current date, so
   they differ from `docs/sample-data-expected.md` on any day other than 18 October 2026.

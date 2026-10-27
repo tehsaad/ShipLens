@@ -2,13 +2,13 @@
 
 Hamqadam has no public JSON API. The browser talks to the server in two ways:
 
-- **[Server actions](server-actions.md)** (37). These are the forms. Every change to data goes
+- **[Server actions](api/server-actions.md)** (37). These are the forms. Every change to data goes
   through one of them.
-- **[Route handlers](routes.md)** (9). These cover file exports (CSV and PDF), the Auth.js
+- **[Route handlers](api/routes.md)** (9). These cover file exports (CSV and PDF), the Auth.js
   endpoints and the health check.
 
 Each entry was read from its source file and the service it calls. The permission column uses
-the action names of `lib/permissions.ts`; [permissions.md](../permissions.md) shows which roles
+the action names of `lib/permissions.ts`; [permissions.md](permissions.md) shows which roles
 hold each one.
 
 ## How a server action runs

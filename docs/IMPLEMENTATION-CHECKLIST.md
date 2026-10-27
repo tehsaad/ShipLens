@@ -180,11 +180,11 @@ Legend: `[x]` done and verified locally, `[~]` done but not fully verifiable her
 
 ## Phase 7: Documentation and submission
 
-- [x] ADRs in `docs/architecture/` for the stack, authentication, the permission model, the
+- [x] ADRs in `docs/adr/` for the stack, authentication, the permission model, the
       audit log, the collection lock, the report state machine, i18n and deployment, plus
       ADR 0009 (PDFKit) and ADR 0010 (server-rendered tables) for the two stack deviations
 - [x] Architecture overview with diagrams of the system, one request and the delivery pipeline
-- [x] `docs/api/`: all 37 server actions and 9 route handlers with inputs, outputs and
+- [x] `docs/api.md` and `docs/api/`: all 37 server actions and 9 route handlers with inputs, outputs and
       permissions
 - [x] `docs/permissions.md` generated from `lib/permissions.ts` (`npm run docs:permissions`),
       with a unit test that fails when it drifts

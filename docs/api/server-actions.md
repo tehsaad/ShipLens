@@ -1,7 +1,7 @@
 # Server actions
 
 Every action below is a form submission (POST). How an action runs, and its result type, are
-described in the [API README](README.md).
+described in the [API overview](../api.md).
 
 In the permission column:
 

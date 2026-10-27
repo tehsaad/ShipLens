@@ -66,6 +66,26 @@ describe("7-day lock (section 6.3)", () => {
     );
   });
 
+  // The handbook's example: an entry is still editable on day 6 and locked on day 8.
+  it("keeps an entry editable on day 6 and locks it on day 8", async () => {
+    const enteredDaysAgo = async (days: number) =>
+      createCollection({
+        branchId,
+        enteredById: leadId,
+        amount: 100,
+        collectedOn: await businessDate(-days),
+        createdAt: new Date(Date.now() - days * 24 * 3600 * 1000).toISOString(),
+      });
+    const daySix = await enteredDaysAgo(6);
+    const dayEight = await enteredDaysAgo(8);
+    expect(
+      await sqlState(pool, `UPDATE collections SET amount = 110 WHERE id = $1`, [daySix]),
+    ).toBe(null);
+    expect(
+      await sqlState(pool, `UPDATE collections SET amount = 110 WHERE id = $1`, [dayEight]),
+    ).toBe("SL001");
+  });
+
   it("rejects edits once 7 days have passed", async () => {
     const id = await createCollection({
       branchId,

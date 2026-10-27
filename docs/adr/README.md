@@ -103,5 +103,5 @@ flowchart LR
 | `lib/validation/`     | Zod schemas shared by forms and server actions                   |
 | `prisma/`             | Schema, migrations (with the triggers) and the sample-data seed  |
 | `tests/`, `e2e/`      | Vitest unit and integration tests; Playwright and axe            |
-| `docs/api/`           | Every server action and route handler                            |
+| `docs/api.md`         | Every server action and route handler                            |
 | `docs/permissions.md` | The matrix as a table, generated from `lib/permissions.ts`       |
