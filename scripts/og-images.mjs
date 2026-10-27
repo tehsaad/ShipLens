@@ -32,8 +32,10 @@ function template(locale, { name, tagline }, otherName) {
     width: ${SIZE.width}px; height: ${SIZE.height}px; box-sizing: border-box; overflow: hidden;
     padding: 72px 88px; display: flex; flex-direction: column; justify-content: space-between;
     background: #0f766e; color: #ffffff;
-    background-image: radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.28), transparent 45%),
-      radial-gradient(circle at 10% 100%, rgba(19, 78, 74, 0.9), transparent 55%);
+    /* Flat shapes, not soft gradients: they keep the PNG small (WhatsApp skips previews over
+       about 300 KB). */
+    background-image: radial-gradient(circle at 100% 0, #3b8a5c 0 300px, transparent 301px),
+      radial-gradient(circle at 0 100%, #134e4a 0 340px, transparent 341px);
     font-family: ${urdu ? "'Noto Nastaliq Urdu'" : "Inter"}, sans-serif;
   }
   .brand { display: flex; align-items: center; gap: 40px; }
