@@ -6,7 +6,7 @@ organisation's public website. It replaces scattered Excel sheets and WhatsApp r
 with approved, auditable records. No online payments. Languages: English (en) and Urdu
 (ur, right-to-left). Timezone for all business dates: Asia/Karachi.
 
-## 2. Stack (fixed; do not change without an ADR in docs/architecture/)
+## 2. Stack (fixed; do not change without an ADR in docs/adr/)
 - Next.js App Router, TypeScript (strict), server components and server actions
 - PostgreSQL 16 with Prisma ORM and versioned migrations
 - Auth.js v5 (credentials provider), Argon2id password hashing
@@ -251,9 +251,9 @@ All tables have id (UUID), createdAt, updatedAt. Money is Decimal(14,2) in PKR.
 - Repository: public, MIT licence, branch protection on main requiring CI.
 
 ## 13. Documentation deliverables (docs/ folder and root)
-- docs/architecture/: ADRs for stack, auth, permission model, audit design, lock design,
+- docs/adr/: ADRs for stack, auth, permission model, audit design, lock design,
   report state machine, i18n approach, deployment.
-- docs/api/: route and server action list with inputs, outputs, and permissions.
+- docs/api.md (with docs/api/): route and server action list with inputs, outputs, and permissions.
 - docs/permissions.md: role x action table generated from lib/permissions.ts.
 - docs/handover.md: setup, environment variables, seed, demo logins, deployment, runbook,
   known limitations (single-instance rate limiter).

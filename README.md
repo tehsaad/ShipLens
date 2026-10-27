@@ -61,14 +61,14 @@ The specification is [`docs/SPEC.md`](docs/SPEC.md). Approved decisions are in
 Next.js 16 (App Router, server components and server actions) with strict TypeScript,
 PostgreSQL 16 with Prisma, Auth.js v5, Zod, Tailwind CSS v4 with shadcn/ui, next-intl, Recharts
 and PDFKit. Tests use Vitest and Playwright with axe. Delivery is Docker, GitHub Actions and
-Render. [ADR 0001](docs/architecture/0001-stack.md) has the versions and the reasons.
+Render. [ADR 0001](docs/adr/0001-stack.md) has the versions and the reasons.
 
 ## Documentation
 
 | Document                                                     | What it covers                                                       |
 | ------------------------------------------------------------ | -------------------------------------------------------------------- |
-| [docs/architecture/](docs/architecture/README.md)            | System diagrams and the ADRs                                         |
-| [docs/api/](docs/api/README.md)                              | Every server action and route handler: inputs, outputs, permissions  |
+| [docs/adr/](docs/adr/README.md)                              | System diagrams and the ADRs                                         |
+| [docs/api.md](docs/api.md)                                   | Every server action and route handler: inputs, outputs, permissions  |
 | [docs/permissions.md](docs/permissions.md)                   | Role × action table, generated from `lib/permissions.ts`             |
 | [docs/handover.md](docs/handover.md)                         | Setup, environment, demo logins, deployment, runbook, limitations    |
 | [docs/security.md](docs/security.md)                         | OWASP Top 10 mapping                                                 |
