@@ -1,57 +1,141 @@
 "use client";
 
-import { Menu } from "lucide-react";
-import { useState } from "react";
-import { cn } from "cn";
+import { Menu, X } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useEffect, useRef, useState } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
+import { LanguageSwitcher } from "./language-switcher";
+import { ThemeToggle } from "./theme-toggle";
 
-type Item = { href: string; label: string };
+const LINKS = [
+  { href: "/", key: "home" },
+  { href: "/about", key: "about" },
+  { href: "/programs", key: "programs" },
+  { href: "/branches", key: "branches" },
+  { href: "/events", key: "events" },
+  { href: "/get-involved", key: "getInvolved" },
+  { href: "/contact", key: "contact" },
+] as const;
 
-/** Main navigation: a row on wide screens, a toggled list on narrow ones. */
-export function NavLinks({
-  items,
-  label,
-  menuLabel,
-}: {
-  items: Item[];
-  label: string;
-  menuLabel: string;
-}) {
+/** Main navigation: a row on wide screens, a menu panel on narrow ones (design by Gemini). */
+export function NavLinks() {
+  const t = useTranslations();
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
-  const isCurrent = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
+  const [isOpen, setIsOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [isOpen]);
+
   return (
-    <nav aria-label={label} className="order-last basis-full md:order-none md:basis-auto">
+    <>
+      <nav aria-label={t("nav.label")} className="hidden items-center xl:flex">
+        <ul className="flex items-center gap-1">
+          {LINKS.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`group focus-ring-marigold relative inline-block rounded-md px-2.5 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
+                    isActive ? "text-primary" : "text-muted-foreground hover:text-primary"
+                  }`}
+                >
+                  {t(`nav.${link.key}`)}
+                  <span
+                    aria-hidden="true"
+                    className={`bg-primary motion-reduce-fade absolute start-2.5 bottom-0 h-[2px] transition-all duration-300 ease-out group-hover:w-[calc(100%-20px)] ${
+                      isActive ? "w-[calc(100%-20px)]" : "w-0"
+                    }`}
+                  />
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      <div className="hidden items-center gap-2 xl:flex">
+        <LanguageSwitcher />
+        <ThemeToggle />
+        <Link
+          href="/get-involved"
+          className="bg-marigold text-marigold-foreground hover:bg-marigold/90 focus-ring-marigold motion-reduce-fade ms-2 inline-flex h-11 items-center justify-center rounded-xl px-5 text-sm font-bold whitespace-nowrap shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:scale-95"
+        >
+          {t("home.ctaApply")}
+        </Link>
+      </div>
+
       <button
+        ref={menuButtonRef}
         type="button"
-        className="inline-flex items-center gap-2 rounded-md px-2 py-1 text-sm md:hidden"
-        aria-expanded={open}
-        aria-controls="site-nav"
-        onClick={() => setOpen((value) => !value)}
+        className="text-ink hover:bg-border/50 focus-ring-marigold inline-flex h-11 w-11 items-center justify-center rounded-xl xl:hidden"
+        onClick={() => setIsOpen((open) => !open)}
+        aria-expanded={isOpen}
+        aria-controls="mobile-menu"
+        aria-label={t("nav.menu")}
       >
-        <Menu className="size-4" aria-hidden />
-        {menuLabel}
-      </button>
-      <ul
-        id="site-nav"
-        className={cn(
-          "flex-col gap-1 pt-2 md:flex md:flex-row md:gap-5 md:pt-0",
-          open ? "flex" : "hidden",
+        {isOpen ? (
+          <X className="h-6 w-6" aria-hidden="true" />
+        ) : (
+          <Menu className="h-6 w-6" aria-hidden="true" />
         )}
+      </button>
+
+      {/* Closed, the panel is inert: its links cannot be focused or read. */}
+      <div
+        id="mobile-menu"
+        inert={!isOpen}
+        className={`border-border bg-surface motion-reduce-fade absolute start-0 end-0 top-16 z-40 border-b shadow-lg transition-all duration-300 ease-out xl:hidden ${
+          isOpen ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-4 opacity-0"
+        }`}
       >
-        {items.map((item) => (
-          <li key={item.href}>
+        <nav aria-label={t("nav.menu")} className="flex flex-col gap-2 p-4">
+          <ul className="flex flex-col gap-2">
+            {LINKS.map((link) => {
+              const isActive = pathname === link.href;
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    aria-current={isActive ? "page" : undefined}
+                    onClick={() => setIsOpen(false)}
+                    className={`focus-ring-marigold flex h-11 items-center rounded-lg px-4 text-base font-medium transition-colors ${
+                      isActive
+                        ? "bg-primary/10 text-primary"
+                        : "text-ink hover:bg-background hover:text-primary"
+                    }`}
+                  >
+                    {t(`nav.${link.key}`)}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+          <div className="bg-border my-2 h-px w-full" role="none" />
+          <div className="flex items-center gap-2 px-2">
+            <LanguageSwitcher />
+            <ThemeToggle />
             <Link
-              href={item.href}
-              aria-current={isCurrent(item.href) ? "page" : undefined}
-              className="block rounded-md px-2 py-1 text-sm hover:text-primary aria-[current=page]:font-semibold aria-[current=page]:text-primary md:px-0"
-              onClick={() => setOpen(false)}
+              href="/get-involved"
+              onClick={() => setIsOpen(false)}
+              className="bg-marigold text-marigold-foreground focus-ring-marigold ms-auto inline-flex h-11 items-center justify-center rounded-xl px-6 font-bold active:scale-95"
             >
-              {item.label}
+              {t("home.ctaApply")}
             </Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
+          </div>
+        </nav>
+      </div>
+    </>
   );
 }

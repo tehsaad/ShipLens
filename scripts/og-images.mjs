@@ -9,10 +9,11 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 const LOCALES = ["en", "ur"];
 const SIZE = { width: 1200, height: 630 };
 
-const lens = `<svg viewBox="0 0 32 32" width="132" height="132" aria-hidden="true">
-  <rect width="32" height="32" rx="7" fill="#ffffff"/>
-  <circle cx="14" cy="14" r="7" fill="none" stroke="#1f4d3a" stroke-width="3"/>
-  <path d="M19.5 19.5 25 25" stroke="#1f4d3a" stroke-width="3" stroke-linecap="round"/>
+// The "walking together" mark (app/icon.svg), drawn large.
+const mark = `<svg viewBox="0 0 32 32" width="132" height="132" aria-hidden="true">
+  <rect width="32" height="32" rx="8" fill="#ffffff"/>
+  <path d="M10 23 16 11l6 12" fill="none" stroke="#0f766e" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="16" cy="9.6" r="3.2" fill="#f59e0b"/>
 </svg>`;
 
 const escape = (text) =>
@@ -30,22 +31,26 @@ function template(locale, { name, tagline }, otherName) {
   body {
     width: ${SIZE.width}px; height: ${SIZE.height}px; box-sizing: border-box; overflow: hidden;
     padding: 72px 88px; display: flex; flex-direction: column; justify-content: space-between;
-    background: #1f4d3a; color: #ffffff;
+    background: #0f766e; color: #ffffff;
+    /* Flat shapes, not soft gradients: they keep the PNG small (WhatsApp skips previews over
+       about 300 KB). */
+    background-image: radial-gradient(circle at 100% 0, #3b8a5c 0 300px, transparent 301px),
+      radial-gradient(circle at 0 100%, #134e4a 0 340px, transparent 341px);
     font-family: ${urdu ? "'Noto Nastaliq Urdu'" : "Inter"}, sans-serif;
   }
   .brand { display: flex; align-items: center; gap: 40px; }
   h1 { margin: 0; font-weight: 700; font-size: ${urdu ? 76 : 84}px; line-height: ${urdu ? 1.9 : 1.1}; }
-  p { margin: 0; max-width: 980px; color: #d7e6de; font-size: ${urdu ? 44 : 50}px;
+  p { margin: 0; max-width: 980px; color: #e3f4f1; font-size: ${urdu ? 44 : 50}px;
       line-height: ${urdu ? 2 : 1.25}; font-weight: ${urdu ? 400 : 500}; }
   footer { display: flex; justify-content: space-between; align-items: center;
-           border-top: 2px solid rgba(255,255,255,0.25); padding-top: 28px;
-           font-family: Inter, sans-serif; font-size: 30px; color: #b9d2c6; }
+           border-top: 3px solid #f59e0b; padding-top: 28px;
+           font-family: Inter, sans-serif; font-size: 30px; color: #ccebe6; }
   footer span[lang="ur"] { font-family: 'Noto Nastaliq Urdu', serif; font-size: 28px; }
   footer span[lang="en"] { font-family: Inter, sans-serif; }
 </style>
 </head>
 <body>
-  <div class="brand">${lens}<h1>${escape(name)}</h1></div>
+  <div class="brand">${mark}<h1>${escape(name)}</h1></div>
   <p>${escape(tagline)}</p>
   <footer><span lang="${urdu ? "en" : "ur"}" dir="${urdu ? "ltr" : "rtl"}">${escape(otherName)}</span><span>English · <span lang="ur">اردو</span></span></footer>
 </body>

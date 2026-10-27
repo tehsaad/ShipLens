@@ -38,6 +38,13 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
+  /* Teal and Marigold design system (docs/design/DESIGN-SYSTEM.md). */
+  --color-ink: var(--foreground);
+  --color-surface: var(--card);
+  --color-marigold: var(--marigold);
+  --color-marigold-foreground: var(--marigold-foreground);
+  --color-marigold-ink: var(--marigold-ink);
+  --color-teal-deep: var(--teal-deep);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -80,6 +87,11 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --marigold: #f59e0b;
+  --marigold-foreground: #1c1917;
+  --marigold-ink: #b45309;
+  --teal-deep: #134e4a;
+  --focus-ring: #b45309;
 }
 
 .dark {
@@ -114,6 +126,10 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --marigold: #fbbf24;
+  --marigold-ink: #fbbf24;
+  --teal-deep: #042f2e;
+  --focus-ring: #fbbf24;
 }
 
 @layer base {
@@ -129,39 +145,83 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Public site palette (docs/design/landing-reference): green primary, warm
-   background. Scoped to .site so the admin keeps the neutral shadcn theme.
+   Public site palette: Teal and Marigold (docs/design/DESIGN-SYSTEM.md). Scoped
+   to .site so the admin keeps its own theme until it is redesigned.
+   Text contrast on the background is at least 4.5:1 in both themes; marigold is
+   a fill with dark text, never text on a light background (use marigold-ink).
    --------------------------------------------------------------------------- */
 .site {
-  --background: #fbfaf6;
-  --foreground: #1b2420;
+  --background: #fffbf2;
+  --foreground: #0b1f1e;
   --card: #ffffff;
-  --card-foreground: #1b2420;
-  --primary: #1f4d3a;
+  --card-foreground: #0b1f1e;
+  --popover: #ffffff;
+  --popover-foreground: #0b1f1e;
+  --primary: #0f766e;
   --primary-foreground: #ffffff;
-  --muted: #e9efea;
-  --muted-foreground: #4d5a54;
-  --accent: #e9efea;
-  --accent-foreground: #1b2420;
-  --border: #d6dcd6;
-  --input: #c3cbc4;
-  --ring: #7a430c;
+  --secondary: #f3eee2;
+  --secondary-foreground: #0b1f1e;
+  --muted: #f3eee2;
+  --muted-foreground: #4a5d5b;
+  --accent: #fdf3dc;
+  --accent-foreground: #0b1f1e;
+  --border: #e7e1d3;
+  --input: #8f8775;
+  --ring: #0f766e;
+  --marigold: #f59e0b;
+  --marigold-foreground: #1c1917;
+  --marigold-ink: #b45309;
+  --teal-deep: #134e4a;
+  --focus-ring: #b45309;
 }
 
 .site.dark {
-  --background: #0f1a16;
-  --foreground: #eaf0ec;
-  --card: #17241f;
-  --card-foreground: #eaf0ec;
-  --primary: #6fbf94;
-  --primary-foreground: #0f1a16;
-  --muted: #1d2c26;
-  --muted-foreground: #b3bfb8;
-  --accent: #1d2c26;
-  --accent-foreground: #eaf0ec;
-  --border: #2b3a33;
-  --input: #3a4a42;
-  --ring: #e9b873;
+  --background: #061e1d;
+  --foreground: #e6f4f1;
+  --card: #0b2e2c;
+  --card-foreground: #e6f4f1;
+  --popover: #0b2e2c;
+  --popover-foreground: #e6f4f1;
+  --primary: #2dd4bf;
+  --primary-foreground: #042f2e;
+  --secondary: #0f3633;
+  --secondary-foreground: #e6f4f1;
+  --muted: #0f3633;
+  --muted-foreground: #9fb7b3;
+  --accent: #12403c;
+  --accent-foreground: #e6f4f1;
+  --border: #1f4542;
+  --input: #5d8a85;
+  --ring: #2dd4bf;
+  --marigold: #fbbf24;
+  --marigold-foreground: #1c1917;
+  --marigold-ink: #fbbf24;
+  --teal-deep: #042f2e;
+  --focus-ring: #fbbf24;
+}
+
+/* A visible keyboard focus ring in marigold-ink (light) or marigold (dark): at least 3:1
+   against the background in both themes. */
+@utility focus-ring-marigold {
+  outline: none;
+  &:focus-visible {
+    outline: 3px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+}
+
+/* Under reduced motion, an element keeps its colour feedback but does not move. */
+@utility motion-reduce-fade {
+  @media (prefers-reduced-motion: reduce) {
+    transform: none !important;
+    transition-property: color, background-color, border-color, opacity !important;
+  }
+}
+
+/* English headings: slightly tighter tracking. Never on Urdu, where spacing breaks the joins. */
+html[lang="en"] :is(h1, h2, h3) {
+  letter-spacing: -0.015em;
+  text-wrap: balance;
 }
 
 /* Urdu (section 7.4): Nastaliq needs a taller line height. */

@@ -9,21 +9,22 @@ import { Link, usePathname } from "@/i18n/navigation";
  * screen-reader explanation in the page's language.
  */
 export function LanguageSwitcher() {
-  const t = useTranslations("language");
+  const t = useTranslations();
   const locale = useLocale();
   const pathname = usePathname();
   const other = locale === "en" ? "ur" : "en";
+
   return (
     <Link
       href={pathname}
       locale={other}
       hrefLang={other}
-      className="rounded-full border px-3 py-1 text-sm hover:bg-muted"
+      className="focus-ring-marigold text-muted-foreground hover:bg-border/50 hover:text-primary inline-flex h-11 min-w-[3rem] items-center justify-center rounded-xl px-3 text-sm font-medium transition-all duration-200 active:scale-95"
     >
-      <span lang={other}>{t("switchTo")}</span>
+      <span lang={other}>{t("language.switchTo")}</span>
       <span className="sr-only">
         {" "}
-        ({t("label")}: {t("switchToName")})
+        ({t("language.label")}: {t("language.switchToName")})
       </span>
     </Link>
   );

@@ -1,33 +1,36 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { LanguageSwitcher } from "./language-switcher";
 import { NavLinks } from "./nav-links";
-import { ThemeToggle } from "./theme-toggle";
 
-export const NAV_ITEMS = [
-  { href: "/", key: "home" },
-  { href: "/about", key: "about" },
-  { href: "/programs", key: "programs" },
-  { href: "/branches", key: "branches" },
-  { href: "/events", key: "events" },
-  { href: "/get-involved", key: "getInvolved" },
-  { href: "/contact", key: "contact" },
-] as const;
-
+/** Site header (design by Gemini): the "walking together" mark, the name and the navigation. */
 export async function SiteHeader() {
   const t = await getTranslations();
-  const items = NAV_ITEMS.map((item) => ({ href: item.href, label: t(`nav.${item.key}`) }));
+
   return (
-    <header className="border-b bg-background/95">
-      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-3 px-4 py-3">
-        <Link href="/" className="text-lg font-semibold text-primary">
-          {t("site.name")}
+    <header className="border-border bg-background/90 sticky top-0 z-50 w-full border-b backdrop-blur-md">
+      <div className="relative mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
+        <Link href="/" className="focus-ring-marigold flex items-center gap-2 rounded-md">
+          <svg
+            aria-hidden="true"
+            className="text-primary h-8 w-8"
+            viewBox="0 0 512 512"
+            fill="none"
+          >
+            <circle cx="256" cy="160" r="48" fill="var(--color-marigold)" />
+            <path
+              d="M160 352L256 160L352 352"
+              stroke="currentColor"
+              strokeWidth="48"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <span className="text-primary text-xl font-bold tracking-tight whitespace-nowrap">
+            {t("site.name")}
+          </span>
         </Link>
-        <NavLinks items={items} label={t("nav.label")} menuLabel={t("nav.menu")} />
-        <div className="ms-auto flex items-center gap-2">
-          <LanguageSwitcher />
-          <ThemeToggle />
-        </div>
+
+        <NavLinks />
       </div>
     </header>
   );
