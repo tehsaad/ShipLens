@@ -105,7 +105,8 @@ Render. [ADR 0001](docs/adr/0001-stack.md) has the versions and the reasons.
 ```bash
 npm ci
 cp .env.example .env      # then replace the placeholder values
-docker compose up -d      # starts PostgreSQL 16 (service "db")
+docker compose up -d      # starts PostgreSQL 16 (service "db"); wait for "healthy"
+npm run db:generate       # generate the Prisma client (npm ci does not)
 npm run db:deploy         # apply migrations
 npm run db:seed           # load sample data and demo logins (docs/handover.md)
 npm run dev               # http://localhost:3000, staff sign-in at /admin/login

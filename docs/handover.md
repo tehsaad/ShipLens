@@ -12,7 +12,8 @@ The [README](../README.md#local-setup) has the full local setup. In short:
 1. Install Node.js 24 (`.nvmrc`), then run `npm ci`.
 2. Copy `.env.example` to `.env` and fill in `DATABASE_URL`, `AUTH_SECRET` and
    `TEST_DATABASE_URL`.
-3. Start PostgreSQL 16 (`docker compose up -d`), apply the migrations (`npm run db:deploy`)
+3. Start PostgreSQL 16 (`docker compose up -d`), generate the Prisma client
+   (`npm run db:generate`), apply the migrations (`npm run db:deploy`)
    and load the sample data (`SEED_DEMO_PASSWORD=… npm run db:seed`).
 4. Run `npm run dev` and open <http://localhost:3000/en> or <http://localhost:3000/admin>.
 
