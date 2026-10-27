@@ -18,7 +18,8 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import pg from "pg";
 
-// Any constant shared by every instance of this app; "shiplens" in ASCII.
+// Any constant shared by every instance of this app. Never change it: two versions taking
+// different keys during a deploy could migrate at the same time.
 const ADVISORY_LOCK_KEY = 0x736869706c656e73n;
 
 const HISTORY_TABLE_DDL = `

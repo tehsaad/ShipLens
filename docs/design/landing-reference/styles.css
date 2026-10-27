@@ -1,4 +1,4 @@
-/* ShipLens volunteer landing page — shared styles for the English (LTR) and Urdu (RTL) pages.
+/* Hamqadam volunteer landing page — shared styles for the English (LTR) and Urdu (RTL) pages.
    Layout uses logical properties (margin-inline, padding-inline, text-align: start) so the
    Urdu page mirrors itself when dir="rtl" is set. */
 

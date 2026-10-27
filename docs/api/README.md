@@ -1,6 +1,6 @@
 # API reference
 
-ShipLens has no public JSON API. The browser talks to the server in two ways:
+Hamqadam has no public JSON API. The browser talks to the server in two ways:
 
 - **[Server actions](server-actions.md)** (37). These are the forms. Every change to data goes
   through one of them.

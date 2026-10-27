@@ -1,4 +1,4 @@
-# ShipLens — volunteer landing page
+# Hamqadam — volunteer landing page
 
 Static bilingual landing page (English and Urdu) for a volunteer organisation.
 

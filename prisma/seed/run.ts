@@ -8,6 +8,8 @@ import { parseDateOnly } from "../../lib/dates";
 import type { Prisma, PrismaClient } from "../../lib/generated/prisma/client";
 import { computeWeeklyTotals } from "../../lib/services/reporting";
 import {
+  DEMO_DOMAIN,
+  LEGACY_DEMO_DOMAIN,
   applications,
   branches,
   collections,
@@ -40,6 +42,48 @@ async function createMissing<T extends { id: string }>(
   return created;
 }
 
+/**
+ * Moves demo accounts created under the project's competition name to the current demo
+ * domain, with the current demo password, so the published logins work on databases seeded
+ * before the rename. Only a seeded account whose email is still exactly the old address is
+ * changed; one an admin has edited, or whose new address is taken, is left alone. Afterwards
+ * no account matches, so later runs change nothing.
+ */
+async function moveLegacyDemoLogins(tx: Tx, passwordHash: string): Promise<number> {
+  let moved = 0;
+  for (const user of users) {
+    const legacyEmail = user.email.replace(`@${DEMO_DOMAIN}`, `@${LEGACY_DEMO_DOMAIN}`);
+    const [legacy, taken] = await Promise.all([
+      tx.user.findFirst({ where: { id: user.id, email: legacyEmail }, select: { id: true } }),
+      tx.user.findUnique({ where: { email: user.email }, select: { id: true } }),
+    ]);
+    if (!legacy || taken) continue;
+    await tx.user.update({
+      where: { id: user.id },
+      data: {
+        email: user.email,
+        passwordHash,
+        mustChangePassword: false,
+        failedLoginCount: 0,
+        lockedUntil: null,
+      },
+    });
+    moved += 1;
+  }
+  if (moved > 0) {
+    // Counts and domains only: no addresses or password material in the append-only log.
+    await tx.auditLog.create({
+      data: {
+        action: "seed.demoLoginsMoved",
+        entityType: "Seed",
+        before: { domain: LEGACY_DEMO_DOMAIN },
+        after: { domain: DEMO_DOMAIN, accounts: moved },
+      },
+    });
+  }
+  return moved;
+}
+
 async function seed(tx: Tx, passwordHash: string): Promise<Record<string, number>> {
   const counts: Record<string, number> = {};
 
@@ -61,6 +105,8 @@ async function seed(tx: Tx, passwordHash: string): Promise<Record<string, number
       }),
   );
 
+  // Before creating users: a moved account must not be created a second time.
+  counts["demoLoginsMoved"] = await moveLegacyDemoLogins(tx, passwordHash);
   counts["users"] = await createMissing(
     users,
     (ids) => tx.user.findMany({ where: { id: { in: ids } }, select: { id: true } }),
@@ -171,7 +217,9 @@ async function seed(tx: Tx, passwordHash: string): Promise<Record<string, number
     (message) => tx.contactMessage.create({ data: message }),
   );
 
-  const createdTotal = Object.values(counts).reduce((sum, count) => sum + count, 0);
+  const createdTotal = Object.entries(counts)
+    .filter(([kind]) => kind !== "demoLoginsMoved")
+    .reduce((sum, [, count]) => sum + count, 0);
   if (createdTotal > 0) {
     await tx.auditLog.create({
       data: { action: "seed.applied", entityType: "Seed", after: counts },

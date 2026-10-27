@@ -8,7 +8,6 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 
 const LOCALES = ["en", "ur"];
 const SIZE = { width: 1200, height: 630 };
-const HOST = "shiplens.onrender.com";
 
 const lens = `<svg viewBox="0 0 32 32" width="132" height="132" aria-hidden="true">
   <rect width="32" height="32" rx="7" fill="#ffffff"/>
@@ -19,7 +18,7 @@ const lens = `<svg viewBox="0 0 32 32" width="132" height="132" aria-hidden="tru
 const escape = (text) =>
   text.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
 
-function template(locale, { name, tagline }) {
+function template(locale, { name, tagline }, otherName) {
   const urdu = locale === "ur";
   return `<!doctype html>
 <html lang="${locale}" dir="${urdu ? "rtl" : "ltr"}">
@@ -42,12 +41,13 @@ function template(locale, { name, tagline }) {
            border-top: 2px solid rgba(255,255,255,0.25); padding-top: 28px;
            font-family: Inter, sans-serif; font-size: 30px; color: #b9d2c6; }
   footer span[lang="ur"] { font-family: 'Noto Nastaliq Urdu', serif; font-size: 28px; }
+  footer span[lang="en"] { font-family: Inter, sans-serif; }
 </style>
 </head>
 <body>
   <div class="brand">${lens}<h1>${escape(name)}</h1></div>
   <p>${escape(tagline)}</p>
-  <footer><span dir="ltr">${HOST}</span><span>English · <span lang="ur">اردو</span></span></footer>
+  <footer><span lang="${urdu ? "en" : "ur"}" dir="${urdu ? "ltr" : "rtl"}">${escape(otherName)}</span><span>English · <span lang="ur">اردو</span></span></footer>
 </body>
 </html>`;
 }
@@ -59,8 +59,13 @@ try {
   await mkdir("public/og", { recursive: true });
   for (const locale of LOCALES) {
     const messages = JSON.parse(await readFile(`messages/${locale}.json`, "utf8"));
+    const other = JSON.parse(
+      await readFile(`messages/${locale === "en" ? "ur" : "en"}.json`, "utf8"),
+    );
     const page = await browser.newPage({ viewport: SIZE });
-    await page.setContent(template(locale, messages.site), { waitUntil: "networkidle" });
+    await page.setContent(template(locale, messages.site, other.site.name), {
+      waitUntil: "networkidle",
+    });
     await page.evaluate(() => document.fonts.ready);
     const file = `public/og/${locale}.png`;
     await writeFile(file, await page.screenshot({ type: "png" }));

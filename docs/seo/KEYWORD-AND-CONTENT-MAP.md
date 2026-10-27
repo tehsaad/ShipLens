@@ -14,7 +14,7 @@ Titles and descriptions below are the ones now in `messages/en.json` and `messag
 
 | Intent                                     | Page that answers it | Pages that only link to it                    |
 | ------------------------------------------ | -------------------- | --------------------------------------------- |
-| Who is ShipLens Volunteers?                | About                | Home (hero summary), header navigation        |
+| Who is Hamqadam Volunteers?                | About                | Home (hero summary), header navigation        |
 | What do the branches do?                   | Programs             | Home (three-program preview), About           |
 | Is there a branch in my city?              | Branches             | Home (active branch count), Get Involved      |
 | What is happening and when?                | Events               | Home (next three events)                      |
@@ -30,12 +30,12 @@ Home targets the organisation's name and the overall offer; it must not try to r
 
 - **Intent:** navigational and introductory: someone who heard the name, or is looking for
   volunteer branches in Pakistan.
-- **Focus:** ShipLens Volunteers. **Supporting:** volunteer branches across Pakistan; what
+- **Focus:** Hamqadam Volunteers. **Supporting:** volunteer branches across Pakistan; what
   branches do; how to join.
 - **Audience:** prospective volunteers, families of volunteers, partners.
-- **Title:** ShipLens Volunteers: volunteer branches across Pakistan /
-  شپ لینز رضاکار: پاکستان بھر میں رضاکار شاخیں
-- **Description:** "ShipLens Volunteers connects volunteer branches across Pakistan to one
+- **Title:** Hamqadam Volunteers: volunteer branches across Pakistan /
+  ہم قدم رضاکار: پاکستان بھر میں رضاکار شاخیں
+- **Description:** "Hamqadam Volunteers connects volunteer branches across Pakistan to one
   head office. Our branches run tutoring, food and clothing drives and community events."
 - **Facts in place:** tagline, hero text, active branch count, latest programs and events.
 - **Links:** Get Involved (button), Programs, Branches, Events.
@@ -46,11 +46,11 @@ Home targets the organisation's name and the overall offer; it must not try to r
 
 ### About (`/about`)
 
-- **Intent:** informational: "what is ShipLens Volunteers", mission, how it is organised.
-- **Focus:** about ShipLens Volunteers. **Supporting:** mission; vision; history; how head
+- **Intent:** informational: "what is Hamqadam Volunteers", mission, how it is organised.
+- **Focus:** about Hamqadam Volunteers. **Supporting:** mission; vision; history; how head
   office supports branches; what "branch", "branch lead" and "head office" mean.
-- **Title:** About us · ShipLens Volunteers / ہمارے بارے میں · شپ لینز رضاکار
-- **Description:** "About ShipLens Volunteers: we connect volunteer branches across Pakistan to
+- **Title:** About us · Hamqadam Volunteers / ہمارے بارے میں · ہم قدم رضاکار
+- **Description:** "About Hamqadam Volunteers: we connect volunteer branches across Pakistan to
   one head office, which supports every branch."
 - **Facts in place:** one published sentence.
 - **Links (now):** Programs, Branches, Get Involved.
@@ -65,8 +65,8 @@ Home targets the organisation's name and the overall offer; it must not try to r
 - **Intent:** informational: what volunteers actually do.
 - **Focus:** volunteer programs. **Supporting:** tutoring; food and clothing drives;
   community events.
-- **Title:** Programs · ShipLens Volunteers / پروگرام · شپ لینز رضاکار
-- **Description:** "What ShipLens Volunteers branches do week after week: tutoring, food and
+- **Title:** Programs · Hamqadam Volunteers / پروگرام · ہم قدم رضاکار
+- **Description:** "What Hamqadam Volunteers branches do week after week: tutoring, food and
   clothing drives and community events."
 - **Facts in place:** two sample entries ("Program One", "Program Two") with one sentence
   each; Program Two has no Urdu version.
@@ -79,8 +79,8 @@ Home targets the organisation's name and the overall offer; it must not try to r
 
 - **Intent:** local: "volunteer in Lahore", "is there a branch near me".
 - **Focus:** branches by city. **Supporting:** branch codes; contact emails; cities served.
-- **Title:** Branches · ShipLens Volunteers / شاخیں · شپ لینز رضاکار
-- **Description:** "Active ShipLens Volunteers branches across Pakistan, with each branch's
+- **Title:** Branches · Hamqadam Volunteers / شاخیں · ہم قدم رضاکار
+- **Description:** "Active Hamqadam Volunteers branches across Pakistan, with each branch's
   code, city and contact email. Filter the list by city."
 - **Facts in place:** active branches with code, city and contact email (structured data
   lists the same).
@@ -93,8 +93,8 @@ Home targets the organisation's name and the overall offer; it must not try to r
 
 - **Intent:** time-bound: "volunteer events this month", a specific event's date and place.
 - **Focus:** upcoming events. **Supporting:** past events; branch events; head office events.
-- **Title:** Events · ShipLens Volunteers / تقریبات · شپ لینز رضاکار
-- **Description:** "Upcoming and past events of ShipLens Volunteers branches and head office,
+- **Title:** Events · Hamqadam Volunteers / تقریبات · ہم قدم رضاکار
+- **Description:** "Upcoming and past events of Hamqadam Volunteers branches and head office,
   with the date, time and place of each."
 - **Facts in place:** title (English, optional Urdu), start and end, location, branch.
   Upcoming events are described in structured data.
@@ -106,10 +106,10 @@ Home targets the organisation's name and the overall offer; it must not try to r
 ### Get Involved (`/get-involved`)
 
 - **Intent:** transactional: "how to volunteer", "volunteer application Pakistan".
-- **Focus:** volunteering with ShipLens Volunteers. **Supporting:** the three steps; what
+- **Focus:** volunteering with Hamqadam Volunteers. **Supporting:** the three steps; what
   happens after applying; unpaid volunteering; no national ID needed; who sees your details.
-- **Title:** Get involved · ShipLens Volunteers / شامل ہوں · شپ لینز رضاکار
-- **Description:** "How to volunteer with ShipLens Volunteers: apply online and choose a
+- **Title:** Get involved · Hamqadam Volunteers / شامل ہوں · ہم قدم رضاکار
+- **Description:** "How to volunteer with Hamqadam Volunteers: apply online and choose a
   branch, our HR team reads every application, and if you are accepted your branch lead
   contacts you."
 - **Facts in place:** the steps, the form, and the answers (now on the page) from published
@@ -122,10 +122,10 @@ Home targets the organisation's name and the overall offer; it must not try to r
 ### Contact (`/contact`)
 
 - **Intent:** navigational: contact head office.
-- **Focus:** contact ShipLens Volunteers. **Supporting:** questions about volunteering, a
+- **Focus:** contact Hamqadam Volunteers. **Supporting:** questions about volunteering, a
   branch or an event; reply by email.
-- **Title:** Contact · ShipLens Volunteers / رابطہ · شپ لینز رضاکار
-- **Description:** "Questions about volunteering, a branch or an event? Send ShipLens
+- **Title:** Contact · Hamqadam Volunteers / رابطہ · ہم قدم رضاکار
+- **Description:** "Questions about volunteering, a branch or an event? Send Hamqadam
   Volunteers head office a message and we will reply by email."
 - **Links (now):** Get Involved, Branches.
 - **Owner gaps:** a published head office email, phone or address, if the organisation wants

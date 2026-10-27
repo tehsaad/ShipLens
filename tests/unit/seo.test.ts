@@ -41,7 +41,7 @@ describe("canonical origin", () => {
     ["https://127.0.0.1", "a local address"],
     ["https://0.0.0.0:10000", "a local address"],
     ["https://[::1]", "a local address"],
-    ["https://shiplens-pr-12.onrender.com", "a preview deployment"],
+    ["https://hamqadam-pr-12.onrender.com", "a preview deployment"],
     ["https://shiplens.onrender.com/en", "not a bare origin"],
     ["https://shiplens.onrender.com/?utm_source=x", "not a bare origin"],
     ["https://user:secret@shiplens.onrender.com", "contains credentials"],
@@ -124,7 +124,7 @@ describe("page metadata", () => {
   const pageText = {
     title: "Programs",
     description: "What our branches do.",
-    siteName: "ShipLens Volunteers",
+    siteName: "Hamqadam Volunteers",
     imageAlt: "Logo",
   };
 
@@ -148,14 +148,14 @@ describe("page metadata", () => {
       url: "/ur/programs",
       locale: "ur_PK",
       alternateLocale: ["en_PK"],
-      siteName: "ShipLens Volunteers",
-      title: "Programs · ShipLens Volunteers",
+      siteName: "Hamqadam Volunteers",
+      title: "Programs · Hamqadam Volunteers",
       description: "What our branches do.",
       images: [{ url: "/og/ur.png", width: 1200, height: 630, alt: "Logo" }],
     });
     expect(metadata.twitter).toMatchObject({
       card: "summary_large_image",
-      title: "Programs · ShipLens Volunteers",
+      title: "Programs · Hamqadam Volunteers",
       images: [{ url: "/og/ur.png", alt: "Logo" }],
     });
   });
@@ -248,8 +248,8 @@ describe("robots.txt", () => {
 
 describe("structured data", () => {
   const site = {
-    name: "ShipLens Volunteers",
-    alternateName: "شپ لینز رضاکار",
+    name: "Hamqadam Volunteers",
+    alternateName: "ہم قدم رضاکار",
     description: "Volunteer branches across Pakistan, one head office.",
   };
 
@@ -265,7 +265,7 @@ describe("structured data", () => {
     expect(organization).toMatchObject({
       "@type": "Organization",
       "@id": `${PRODUCTION_ORIGIN}/#organization`,
-      name: "ShipLens Volunteers",
+      name: "Hamqadam Volunteers",
       url: `${PRODUCTION_ORIGIN}/en`,
     });
     for (const key of [
@@ -379,7 +379,7 @@ describe("llms.txt", () => {
   const llms = buildLlmsTxt(origin, messages as never);
 
   it("summarises the site and links every public page in both languages", () => {
-    expect(llms.startsWith("# ShipLens Volunteers\n")).toBe(true);
+    expect(llms.startsWith("# Hamqadam Volunteers\n")).toBe(true);
     for (const page of PUBLIC_PAGES) {
       for (const locale of routing.locales) {
         expect(llms).toContain(`(${PRODUCTION_ORIGIN}/${locale}${page.path}):`);

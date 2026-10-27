@@ -35,7 +35,7 @@ describe("audit log is append-only (section 5)", () => {
   });
 
   describe("as the application role", () => {
-    const roleName = `shiplens_app_test_${randomBytes(4).toString("hex")}`;
+    const roleName = `app_role_test_${randomBytes(4).toString("hex")}`;
     const password = randomBytes(18).toString("base64url");
     let appUrl: string;
 

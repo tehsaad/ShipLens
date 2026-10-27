@@ -22,11 +22,11 @@ jobs:
         env:
           POSTGRES_USER: ci
           POSTGRES_PASSWORD: ci
-          POSTGRES_DB: shiplens_test
+          POSTGRES_DB: hamqadam_test
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U ci -d shiplens_test"
+          --health-cmd "pg_isready -U ci -d hamqadam_test"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
@@ -34,8 +34,8 @@ jobs:
       HUSKY: "0"
       NEXT_TELEMETRY_DISABLED: "1"
       # CI-only values for a throwaway service container; not secrets.
-      DATABASE_URL: postgresql://ci:ci@localhost:5432/shiplens_test?schema=public
-      TEST_DATABASE_URL: postgresql://ci:ci@localhost:5432/shiplens_test?schema=public
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/hamqadam_test?schema=public
+      TEST_DATABASE_URL: postgresql://ci:ci@localhost:5432/hamqadam_test?schema=public
     steps:
       - name: Check out repository
         uses: actions/checkout@v7
@@ -92,7 +92,7 @@ jobs:
       # scripts/e2e-server.mjs resets and seeds: the role access tests, the weekly report
       # cycle and the axe checks of the public pages.
       - name: End-to-end database
-        run: docker exec ${{ job.services.postgres.id }} createdb -U ci shiplens_e2e
+        run: docker exec ${{ job.services.postgres.id }} createdb -U ci hamqadam_e2e
 
       - name: Install Playwright's Chromium
         run: npx playwright install --with-deps chromium
@@ -100,7 +100,7 @@ jobs:
       - name: End-to-end and accessibility tests
         env:
           # CI-only value for the throwaway service container; not a secret.
-          E2E_DATABASE_URL: postgresql://ci:ci@localhost:5432/shiplens_e2e?schema=public
+          E2E_DATABASE_URL: postgresql://ci:ci@localhost:5432/hamqadam_e2e?schema=public
         run: npm run test:e2e
 
       - name: Keep the Playwright report of a failed run
@@ -121,23 +121,23 @@ jobs:
           SMOKE_AUTH_SECRET: ci-only-auth-secret-0123456789abcdefghij
           SMOKE_SEED_PASSWORD: ci-only-demo-password
         run: |
-          docker build -t shiplens:ci .
-          size=$(docker image inspect shiplens:ci --format '{{.Size}}')
+          docker build -t hamqadam:ci .
+          size=$(docker image inspect hamqadam:ci --format '{{.Size}}')
           echo "Image size: $((size / 1024 / 1024)) MB"
           test "$size" -le $((300 * 1024 * 1024))
-          docker exec ${{ job.services.postgres.id }} createdb -U ci shiplens_smoke
-          docker run -d --name shiplens-smoke --network host \
+          docker exec ${{ job.services.postgres.id }} createdb -U ci hamqadam_smoke
+          docker run -d --name hamqadam-smoke --network host \
             -e PORT=3300 \
-            -e DATABASE_URL=postgresql://ci:ci@localhost:5432/shiplens_smoke?schema=public \
+            -e DATABASE_URL=postgresql://ci:ci@localhost:5432/hamqadam_smoke?schema=public \
             -e AUTH_SECRET="$SMOKE_AUTH_SECRET" \
             -e AUTH_TRUST_HOST=true \
             -e SEED_DEMO_PASSWORD="$SMOKE_SEED_PASSWORD" \
-            shiplens:ci
+            hamqadam:ci
           for attempt in $(seq 1 60); do
             if curl -fsS http://127.0.0.1:3300/api/health; then
-              echo; docker logs shiplens-smoke | head -20; exit 0
+              echo; docker logs hamqadam-smoke | head -20; exit 0
             fi
             sleep 2
           done
-          docker logs shiplens-smoke
+          docker logs hamqadam-smoke
           exit 1

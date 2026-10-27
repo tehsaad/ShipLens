@@ -46,7 +46,7 @@ const FORWARDING_HEADERS = [
   "x-client-ip",
 ];
 
-const process_ = globalThis as typeof globalThis & { shiplensForwardingLogged?: boolean };
+const process_ = globalThis as typeof globalThis & { hamqadamForwardingLogged?: boolean };
 
 /**
  * Logs once per server start which forwarding headers requests arrive with, and how many
@@ -54,8 +54,8 @@ const process_ = globalThis as typeof globalThis & { shiplensForwardingLogged?: 
  * hosting proxy sets, to choose TRUSTED_CLIENT_IP_HEADER.
  */
 function logForwardingHeaders(source: Headers): void {
-  if (process_.shiplensForwardingLogged) return;
-  process_.shiplensForwardingLogged = true;
+  if (process_.hamqadamForwardingLogged) return;
+  process_.hamqadamForwardingLogged = true;
   logEvent("info", "clientIp.headers", {
     present: FORWARDING_HEADERS.filter((name) => source.has(name)).join(" "),
     forwardedEntries: source.get("x-forwarded-for")?.split(",").length ?? 0,

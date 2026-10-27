@@ -9,9 +9,19 @@ import { addDays, formatDateOnly, parseDateOnly } from "../../lib/dates";
 /** The last date covered by the sample data (a Sunday). */
 export const SEED_ANCHOR = "2026-10-18";
 
-const DEMO_DOMAIN = "demo.shiplens.test";
+export const DEMO_DOMAIN = "demo.hamqadam.test";
 
-/** Stable UUID for a seed record, derived from its kind and key (UUID v5 layout). */
+/**
+ * The demo accounts' domain under the project's competition name, before it became Hamqadam.
+ * Accounts created then are moved to DEMO_DOMAIN by the seed (run.ts).
+ */
+export const LEGACY_DEMO_DOMAIN = "demo.shiplens.test";
+
+/**
+ * Stable UUID for a seed record, derived from its kind and key (UUID v5 layout). The salt
+ * keeps the project's competition name on purpose: the live database's demo records carry
+ * these ids, and a new salt would make the seed create every record a second time.
+ */
 export function seedId(kind: string, key: string | number): string {
   const bytes = createHash("sha1").update(`shiplens-seed:${kind}:${key}`).digest().subarray(0, 16);
   bytes[6] = (bytes[6]! & 0x0f) | 0x50;

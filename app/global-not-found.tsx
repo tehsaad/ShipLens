@@ -3,7 +3,7 @@ import Link from "next/link";
 import { inter } from "@/lib/fonts";
 import "./globals.css";
 
-export const metadata: Metadata = { title: "Page not found · ShipLens Volunteers" };
+export const metadata: Metadata = { title: "Page not found · Hamqadam Volunteers" };
 
 /** Any URL that matches no route at all (the app has two root layouts, so no shared 404). */
 export default function GlobalNotFound() {

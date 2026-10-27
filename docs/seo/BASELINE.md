@@ -2,7 +2,8 @@
 
 What crawlers and visitors got from the live site before this work, recorded on
 **26 October 2026 at 18:00 UTC** against <https://shiplens.onrender.com>, deploy
-`dep-dbfoolc9v7es73boiueg` (commit `e471f32`).
+`dep-dbfoolc9v7es73boiueg` (commit `e471f32`). The site has since been renamed Hamqadam
+(see [handover](../handover.md#names)); this record uses the new name.
 
 **How it was checked:**
 
@@ -34,7 +35,7 @@ What crawlers and visitors got from the live site before this work, recorded on
 | `llms.txt`                                     | FAIL       | 404 (optional; see IMPLEMENTATION.md).                                                                                                                                        |
 | HTTPS and canonical host                       | PASS       | Served over HTTPS at `shiplens.onrender.com`; `/` and unprefixed paths (`/about`) redirect to `/en/...`.                                                                      |
 | `metadataBase` / absolute canonical URLs       | PASS       | Every page's canonical is absolute on `https://shiplens.onrender.com` (from `SITE_URL`, default production). The origin was not validated.                                    |
-| Title template                                 | PARTIAL    | `<page> · ShipLens Volunteers` works, but the home page title was only "Home" / "صفحۂ اول": the template does not apply to a page in the layout's own segment.                |
+| Title template                                 | PARTIAL    | `<page> · Hamqadam Volunteers` works, but the home page title was only "Home" / "صفحۂ اول": the template does not apply to a page in the layout's own segment.                |
 | Meta descriptions                              | FAIL       | All 9 pages in a language shared one description (the site tagline): 18 URLs, 2 distinct descriptions.                                                                        |
 | Open Graph / X cards                           | FAIL       | None on any page; no social image.                                                                                                                                            |
 | Structured data (JSON-LD)                      | FAIL       | None.                                                                                                                                                                         |

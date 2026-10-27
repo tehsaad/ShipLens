@@ -75,11 +75,11 @@ export class RateLimiter {
   }
 }
 
-const store = globalThis as typeof globalThis & { shiplensRateLimiter?: RateLimiter };
+const store = globalThis as typeof globalThis & { hamqadamRateLimiter?: RateLimiter };
 
 function limiter(): RateLimiter {
-  store.shiplensRateLimiter ??= new RateLimiter();
-  return store.shiplensRateLimiter;
+  store.hamqadamRateLimiter ??= new RateLimiter();
+  return store.hamqadamRateLimiter;
 }
 
 /** Clients without an IP share one key. */
