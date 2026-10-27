@@ -6,9 +6,25 @@ checks and approves them. HR turns volunteer applications into members. Head off
 whole picture on one dashboard, with every change and export kept in an audit log that cannot
 be edited. It replaces spreadsheet and WhatsApp reporting with approved, auditable records.
 
-**Live:** <https://shiplens.onrender.com>. The demo logins for the five roles are in
-[docs/handover.md](docs/handover.md#sample-data-and-demo-logins). The free plan sleeps when
-idle, so the first page can take up to a minute.
+**Live:** <https://shiplens.onrender.com>. The free plan sleeps when idle, so the first page
+can take up to a minute. Staff sign in at <https://shiplens.onrender.com/admin/login>.
+
+## Test logins
+
+One login per role, all working on the live site:
+
+| Role             | Email                                 | Signs in to                                                   |
+| ---------------- | ------------------------------------- | ------------------------------------------------------------- |
+| Super Admin      | `super.admin@demo.hamqadam.test`      | Users, branches, the dashboard and the audit log              |
+| Finance Reviewer | `finance.reviewer@demo.hamqadam.test` | Weekly reports to approve or return, collections not yet sent |
+| Content Editor   | `content.editor@demo.hamqadam.test`   | The content manager: drafts and publishing                    |
+| HR Lead          | `hr.lead@demo.hamqadam.test`          | Volunteer applications, accepting or declining them           |
+| Branch Lead      | `lead.kar001@demo.hamqadam.test`      | Karachi Central (`BR-KAR-001`): members, collections, reports |
+
+All five share one password. It is not stored in this repository (rule 9 of the brief: no
+passwords in Git); it is given with the submission and set on Render as `SEED_DEMO_PASSWORD`.
+Loading the sample data is one command, `npm run db:seed`; see
+[docs/handover.md](docs/handover.md#sample-data-and-demo-logins).
 
 The specification is [`docs/SPEC.md`](docs/SPEC.md). Approved decisions are in
 [`docs/OPEN-QUESTIONS.md`](docs/OPEN-QUESTIONS.md), and the acceptance record is
@@ -273,6 +289,31 @@ Notes:
 This repository first held a static bilingual (English and Urdu) volunteer landing page, added
 in pull request #1. It is preserved, with its Git history, in
 [`docs/design/landing-reference/`](docs/design/landing-reference/) as a design reference.
+
+## Credits
+
+Hamqadam is built on open-source software. The direct dependencies and their licences, as
+declared in each package:
+
+| Area               | Packages                                                                                                                                         | Licence           |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------- |
+| Framework and UI   | Next.js, React, React DOM, next-intl, Recharts, React Hook Form, `@hookform/resolvers`, react-markdown, rehype-sanitize, Zod, tw-animate-css, cn | MIT               |
+| UI components      | shadcn/ui (components copied into `components/ui`, CLI `shadcn`), Radix UI (`radix-ui`)                                                          | MIT               |
+| UI components      | class-variance-authority                                                                                                                         | Apache-2.0        |
+| Icons              | Lucide (`lucide-react`)                                                                                                                          | ISC               |
+| Auth and passwords | Auth.js (`next-auth`)                                                                                                                            | ISC               |
+| Auth and passwords | `@node-rs/argon2`                                                                                                                                | MIT               |
+| Database           | Prisma (`prisma`, `@prisma/client`, `@prisma/adapter-pg`)                                                                                        | Apache-2.0        |
+| Database           | node-postgres (`pg`)                                                                                                                             | MIT               |
+| PDF                | PDFKit                                                                                                                                           | MIT               |
+| Styling            | Tailwind CSS (`tailwindcss`, `@tailwindcss/postcss`)                                                                                             | MIT               |
+| Testing            | Vitest, `@vitest/coverage-v8`                                                                                                                    | MIT               |
+| Testing            | Playwright (`@playwright/test`)                                                                                                                  | Apache-2.0        |
+| Testing            | axe-core for Playwright (`@axe-core/playwright`)                                                                                                 | MPL-2.0           |
+| Tooling            | TypeScript                                                                                                                                       | Apache-2.0        |
+| Tooling            | ESLint, `eslint-config-next`, `eslint-config-prettier`, Prettier, esbuild, tsx, Husky, lint-staged, commitlint                                   | MIT               |
+| Tooling            | dotenv                                                                                                                                           | BSD-2-Clause      |
+| Fonts              | Inter, Noto Nastaliq Urdu (Google Fonts, loaded with `next/font`)                                                                                | SIL Open Font 1.1 |
 
 ## License
 
