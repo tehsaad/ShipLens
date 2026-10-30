@@ -23,6 +23,7 @@ const EXPECTED: Record<Action, [Cell, Cell, Cell, Cell, Cell, Cell]> = {
   "branch.update": /*               */ ["-", "A", "-", "-", "-", "-"],
   "branch.changeStatus": /*         */ ["-", "A", "-", "-", "-", "-"],
   "branch.readPublic": /*           */ ["A", "A", "A", "A", "A", "A"],
+  "impact.readPublic": /*           */ ["A", "A", "A", "A", "A", "A"],
   "team.read": /*                   */ ["-", "A", "-", "-", "O", "A"],
   "team.create": /*                 */ ["-", "A", "-", "-", "O", "-"],
   "team.update": /*                 */ ["-", "A", "-", "-", "O", "-"],

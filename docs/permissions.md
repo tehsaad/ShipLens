@@ -32,6 +32,12 @@ admin screens use it only to hide controls.
 | `branch.changeStatus` | All         | —                | —              | —       | —           |        |
 | `branch.readPublic`   | All         | All              | All            | All     | All         | Yes    |
 
+## impact
+
+| Action              | Super Admin | Finance Reviewer | Content Editor | HR Lead | Branch Lead | Public |
+| ------------------- | ----------- | ---------------- | -------------- | ------- | ----------- | ------ |
+| `impact.readPublic` | All         | All              | All            | All     | All         | Yes    |
+
 ## Teams
 
 | Action               | Super Admin | Finance Reviewer | Content Editor | HR Lead | Branch Lead | Public |
