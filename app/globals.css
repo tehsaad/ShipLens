@@ -5,8 +5,12 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-heading: var(--font-sans);
+  /* Public site: Bricolage Grotesque (display) + JetBrains Mono (labels) via next/font.
+     Each falls back to the admin sans / a system mono where those vars are not set. */
+  --font-heading: var(--font-display, var(--font-sans));
+  --font-display: var(--font-display, var(--font-sans));
   --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono, ui-monospace, "SFMono-Regular", Menlo, monospace);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -253,4 +257,175 @@ html[lang="ur"] :is(input:not([type="checkbox"]), select) {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
+}
+
+/* ===========================================================================
+   Public site presentation: display type, the "river" motif and scroll motion.
+   Latin display/mono faces apply to English only; Urdu keeps the Nastaliq stack
+   (letter-spacing and uppercasing break the script's joins).
+   =========================================================================== */
+
+html[lang="en"].site :is(h1, h2, h3, h4) {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+html[lang="en"].site h1 {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+
+/* Small technical label above a heading. */
+.site .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--marigold-ink);
+  font-weight: 600;
+}
+html[lang="en"].site .eyebrow {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.72rem;
+}
+.site .eyebrow::before {
+  content: "";
+  width: 1.75rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--marigold);
+}
+
+/* A word inside a heading painted with the teal → marigold gradient. */
+.site .text-gradient {
+  background-image: linear-gradient(100deg, var(--primary) 0%, var(--marigold-ink) 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.site.dark .text-gradient {
+  background-image: linear-gradient(100deg, var(--primary) 0%, var(--marigold) 85%);
+}
+
+/* Full-bleed wrapper so the river can span the viewport inside the centred <main>. */
+.river-bleed {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+}
+
+/* Soft, static radial glow behind the hero. No animation: it sits in the reading area. */
+.hero-aurora {
+  position: absolute;
+  inset: -10% -20% auto -20%;
+  height: 120%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      42% 42% at 22% 18%,
+      color-mix(in oklab, var(--primary) 26%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      38% 38% at 82% 32%,
+      color-mix(in oklab, var(--marigold) 30%, transparent),
+      transparent 70%
+    );
+  filter: blur(6px);
+}
+
+/* A milestone marker sitting on the river. */
+.river-node {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 999px;
+  background: var(--card);
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-weight: 700;
+  box-shadow: 0 10px 30px -12px color-mix(in oklab, var(--primary) 60%, transparent);
+}
+
+/* The dot that travels along the river path. */
+.river-boat {
+  fill: var(--marigold);
+  stroke: var(--card);
+  stroke-width: 3;
+  filter: drop-shadow(0 4px 10px color-mix(in oklab, var(--marigold) 70%, transparent));
+}
+
+/* Numbered stop sitting on the river (drawn in SVG by the river scene). */
+.river-node-ring {
+  fill: var(--card);
+  stroke: var(--primary);
+  stroke-width: 2;
+  filter: drop-shadow(0 10px 24px color-mix(in oklab, var(--primary) 45%, transparent));
+}
+.river-node-label {
+  fill: var(--primary);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-weight: 700;
+  font-size: 1rem;
+}
+.river-host {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Drifting dust behind the hero. */
+.dust-field {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.river-path-track {
+  stroke: color-mix(in oklab, var(--primary) 18%, transparent);
+}
+.river-path-draw {
+  stroke: var(--primary);
+  stroke-linecap: round;
+}
+
+/* Elevated card used across the public site. */
+.site .card-surface {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-2xl);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+@media (hover: hover) {
+  .site .card-surface.is-interactive:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in oklab, var(--primary) 40%, var(--border));
+    box-shadow: 0 24px 50px -28px color-mix(in oklab, var(--primary) 55%, transparent);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site .card-surface.is-interactive:hover {
+    transform: none;
+  }
+}
+
+/* Big counter numeral for the impact band. */
+.site .stat-figure {
+  font-family: var(--font-display), system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
 }

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { inter } from "@/lib/fonts";
+import { instrumentSans } from "@/lib/fonts";
 import "./globals.css";
 
 export const metadata: Metadata = { title: "Page not found · Hamqadam Volunteers" };
@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Page not found · Hamqadam Volunteer
 /** Any URL that matches no route at all (the app has two root layouts, so no shared 404). */
 export default function GlobalNotFound() {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={instrumentSans.variable}>
       <body className="font-sans">
         <main className="mx-auto grid max-w-md gap-3 px-4 py-24 text-center">
           <h1 className="text-2xl font-semibold">Page not found</h1>
