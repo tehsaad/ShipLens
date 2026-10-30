@@ -298,10 +298,16 @@ export async function listPublishedEntries(
   locale: Locale,
 ): Promise<PublishedEntry[]> {
   authorize(null, "content.readPublished");
+  // Announcements read newest-first; programs and pages read in a stable slug order so the
+  // list matches the way an editor names and thinks of them. (Ordering by publishedAt made
+  // "program-two" — published after "program-one" — appear first, so the two swapped places.)
   const rows = await db.contentEntry.findMany({
     where: { type, status: "PUBLISHED", locale: { in: locale === "en" ? ["en"] : [locale, "en"] } },
     select: publicSelect,
-    orderBy: [{ publishedAt: "desc" }, { slug: "asc" }],
+    orderBy:
+      type === "ANNOUNCEMENT"
+        ? [{ publishedAt: "desc" }, { slug: "asc" }]
+        : [{ slug: "asc" }, { publishedAt: "desc" }],
   });
   const bySlug = new Map<string, PublishedEntry>();
   for (const row of rows) {
