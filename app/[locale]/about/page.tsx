@@ -32,13 +32,13 @@ export default async function AboutPage({ params }: Props) {
             dir={entry.fallback ? "ltr" : undefined}
             className="grid gap-6"
           >
-            <h1 className="text-3xl font-semibold">{entry.title}</h1>
+            <h1 className="text-4xl font-semibold sm:text-5xl">{entry.title}</h1>
             <Markdown>{entry.body}</Markdown>
           </div>
         </article>
       ) : (
         <article className="grid gap-4">
-          <h1 className="text-3xl font-semibold">{t("missingTitle")}</h1>
+          <h1 className="text-4xl font-semibold sm:text-5xl">{t("missingTitle")}</h1>
           <p className="text-muted-foreground">{t("missing")}</p>
         </article>
       )}

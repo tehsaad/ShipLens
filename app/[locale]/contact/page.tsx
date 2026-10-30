@@ -19,7 +19,7 @@ export default async function ContactPage({ params }: Props) {
   return (
     <div className="grid max-w-2xl gap-8">
       <header className="grid gap-2">
-        <h1 className="text-3xl font-semibold">{t("title")}</h1>
+        <h1 className="text-4xl font-semibold sm:text-5xl">{t("title")}</h1>
         <p className="text-muted-foreground text-lg">{t("intro")}</p>
       </header>
       <section aria-labelledby="send" className="grid gap-4">
