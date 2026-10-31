@@ -16,18 +16,18 @@ export type PublicImpact = {
   cities: number;
   activeMembers: number;
   collections: number;
-  totalRaisedPkr: number;
+  teams: number;
 };
 
 export async function getPublicImpact(db: PrismaClient): Promise<PublicImpact> {
   authorize(null, "impact.readPublic");
 
-  const [activeBranches, activeCities, activeMembers, collections, raised] = await Promise.all([
+  const [activeBranches, activeCities, activeMembers, collections, teams] = await Promise.all([
     db.branch.count({ where: { status: "ACTIVE" } }),
     db.branch.findMany({ where: { status: "ACTIVE" }, select: { city: true }, distinct: ["city"] }),
     db.member.count({ where: { status: "ACTIVE" } }),
     db.collection.count(),
-    db.collection.aggregate({ _sum: { amount: true } }),
+    db.team.count(),
   ]);
 
   return {
@@ -35,7 +35,6 @@ export async function getPublicImpact(db: PrismaClient): Promise<PublicImpact> {
     cities: activeCities.length,
     activeMembers,
     collections,
-    // Decimal(14,2) → whole PKR. Rounded down to a whole rupee for display.
-    totalRaisedPkr: Math.floor(Number(raised._sum.amount ?? 0)),
+    teams,
   };
 }

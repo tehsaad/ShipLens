@@ -69,7 +69,6 @@
     "statCities": "Cities reached",
     "statMembers": "Active members",
     "statCollections": "Collections recorded",
-    "statRaised": "Raised across the network",
     "joinTitle": "Your city needs one more volunteer",
     "joinText": "Join a branch near you, or start the conversation with head office. It takes a few minutes to begin.",
     "ctaContact": "Talk to us",
@@ -92,7 +91,8 @@
       "Experienced volunteers guide newcomers as they find their footing.",
       "When a crisis hits a city, the nearest branch is ready to respond."
     ],
-    "resultsMore": "See our results"
+    "resultsMore": "See our results",
+    "statTeams": "Volunteer teams"
   },
   "about": {
     "metaTitle": "About us",

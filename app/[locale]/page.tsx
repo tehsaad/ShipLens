@@ -41,11 +41,6 @@ export default async function HomePage({ params }: Props) {
   const when = eventTimeFormat(locale);
 
   const num = new Intl.NumberFormat(locale);
-  const money = new Intl.NumberFormat(locale, {
-    style: "currency",
-    currency: "PKR",
-    maximumFractionDigits: 0,
-  });
 
   const flowTitles = t.raw("flowTitles") as string[];
   const flowBodies = t.raw("flowBodies") as string[];
@@ -229,10 +224,10 @@ export default async function HomePage({ params }: Props) {
                     {num.format(impact.collections)}
                   </dd>
                 </div>
-                <div className="col-span-2 sm:col-span-1">
-                  <dt className="text-sm text-white/70">{t("statRaised")}</dt>
-                  <dd className="stat-figure text-marigold mt-1 text-3xl" dir="ltr">
-                    {money.format(impact.totalRaisedPkr)}
+                <div>
+                  <dt className="text-sm text-white/70">{t("statTeams")}</dt>
+                  <dd className="stat-figure text-marigold mt-1 text-4xl">
+                    {num.format(impact.teams)}
                   </dd>
                 </div>
               </dl>
