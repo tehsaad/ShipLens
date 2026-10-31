@@ -150,6 +150,31 @@ export const PERMISSIONS = {
   "event.update": { roles: { SUPER_ADMIN: ALL, CONTENT_EDITOR: ALL } },
   "event.publish": { roles: { SUPER_ADMIN: ALL, CONTENT_EDITOR: ALL } },
 
+  // Public results / achievements ("the portfolio"): SUPER_ADMIN, CONTENT_EDITOR and HR_LEAD
+  // manage them network-wide; a BRANCH_LEAD manages only its own branch's results.
+  "result.read": {
+    roles: { SUPER_ADMIN: ALL, CONTENT_EDITOR: ALL, HR_LEAD: ALL, BRANCH_LEAD: OWN },
+  },
+  "result.create": {
+    roles: { SUPER_ADMIN: ALL, CONTENT_EDITOR: ALL, HR_LEAD: ALL, BRANCH_LEAD: OWN },
+  },
+  "result.update": {
+    roles: { SUPER_ADMIN: ALL, CONTENT_EDITOR: ALL, HR_LEAD: ALL, BRANCH_LEAD: OWN },
+  },
+  "result.publish": {
+    roles: { SUPER_ADMIN: ALL, CONTENT_EDITOR: ALL, HR_LEAD: ALL, BRANCH_LEAD: OWN },
+  },
+  "result.readPublished": {
+    public: true,
+    roles: {
+      SUPER_ADMIN: ALL,
+      FINANCE_REVIEWER: ALL,
+      CONTENT_EDITOR: ALL,
+      HR_LEAD: ALL,
+      BRANCH_LEAD: ALL,
+    },
+  },
+
   // Contact form (section 3: PUBLIC submits; SUPER_ADMIN has all data)
   "contactMessage.submit": {
     public: true,

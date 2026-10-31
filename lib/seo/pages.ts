@@ -27,6 +27,13 @@ export const PUBLIC_PAGES = [
     sources: ["programs"],
   },
   {
+    key: "results",
+    path: "/results",
+    namespace: "results",
+    schemaType: "CollectionPage",
+    sources: [],
+  },
+  {
     key: "branches",
     path: "/branches",
     namespace: "branches",

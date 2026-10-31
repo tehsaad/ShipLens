@@ -13,6 +13,7 @@ export const PUBLIC_PAGES = [
   "",
   "/about",
   "/programs",
+  "/results",
   "/branches",
   "/events",
   "/get-involved",

@@ -21,6 +21,7 @@ const NAV = [
   { href: "/admin/reports", key: "reports", action: "report.read" },
   { href: "/admin/content", key: "content", action: "content.read" },
   { href: "/admin/events", key: "events", action: "event.read" },
+  { href: "/admin/results", key: "results", action: "result.read" },
   { href: "/admin/messages", key: "messages", action: "contactMessage.read" },
   { href: "/admin/audit", key: "audit", action: "audit.read" },
 ] as const satisfies { href: string; key: string; action: Action }[];

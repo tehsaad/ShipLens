@@ -132,6 +132,7 @@ model Branch {
   collections   Collection[]
   weeklyReports WeeklyReport[]
   events        Event[]
+  results       Result[]
 
   @@index([leadUserId])
   @@index([status])
@@ -371,4 +372,48 @@ model AuditLog {
   @@index([entityType, entityId])
   @@index([branchId, createdAt])
   @@map("audit_logs")
+}
+
+/// A published result or achievement shown to the public (the "portfolio"). Network-level
+/// when branchId is null, otherwise owned by one branch. Bilingual, with an optional image
+/// stored alongside in result_images.
+model Result {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  branchId       String?       @map("branch_id") @db.Uuid
+  titleEn        String        @map("title_en")
+  titleUr        String?       @map("title_ur")
+  bodyEn         String        @map("body_en")
+  bodyUr         String?       @map("body_ur")
+  happenedOn     DateTime?     @map("happened_on") @db.Date
+  status         PublishStatus @default(DRAFT)
+  publishedAt    DateTime?     @map("published_at") @db.Timestamptz(3)
+  /// Alt text for the image, required when an image is attached (accessibility).
+  imageAltEn     String?       @map("image_alt_en")
+  imageAltUr     String?       @map("image_alt_ur")
+  /// Set when an image is present; also the cache-busting version for the image URL.
+  imageUpdatedAt DateTime?     @map("image_updated_at") @db.Timestamptz(3)
+  createdAt      DateTime      @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime      @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  branch Branch?      @relation(fields: [branchId], references: [id])
+  image  ResultImage?
+
+  @@index([status, publishedAt])
+  @@index([branchId])
+  @@map("results")
+}
+
+/// The image bytes for a result, kept in its own table so result queries never pull them.
+/// Served same-origin by /api/media/results/[id] (the CSP forbids external image hosts).
+model ResultImage {
+  resultId    String   @id @map("result_id") @db.Uuid
+  data        Bytes
+  contentType String   @map("content_type")
+  byteSize    Int      @map("byte_size")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(3)
+
+  result Result @relation(fields: [resultId], references: [id], onDelete: Cascade)
+
+  @@map("result_images")
 }

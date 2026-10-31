@@ -236,6 +236,12 @@ export default async function HomePage({ params }: Props) {
                   </dd>
                 </div>
               </dl>
+              <Link
+                href="/results"
+                className="text-marigold mt-6 inline-block text-sm font-semibold underline"
+              >
+                {t("resultsMore")}
+              </Link>
             </article>
 
             {/* Stop 4 — Events */}

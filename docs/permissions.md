@@ -116,6 +116,16 @@ admin screens use it only to hide controls.
 | `event.update`  | All         | —                | All            | —       | —           |        |
 | `event.publish` | All         | —                | All            | —       | —           |        |
 
+## result
+
+| Action                 | Super Admin | Finance Reviewer | Content Editor | HR Lead | Branch Lead | Public |
+| ---------------------- | ----------- | ---------------- | -------------- | ------- | ----------- | ------ |
+| `result.read`          | All         | —                | All            | All     | Own branch  |        |
+| `result.create`        | All         | —                | All            | All     | Own branch  |        |
+| `result.update`        | All         | —                | All            | All     | Own branch  |        |
+| `result.publish`       | All         | —                | All            | All     | Own branch  |        |
+| `result.readPublished` | All         | All              | All            | All     | All         | Yes    |
+
 ## Contact messages
 
 | Action                  | Super Admin | Finance Reviewer | Content Editor | HR Lead | Branch Lead | Public |
