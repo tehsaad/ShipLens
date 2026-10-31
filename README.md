@@ -6,12 +6,17 @@ checks and approves them. HR turns volunteer applications into members. Head off
 whole picture on one dashboard, with every change and export kept in an audit log that cannot
 be edited. It replaces spreadsheet and WhatsApp reporting with approved, auditable records.
 
-**Live:** <https://shiplens.onrender.com>. The free plan sleeps when idle, so the first page
-can take up to a minute. Staff sign in at <https://shiplens.onrender.com/admin/login>.
+**Live (Render, production):** <https://hamqadam.onrender.com>. The free plan sleeps when idle, so
+the first page can take up to a minute. A fast mirror runs on Vercel at
+<https://hamqadam-demo.vercel.app>. Staff sign in at `/admin/login`.
+
+> **For reviewers — one-click sign-in.** The sign-in page has a **Demo accounts** panel: one click
+> (“Enter as Super Admin”, “Enter as Finance Reviewer”, …) signs you in as that role — no email or
+> password to type.
 
 ## Test logins
 
-One login per role, all working on the live site:
+One login per role, all working on the live site (or use the one-click panel above):
 
 | Role             | Email                                 | Signs in to                                                   |
 | ---------------- | ------------------------------------- | ------------------------------------------------------------- |
@@ -21,8 +26,9 @@ One login per role, all working on the live site:
 | HR Lead          | `hr.lead@demo.hamqadam.test`          | Volunteer applications, accepting or declining them           |
 | Branch Lead      | `lead.kar001@demo.hamqadam.test`      | Karachi Central (`BR-KAR-001`): members, collections, reports |
 
-All five share one password. It is not stored in this repository (rule 9 of the brief: no
-passwords in Git); it is given with the submission and set on Render as `SEED_DEMO_PASSWORD`.
+For a manual sign-in, the five demo accounts share one password. It is not stored in this
+repository (brief rule: no passwords in Git); it is set on Render as `SEED_DEMO_PASSWORD` and given
+with the submission. Reviewers do not need it — the one-click panel signs in without a password.
 Loading the sample data is one command, `npm run db:seed`; see
 [docs/handover.md](docs/handover.md#sample-data-and-demo-logins).
 
@@ -45,7 +51,7 @@ The specification is [`docs/SPEC.md`](docs/SPEC.md). Approved decisions are in
 ## Status
 
 **Phases 0 to 7 are implemented**; what is left for the project owner is listed in
-[`docs/ACCEPTANCE.md`](docs/ACCEPTANCE.md). Live at <https://shiplens.onrender.com>:
+[`docs/ACCEPTANCE.md`](docs/ACCEPTANCE.md). Live at <https://hamqadam.onrender.com>:
 
 - Project tooling, Docker and CI, the health endpoint, and deployment on Render
 - The full data model, plus database rules enforced in PostgreSQL: the 7-day collection lock,
@@ -53,10 +59,11 @@ The specification is [`docs/SPEC.md`](docs/SPEC.md). Approved decisions are in
 - Staff sign-in with a lockout after failed attempts and a forced first-login password change
 - The role permission matrix, the audit service, and the sample-data seed
 - Admin screens for branches, users, applications, members, teams, collections, weekly
-  reports (with the review cycle), the dashboard, content, events, contact messages and the
-  audit log
-- The bilingual public site (English and Urdu, right-to-left) with the volunteer and contact
-  forms
+  reports (with the review cycle), the dashboard, content, events, results, contact messages
+  and the audit log
+- The bilingual public site (English and Urdu, right-to-left) with a scroll-driven landing
+  page, a public results/achievements showcase, a cookie-consent notice, and the volunteer and
+  contact forms
 - Search and sharing: unique titles and descriptions in both languages, canonical and hreflang
   links, Open Graph and X cards, structured data, `robots.txt`, `sitemap.xml` and `llms.txt`
   (see [Search and discoverability](#search-and-discoverability))
@@ -211,7 +218,7 @@ search with the Next.js Metadata API and next-intl; no SEO library is used.
   meta tag instead of being blocked, so crawlers can see that.
 - `sitemap.xml` lists the 18 public URLs, dated from published records only.
 
-Check a deployment with `npm run seo:check -- https://shiplens.onrender.com`. The same audit
+Check a deployment with `npm run seo:check -- https://hamqadam.onrender.com`. The same audit
 runs in CI against the production build (`e2e/seo.spec.ts`). The owner's Search Console and
 Bing steps are in [`docs/seo/POST-DEPLOYMENT.md`](docs/seo/POST-DEPLOYMENT.md).
 

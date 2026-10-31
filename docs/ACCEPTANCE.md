@@ -15,7 +15,7 @@ wording. Each line says what proves it. Checked on 27 October 2026, after the de
 | 1   | Correct dashboard values                    | Met    | Loading the sample data is one documented command, `npm run db:seed` ([handover](handover.md#sample-data-and-demo-logins)). `tests/integration/sample-data.test.ts` asserts every value in [`sample-data-expected.md`](sample-data-expected.md) for 18 October 2026, the last day the data covers. |
 | 2   | Complete weekly report cycle, fully audited | Met    | `e2e/report-cycle.spec.ts` runs draft, submit, return, resubmit, approve and lock in the browser, then finds each step with its actor in the Super Admin audit log. Service-level checks: `tests/integration/reports.test.ts`.                                                                     |
 | 3   | Permissions proven by tests                 | Met    | `tests/unit/permissions.test.ts` tests every role against every action in the table. IDOR and scope tests are in `tests/integration/*`. `e2e/access.spec.ts` checks real 403 and 404 responses for each role and a replayed Approve form refused on the server.                                    |
-| 4   | Live and green                              | Met    | <https://shiplens.onrender.com> serves `bf85481`, the merge of pull request #17; CI passed on `main` for that commit.                                                                                                                                                                              |
+| 4   | Live and green                              | Met    | <https://hamqadam.onrender.com> serves `bf85481`, the merge of pull request #17; CI passed on `main` for that commit.                                                                                                                                                                              |
 
 ## Final checklist
 
@@ -56,7 +56,7 @@ results are from 26 October 2026, before the redesign; they are rerun after each
 ### Live site
 
 Lighthouse 13.5.0, mobile preset with simulated throttling, against
-<https://shiplens.onrender.com> on 26 October 2026 (deploy of `e471f32`, page loaded once
+<https://hamqadam.onrender.com> on 26 October 2026 (deploy of `e471f32`, page loaded once
 beforehand so the free plan was awake). Raw summary:
 [`docs/seo/lighthouse/2026-10-26-live-before.json`](seo/lighthouse/2026-10-26-live-before.json).
 

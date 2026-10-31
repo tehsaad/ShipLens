@@ -13,13 +13,13 @@ they do not guarantee indexing, rich results or citations.
 1. Wait for the Render deploy to show **Live**.
 2. From a machine with internet access, in the repository:
    ```sh
-   npm run seo:check -- https://shiplens.onrender.com
+   npm run seo:check -- https://hamqadam.onrender.com
    ```
    It checks `robots.txt`, `sitemap.xml`, `llms.txt`, every page's title, description,
    canonical, hreflang, social cards and structured data, internal links, 404s and the
    `noindex` rules. Expect `All checks passed.`
-3. Open <https://shiplens.onrender.com/robots.txt> and
-   <https://shiplens.onrender.com/sitemap.xml> in a browser: 18 URLs, each with `en`, `ur`
+3. Open <https://hamqadam.onrender.com/robots.txt> and
+   <https://hamqadam.onrender.com/sitemap.xml> in a browser: 18 URLs, each with `en`, `ur`
    and `x-default` alternates.
 4. Open a page, view source and search for `application/ld+json`: one block per page.
 5. Open the browser console on `/ur` and reload about ten times: no "Minified React error
@@ -28,7 +28,7 @@ they do not guarantee indexing, rich results or citations.
 ## 2. Google Search Console
 
 1. Go to <https://search.google.com/search-console> and **Add property**.
-2. Choose **URL prefix** and enter `https://shiplens.onrender.com/` (a Domain property needs
+2. Choose **URL prefix** and enter `https://hamqadam.onrender.com/` (a Domain property needs
    DNS access, which an `onrender.com` subdomain does not give you).
 3. Verify with the **HTML tag** method. Send the tag's `content` value to the developer: it
    belongs in the root layout's metadata as `verification: { google: "<value>" }` and needs
@@ -36,7 +36,7 @@ they do not guarantee indexing, rich results or citations.
    not commit the value anywhere else.
 4. **Sitemaps** → submit `sitemap.xml`. The status should become **Success** with 18 URLs
    discovered.
-5. **URL inspection** → inspect `https://shiplens.onrender.com/en` and `/ur`, then
+5. **URL inspection** → inspect `https://hamqadam.onrender.com/en` and `/ur`, then
    **Request indexing** for each. Under "Page indexing", check that **User-declared
    canonical** and **Google-selected canonical** are the same URL.
 6. After a few days, in **Pages** (indexing report): every sitemap URL should be indexed or
@@ -51,7 +51,7 @@ they do not guarantee indexing, rich results or citations.
 1. Go to <https://www.bing.com/webmasters>. The quickest route is **Import from Google
    Search Console** after step 2; otherwise verify with the meta tag (`verification: {
 other: { "msvalidate.01": "<value>" } }` in the root layout) or an XML file in `public/`.
-2. Submit `https://shiplens.onrender.com/sitemap.xml`.
+2. Submit `https://hamqadam.onrender.com/sitemap.xml`.
 3. Use **URL Inspection** on `/en` and `/ur`.
 4. Optional: IndexNow lets a site notify Bing of changes. It is not set up; it would need a
    key file and a call when content is published.
@@ -113,7 +113,7 @@ that.
 
 ## 8. Periodic review (every 3 to 6 months)
 
-1. Run `npm run seo:check -- https://shiplens.onrender.com`.
+1. Run `npm run seo:check -- https://hamqadam.onrender.com`.
 2. Re-run PageSpeed Insights on the key pages.
 3. Read each page as a newcomer: is the content still accurate, in both languages? Are past
    events and ended programs unpublished?

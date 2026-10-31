@@ -1,7 +1,7 @@
 import { logEvent } from "@/lib/log";
 
 /** The live site. Canonical links, the sitemap and structured data use it unless `SITE_URL` is set. */
-export const PRODUCTION_ORIGIN = "https://shiplens.onrender.com";
+export const PRODUCTION_ORIGIN = "https://hamqadam.onrender.com";
 
 /** Hosts that must never become the canonical origin: this machine, and Render pull request previews. */
 const LOCAL_HOST = /^(localhost|127(?:\.\d{1,3}){3}|0\.0\.0\.0|\[::1?\])$/;

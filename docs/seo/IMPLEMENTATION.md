@@ -18,7 +18,7 @@ was added.
 
 | Part                                                               | Role                                                                                                                                                                                                                       |
 | ------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `lib/seo/site.ts`                                                  | The canonical origin. Read from `SITE_URL` (default `https://shiplens.onrender.com`), never from the request's Host header. A value that is not a bare HTTPS origin on a public host is logged and replaced by production. |
+| `lib/seo/site.ts`                                                  | The canonical origin. Read from `SITE_URL` (default `https://hamqadam.onrender.com`), never from the request's Host header. A value that is not a bare HTTPS origin on a public host is logged and replaced by production. |
 | `lib/seo/pages.ts`                                                 | The one list of public pages: path, messages namespace, schema.org page type and the published records each page shows. Metadata, sitemap, structured data, `llms.txt` and the tests all read it.                          |
 | `lib/seo/metadata.ts`                                              | `pageMetadata()` for every public page: title, description, canonical, hreflang, Open Graph, X card. Next.js replaces these objects per page rather than merging them, so each page gets the full set from here.           |
 | `messages/{en,ur}.json`                                            | `metaTitle` and new `metaDescription` per page, `seo.imageAlt`, the Get Involved questions and the related-page labels.                                                                                                    |
@@ -144,7 +144,7 @@ E2E database), unless stated otherwise.
 ### Implemented, not yet verified on the live site
 
 This work is committed locally and **not deployed** (as instructed). After deployment, run
-`npm run seo:check -- https://shiplens.onrender.com` and the steps in POST-DEPLOYMENT.md.
+`npm run seo:check -- https://hamqadam.onrender.com` and the steps in POST-DEPLOYMENT.md.
 The hydration fix in particular is verified locally only; on live the error was
 timing-dependent.
 
@@ -202,7 +202,7 @@ On 26 October 2026, in the development container (Node 22, PostgreSQL 16), on th
 | `npm run test:coverage` (unit and integration)                             | 34 files, 632 tests pass; lines 68.86% |
 | `npm run build`                                                            | Pass                                   |
 | `npx playwright test` (all E2E, local production build)                    | 79 pass                                |
-| `npm run seo:check -- http://127.0.0.1:3200 https://shiplens.onrender.com` | 0 failures (226 before the change)     |
+| `npm run seo:check -- http://127.0.0.1:3200 https://hamqadam.onrender.com` | 0 failures (226 before the change)     |
 | Lighthouse 13.5.0, mobile, six key pages                                   | See below                              |
 
 ## Lighthouse after the change (local)
