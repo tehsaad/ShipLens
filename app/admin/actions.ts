@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 import { signIn, signOut } from "@/lib/auth";
 import { LOGIN_PATH } from "@/lib/auth/config";
+import { DEMO_EMAIL_SUFFIX, demoLoginToken } from "@/lib/auth/demo";
 import { getSessionUser, requireUser } from "@/lib/auth/session";
 import { getPrisma } from "@/lib/db";
 import { isAppError } from "@/lib/errors";
@@ -28,6 +29,25 @@ export async function login(_previous: LoginState, formData: FormData): Promise<
   try {
     // On success this throws a redirect, which Next.js handles.
     await signIn("credentials", { ...parsed.data, redirectTo: "/admin" });
+  } catch (error) {
+    if (error instanceof AuthError) return { error: LOGIN_FAILED };
+    throw error;
+  }
+  return { error: null };
+}
+
+/**
+ * One-click demo sign-in for reviewers: signs in a seeded demo account by email, with no
+ * password typed. The token comes from the server (lib/auth/demo.ts), so it never reaches the
+ * browser; the credentials provider accepts it only for demo-address accounts that were seeded.
+ */
+export async function demoSignIn(_previous: LoginState, formData: FormData): Promise<LoginState> {
+  const email = String(formData.get("demoEmail") ?? "")
+    .trim()
+    .toLowerCase();
+  if (!email.endsWith(DEMO_EMAIL_SUFFIX)) return { error: LOGIN_FAILED };
+  try {
+    await signIn("credentials", { email, password: demoLoginToken(), redirectTo: "/admin" });
   } catch (error) {
     if (error instanceof AuthError) return { error: LOGIN_FAILED };
     throw error;
