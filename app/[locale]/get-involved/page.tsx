@@ -38,12 +38,12 @@ export default async function GetInvolvedPage({ params }: Props) {
   return (
     <div className="grid gap-10">
       <header className="grid max-w-3xl gap-2">
-        <h1 className="text-3xl font-semibold">{t("title")}</h1>
+        <h1 className="text-4xl font-semibold sm:text-5xl">{t("title")}</h1>
         <p className="text-muted-foreground text-lg">{t("intro")}</p>
       </header>
       <ol className="grid gap-4 sm:grid-cols-3">
         {steps.map((step) => (
-          <li key={step} className="bg-card grid gap-1 rounded-xl border p-5">
+          <li key={step} className="card-surface grid gap-1 p-5">
             <span className="text-primary text-sm font-semibold">{step}</span>
             <h2 className="font-semibold">{t(`step${step}Title`)}</h2>
             <p className="text-muted-foreground text-sm">{t(`step${step}`)}</p>

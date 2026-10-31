@@ -26,7 +26,7 @@ export default async function BranchesPage({ params }: Props) {
   return (
     <div className="grid gap-8">
       <header className="grid gap-2">
-        <h1 className="text-3xl font-semibold">{t("title")}</h1>
+        <h1 className="text-4xl font-semibold sm:text-5xl">{t("title")}</h1>
         <p className="text-muted-foreground text-lg">{t("intro")}</p>
       </header>
       <BranchList branches={branches} />

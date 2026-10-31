@@ -90,7 +90,7 @@ export function EventList({ events, now }: { events: EventItem[]; now: number })
         {shown.map((event) => {
           const fallback = locale === "ur" && !event.titleUr;
           return (
-            <li key={event.id} className="bg-card grid gap-2 rounded-xl border p-5">
+            <li key={event.id} className="card-surface is-interactive grid gap-2 p-5">
               <h2
                 className="text-lg font-semibold"
                 lang={fallback ? "en" : undefined}

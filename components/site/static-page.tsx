@@ -15,7 +15,7 @@ export async function StaticPage({
   const paragraphs = t.raw("body") as string[];
   return (
     <article className="grid max-w-3xl gap-4">
-      <h1 className="text-3xl font-semibold">{t("title")}</h1>
+      <h1 className="text-4xl font-semibold sm:text-5xl">{t("title")}</h1>
       {paragraphs.map((paragraph) => (
         <p key={paragraph} className="text-muted-foreground leading-relaxed">
           {paragraph}

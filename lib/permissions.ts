@@ -57,6 +57,19 @@ export const PERMISSIONS = {
       BRANCH_LEAD: ALL,
     },
   },
+  // Aggregate, network-wide impact figures for the public home page: counts of active
+  // branches, cities and members, and the collections total. Aggregate only — no member
+  // names, no per-branch or per-person amounts ever leave this surface.
+  "impact.readPublic": {
+    public: true,
+    roles: {
+      SUPER_ADMIN: ALL,
+      FINANCE_REVIEWER: ALL,
+      CONTENT_EDITOR: ALL,
+      HR_LEAD: ALL,
+      BRANCH_LEAD: ALL,
+    },
+  },
 
   // Teams (section 7.2: BRANCH_LEAD for own branch)
   "team.read": { roles: { SUPER_ADMIN: ALL, HR_LEAD: ALL, BRANCH_LEAD: OWN } },

@@ -5,9 +5,10 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
 import { SiteFooter } from "@/components/site/footer";
 import { SiteHeader } from "@/components/site/header";
+import { SmoothScroll } from "@/components/site/smooth-scroll";
 import { THEME_SCRIPT } from "@/components/site/theme-script";
 import { directionOf, routing } from "@/i18n/routing";
-import { inter, nastaliq } from "@/lib/fonts";
+import { bricolage, instrumentSans, jetbrainsMono, nastaliq } from "@/lib/fonts";
 import { titleTemplate } from "@/lib/seo/metadata";
 import { SITE_URL } from "@/lib/seo/site";
 import { cn } from "@/lib/utils";
@@ -53,7 +54,13 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={directionOf(locale)}
-      className={cn("site font-sans", inter.variable, nastaliq.variable)}
+      className={cn(
+        "site font-sans",
+        instrumentSans.variable,
+        bricolage.variable,
+        jetbrainsMono.variable,
+        nastaliq.variable,
+      )}
       suppressHydrationWarning
     >
       <head>
@@ -67,6 +74,7 @@ export default async function LocaleLayout({
           {t("skipToContent")}
         </a>
         <NextIntlClientProvider>
+          <SmoothScroll />
           <SiteHeader />
           <main id="main" className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
             {children}

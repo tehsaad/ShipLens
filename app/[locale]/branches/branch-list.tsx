@@ -39,7 +39,7 @@ export function BranchList({ branches }: { branches: PublicBranch[] }) {
       {shown.length === 0 ? <p className="text-muted-foreground">{t("empty")}</p> : null}
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {shown.map((branch) => (
-          <li key={branch.id} className="bg-card grid gap-2 rounded-xl border p-5">
+          <li key={branch.id} className="card-surface is-interactive grid gap-2 p-5">
             <h2 className="text-lg font-semibold">{branch.name}</h2>
             <dl className="grid grid-cols-[max-content_1fr] gap-x-3 gap-y-1 text-sm">
               <dt className="text-muted-foreground">{t("code")}</dt>

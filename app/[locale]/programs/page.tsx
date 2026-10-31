@@ -25,7 +25,7 @@ export default async function ProgramsPage({ params }: Props) {
   return (
     <div className="grid gap-8">
       <header className="grid gap-2">
-        <h1 className="text-3xl font-semibold">{t("title")}</h1>
+        <h1 className="text-4xl font-semibold sm:text-5xl">{t("title")}</h1>
         <p className="text-muted-foreground text-lg">{t("intro")}</p>
       </header>
       {programs.length === 0 ? <p className="text-muted-foreground">{t("empty")}</p> : null}
@@ -33,7 +33,7 @@ export default async function ProgramsPage({ params }: Props) {
         {programs.map((entry) => (
           <article
             key={entry.slug}
-            className="bg-card grid content-start gap-3 rounded-xl border p-6"
+            className="card-surface is-interactive grid content-start gap-3 p-6"
           >
             {entry.fallback ? <FallbackNotice /> : null}
             <div
