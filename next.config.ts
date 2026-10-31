@@ -7,7 +7,9 @@ const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 const isDev = process.env.NODE_ENV === "development";
 
 const nextConfig: NextConfig = {
-  output: "standalone",
+  // Standalone output is for the Render Docker image (scripts/docker-entrypoint.sh). On Vercel
+  // the platform provides its own serverless output, so leave it unset there.
+  ...(process.env.VERCEL ? {} : { output: "standalone" as const }),
   poweredByHeader: false,
   reactStrictMode: true,
   experimental: {
