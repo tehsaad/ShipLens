@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
+import { Building2, ClipboardList, Coins, Inbox, Send, Users } from "lucide-react";
 import Link from "next/link";
-import { Cell, DataTable, ExportLink, PageHeader, Section } from "@/components/admin/page";
+import { Reveal } from "@/components/admin/animate";
+import { DashboardHero } from "@/components/admin/dashboard-hero";
+import { Cell, DataTable, ExportLink, Section } from "@/components/admin/page";
+import { StatCard } from "@/components/admin/stat-card";
 import { CollectionTrend, NewMemberTrend } from "@/components/admin/trend-charts";
 import { requireUser } from "@/lib/auth/session";
 import { formatBusinessDate } from "@/lib/dates";
@@ -12,74 +16,89 @@ import { getDashboard, UNROUTED_LIST_SIZE } from "@/lib/services/dashboard";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
-function Kpi({ label, value, detail }: { label: string; value: string; detail?: string }) {
-  return (
-    <div className="rounded-xl border p-4">
-      <dt className="text-muted-foreground text-sm">{label}</dt>
-      <dd className="mt-1 text-2xl font-semibold tabular-nums">{value}</dd>
-      {detail ? <dd className="text-muted-foreground mt-1 text-xs">{detail}</dd> : null}
-    </div>
-  );
-}
-
 export default async function AdminHomePage() {
   const user = await requireUser();
+  const roleLabel = ROLE_LABELS[user.role];
+
   if (!can(user, "dashboard.view")) {
     return (
-      <PageHeader
-        title="Admin"
-        description={`Signed in as ${user.name} (${ROLE_LABELS[user.role]}). Use the menu to manage the records your role covers.`}
+      <DashboardHero
+        name={user.name}
+        role={user.role}
+        roleLabel={roleLabel}
+        scope="Use the menu above to manage the records your role covers."
       />
     );
   }
 
   const dashboard = await getDashboard(await serviceContext(user));
   const { finance, membership } = dashboard;
+  const scope = `${
+    dashboard.branchScope ? `Branch ${dashboard.branchScope.code}` : "All branches"
+  } · as of ${dashboard.asOf} (Asia/Karachi)`;
 
   return (
     <>
-      <PageHeader
-        title="Dashboard"
-        description={`${dashboard.branchScope ? `Branch ${dashboard.branchScope.code}` : "All branches"} · as of ${dashboard.asOf} (Asia/Karachi)`}
-      />
-      <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <DashboardHero name={user.name} role={user.role} roleLabel={roleLabel} scope={scope} />
+
+      <Reveal pop className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {finance ? (
           <>
-            <Kpi
+            <StatCard
               label="Collections this month"
-              value={formatPkr(finance.collectionsThisMonth.total)}
+              value={Number(finance.collectionsThisMonth.total)}
+              kind="pkr"
               detail={`${finance.collectionsThisMonth.count} entries dated this month`}
+              icon={Coins}
+              tone="teal"
             />
-            <Kpi
+            <StatCard
               label="Unrouted collections"
-              value={formatPkr(finance.unrouted.total)}
+              value={Number(finance.unrouted.total)}
+              kind="pkr"
               detail={`${finance.unrouted.count} entries not yet routed to the main account`}
+              icon={Send}
+              tone="amber"
             />
-            <Kpi
+            <StatCard
               label="Reports awaiting review"
-              value={String(finance.reportsAwaitingReview.count)}
+              value={finance.reportsAwaitingReview.count}
               detail={
                 finance.reportsAwaitingReview.oldestSubmittedAt
                   ? `Oldest submitted ${formatBusinessDate(finance.reportsAwaitingReview.oldestSubmittedAt)}`
                   : "None waiting"
               }
+              icon={ClipboardList}
+              tone="amber"
             />
           </>
         ) : null}
         {dashboard.activeBranches !== null ? (
-          <Kpi label="Active branches" value={String(dashboard.activeBranches)} />
+          <StatCard
+            label="Active branches"
+            value={dashboard.activeBranches}
+            icon={Building2}
+            tone="teal"
+          />
         ) : null}
         {membership ? (
           <>
-            <Kpi label="Active members" value={String(membership.activeMembers)} />
-            <Kpi
+            <StatCard
+              label="Active members"
+              value={membership.activeMembers}
+              icon={Users}
+              tone="emerald"
+            />
+            <StatCard
               label="Pending applications"
-              value={String(membership.pendingApplications)}
+              value={membership.pendingApplications}
               detail="Status new"
+              icon={Inbox}
+              tone="marigold"
             />
           </>
         ) : null}
-      </dl>
+      </Reveal>
 
       {finance ? (
         <Section title="Collections per month (last 12 months)">

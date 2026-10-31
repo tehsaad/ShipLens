@@ -204,6 +204,119 @@
   --focus-ring: #fbbf24;
 }
 
+/* ---------------------------------------------------------------------------
+   Admin console: a branded Teal & Marigold dashboard theme (light), replacing
+   the neutral default so the staff area reads as one product with the public
+   site. Soft surfaces, a little more radius, and status accents for KPIs.
+   --------------------------------------------------------------------------- */
+.admin {
+  --background: #f3f6f6;
+  --foreground: #0b1f1e;
+  --card: #ffffff;
+  --card-foreground: #0b1f1e;
+  --popover: #ffffff;
+  --popover-foreground: #0b1f1e;
+  --primary: #0f766e;
+  --primary-foreground: #ffffff;
+  --secondary: #e9efee;
+  --secondary-foreground: #0b1f1e;
+  --muted: #eef2f2;
+  --muted-foreground: #556461;
+  --accent: #fdf3dc;
+  --accent-foreground: #0b1f1e;
+  --destructive: #dc2626;
+  --border: #e2e8e7;
+  --input: #cbd6d4;
+  --ring: #0f766e;
+  --radius: 0.85rem;
+  --marigold: #f59e0b;
+  --marigold-foreground: #1c1917;
+  --marigold-ink: #b45309;
+  --teal-deep: #134e4a;
+  --focus-ring: #0f766e;
+  /* Chart series, branded. */
+  --chart-1: #0f766e;
+  --chart-2: #f59e0b;
+  --chart-3: #0ea5a3;
+  --chart-4: #64748b;
+  --chart-5: #134e4a;
+}
+
+.admin body {
+  background:
+    radial-gradient(
+      60% 40% at 100% 0%,
+      color-mix(in oklab, var(--primary) 8%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      50% 35% at 0% 0%,
+      color-mix(in oklab, var(--marigold) 7%, transparent),
+      transparent 70%
+    ),
+    var(--background);
+  background-attachment: fixed;
+}
+
+/* Elevated dashboard card. */
+.admin .surface {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 1px 2px color-mix(in oklab, var(--foreground) 6%, transparent);
+}
+@media (hover: hover) {
+  .admin .surface-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 36px -22px color-mix(in oklab, var(--primary) 55%, transparent);
+    border-color: color-mix(in oklab, var(--primary) 35%, var(--border));
+  }
+}
+.admin .surface,
+.admin .surface-hover {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin .surface-hover:hover {
+    transform: none;
+  }
+}
+
+/* Big KPI numeral. */
+.admin .kpi-figure {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The role emblem on the dashboard hero: a conic ring that reads as "live". */
+.admin .hero-orb {
+  background: conic-gradient(
+    from 140deg,
+    var(--primary),
+    var(--marigold),
+    color-mix(in oklab, var(--primary) 60%, var(--marigold)),
+    var(--primary)
+  );
+  mask: radial-gradient(farthest-side, transparent calc(100% - 9px), #000 calc(100% - 8px));
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 9px), #000 calc(100% - 8px));
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (hover: hover) {
+  .admin .orb-wrap:hover .hero-orb {
+    transform: rotate(45deg) scale(1.06);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin .orb-wrap:hover .hero-orb {
+    transform: none;
+  }
+}
+
 /* A visible keyboard focus ring in marigold-ink (light) or marigold (dark): at least 3:1
    against the background in both themes. */
 @utility focus-ring-marigold {
