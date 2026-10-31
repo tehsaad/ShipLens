@@ -33,9 +33,9 @@ export default async function ConsoleLayout({ children }: { children: ReactNode 
 
   return (
     <div className="min-h-svh">
-      <header className="border-b">
+      <header className="border-border bg-card/80 sticky top-0 z-40 border-b backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
-          <Link href="/admin" className="font-semibold">
+          <Link href="/admin" className="text-primary text-base font-bold tracking-tight">
             {t("label")}
           </Link>
           <nav aria-label={t("label")} className="flex flex-wrap gap-4 text-sm">

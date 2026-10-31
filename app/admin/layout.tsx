@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 /** Root layout of the staff area. Admin screens are in English (section 7.4 covers navigation labels). */
 export default function AdminRootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en" dir="ltr" className={cn("font-sans", geist.variable)}>
+    <html lang="en" dir="ltr" className={cn("admin font-sans", geist.variable)}>
       <body>{children}</body>
     </html>
   );

@@ -25,8 +25,8 @@ export function PageHeader({
 
 export function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <section className="grid gap-3 rounded-xl border p-4">
-      <h2 className="text-lg font-medium">{title}</h2>
+    <section className="surface grid gap-3 p-5">
+      <h2 className="text-lg font-semibold">{title}</h2>
       {children}
     </section>
   );
@@ -42,9 +42,9 @@ export function DataTable({
   empty?: boolean;
 }) {
   return (
-    <div className="overflow-x-auto rounded-xl border">
+    <div className="surface overflow-x-auto">
       <table className="w-full text-sm">
-        <thead className="bg-muted/50 text-start">
+        <thead className="bg-muted/60 text-start">
           <tr>
             {head.map((label) => (
               <th key={label} scope="col" className="px-3 py-2 text-start font-medium">
