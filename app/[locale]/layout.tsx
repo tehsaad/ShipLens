@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import type { ReactNode } from "react";
+import { CookieConsent } from "@/components/site/cookie-consent";
 import { SiteFooter } from "@/components/site/footer";
 import { SiteHeader } from "@/components/site/header";
 import { SmoothScroll } from "@/components/site/smooth-scroll";
@@ -80,6 +81,7 @@ export default async function LocaleLayout({
             {children}
           </main>
           <SiteFooter />
+          <CookieConsent />
         </NextIntlClientProvider>
       </body>
     </html>
