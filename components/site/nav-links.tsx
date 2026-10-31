@@ -1,20 +1,20 @@
 "use client";
 
-import { Menu, X } from "lucide-react";
+import { LogIn, Menu, X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import NextLink from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { LanguageSwitcher } from "./language-switcher";
 import { ThemeToggle } from "./theme-toggle";
 
+// A short primary nav. Events lives inside Programs now, and About and Contact are reachable
+// from the footer, so the bar stays uncluttered.
 const LINKS = [
   { href: "/", key: "home" },
-  { href: "/about", key: "about" },
   { href: "/programs", key: "programs" },
   { href: "/branches", key: "branches" },
-  { href: "/events", key: "events" },
   { href: "/get-involved", key: "getInvolved" },
-  { href: "/contact", key: "contact" },
 ] as const;
 
 /** Main navigation: a row on wide screens, a menu panel on narrow ones (design by Gemini). */
@@ -68,9 +68,17 @@ export function NavLinks() {
       <div className="hidden items-center gap-2 xl:flex">
         <LanguageSwitcher />
         <ThemeToggle />
+        <NextLink
+          href="/admin/login"
+          hrefLang="en"
+          className="text-muted-foreground hover:text-primary focus-ring-marigold ms-1 inline-flex h-11 items-center gap-1.5 rounded-xl px-3 text-sm font-medium whitespace-nowrap transition-colors"
+        >
+          <LogIn className="h-4 w-4" aria-hidden="true" />
+          {t("nav.signIn")}
+        </NextLink>
         <Link
           href="/get-involved"
-          className="bg-marigold text-marigold-foreground hover:bg-marigold/90 focus-ring-marigold motion-reduce-fade ms-2 inline-flex h-11 items-center justify-center rounded-xl px-5 text-sm font-bold whitespace-nowrap shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:scale-95"
+          className="bg-marigold text-marigold-foreground hover:bg-marigold/90 focus-ring-marigold motion-reduce-fade inline-flex h-11 items-center justify-center rounded-xl px-5 text-sm font-bold whitespace-nowrap shadow-sm transition-all duration-200 hover:-translate-y-0.5 active:scale-95"
         >
           {t("home.ctaApply")}
         </Link>
@@ -122,6 +130,15 @@ export function NavLinks() {
               );
             })}
           </ul>
+          <NextLink
+            href="/admin/login"
+            hrefLang="en"
+            onClick={() => setIsOpen(false)}
+            className="text-ink hover:bg-background hover:text-primary focus-ring-marigold flex h-11 items-center gap-2 rounded-lg px-4 text-base font-medium transition-colors"
+          >
+            <LogIn className="h-4 w-4" aria-hidden="true" />
+            {t("nav.signIn")}
+          </NextLink>
           <div className="bg-border my-2 h-px w-full" role="none" />
           <div className="flex items-center gap-2 px-2">
             <LanguageSwitcher />
