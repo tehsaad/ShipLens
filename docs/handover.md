@@ -26,7 +26,7 @@ The [README](../README.md#local-setup) has the full local setup. In short:
 | `AUTH_TRUST_HOST`          | `true`                                              | `true`                          | No     |
 | `TRUSTED_CLIENT_IP_HEADER` | `cf-connecting-ip`                                  | Unset (first `X-Forwarded-For`) | No     |
 | `SEED_DEMO_PASSWORD`       | Set in the Render dashboard while demo logins exist | Shell, for `npm run db:seed`    | Yes    |
-| `SITE_URL`                 | Unset: defaults to `https://shiplens.onrender.com`  | Optional; a bare HTTPS origin   | No     |
+| `SITE_URL`                 | Unset: defaults to `https://hamqadam.onrender.com`  | Optional; a bare HTTPS origin   | No     |
 | `DATABASE_MIGRATION_URL`   | Unset (the app connects as the database owner)      | Optional                        | Yes    |
 | `TEST_DATABASE_URL`        | Not used                                            | Integration tests               | No     |
 | `E2E_DATABASE_URL`         | Not used                                            | End-to-end tests                | No     |
@@ -80,7 +80,7 @@ identifiers keep the old name because changing them would break the running syst
 
 | Identifier                                                                               | Why it stays                                                                                                 |
 | ---------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `https://shiplens.onrender.com`                                                          | Render fixes a service's address when it is created. A new address needs a new service or a custom domain.   |
+| `https://hamqadam.onrender.com`                                                          | Render fixes a service's address when it is created. A new address needs a new service or a custom domain.   |
 | Render resources `shiplens`, `shiplens-db`; database and user `shiplens` (`render.yaml`) | Names of the existing resources; `render.yaml` must match them.                                              |
 | Database role `shiplens_app`                                                             | Created by an applied migration; migrations are never edited, and renaming a role can invalidate its logins. |
 | Seed id salt `shiplens-seed` (`prisma/seed/data.ts`)                                     | The live demo records' ids derive from it; a new salt would duplicate every demo record.                     |
@@ -181,7 +181,7 @@ backward compatible needs a follow-up migration instead.
 
 **The site is down, or `/api/health` answers 503.**
 
-1. Open `https://shiplens.onrender.com/api/health`.
+1. Open `https://hamqadam.onrender.com/api/health`.
    - `{"database":"down"}` means the app runs but cannot reach PostgreSQL. Check the database
      in Render: its status, and whether a free database has expired.
    - No answer at all: the free web service may be waking from sleep, which takes up to a

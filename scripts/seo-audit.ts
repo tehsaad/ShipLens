@@ -21,7 +21,7 @@ export type AuditResult = {
 type Options = {
   /** Where to send requests, for example http://127.0.0.1:3200. */
   base: string;
-  /** The origin canonical URLs must use, for example https://shiplens.onrender.com. */
+  /** The origin canonical URLs must use, for example https://hamqadam.onrender.com. */
   canonicalOrigin: string;
 };
 

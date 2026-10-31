@@ -27,8 +27,8 @@ afterEach(() => vi.restoreAllMocks());
 
 describe("canonical origin", () => {
   it("accepts a bare HTTPS origin on a public host", () => {
-    expect(checkSiteOrigin("https://shiplens.onrender.com")).toEqual({
-      origin: new URL("https://shiplens.onrender.com"),
+    expect(checkSiteOrigin("https://hamqadam.onrender.com")).toEqual({
+      origin: new URL("https://hamqadam.onrender.com"),
     });
     expect(checkSiteOrigin("https://volunteers.example.org/")).toEqual({
       origin: new URL("https://volunteers.example.org"),
@@ -36,16 +36,16 @@ describe("canonical origin", () => {
   });
 
   it.each([
-    ["http://shiplens.onrender.com", "not HTTPS"],
+    ["http://hamqadam.onrender.com", "not HTTPS"],
     ["https://localhost:3000", "a local address"],
     ["https://127.0.0.1", "a local address"],
     ["https://0.0.0.0:10000", "a local address"],
     ["https://[::1]", "a local address"],
     ["https://hamqadam-pr-12.onrender.com", "a preview deployment"],
-    ["https://shiplens.onrender.com/en", "not a bare origin"],
-    ["https://shiplens.onrender.com/?utm_source=x", "not a bare origin"],
-    ["https://user:secret@shiplens.onrender.com", "contains credentials"],
-    ["shiplens.onrender.com", "not a URL"],
+    ["https://hamqadam.onrender.com/en", "not a bare origin"],
+    ["https://hamqadam.onrender.com/?utm_source=x", "not a bare origin"],
+    ["https://user:secret@hamqadam.onrender.com", "contains credentials"],
+    ["hamqadam.onrender.com", "not a URL"],
   ])("rejects %s (%s)", (value, problem) => {
     expect(checkSiteOrigin(value)).toEqual({ problem });
   });
@@ -61,7 +61,7 @@ describe("canonical origin", () => {
   });
 
   it("builds absolute URLs on the canonical origin", () => {
-    expect(absoluteUrl("/ur/programs", origin)).toBe("https://shiplens.onrender.com/ur/programs");
+    expect(absoluteUrl("/ur/programs", origin)).toBe("https://hamqadam.onrender.com/ur/programs");
   });
 });
 
