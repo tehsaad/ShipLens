@@ -13,7 +13,9 @@
     "events": "Events",
     "getInvolved": "Get involved",
     "contact": "Contact",
-    "menu": "Menu"
+    "menu": "Menu",
+    "signIn": "Sign in",
+    "results": "Results"
   },
   "language": {
     "label": "Language",
@@ -29,7 +31,8 @@
     "privacy": "Privacy",
     "terms": "Terms",
     "staff": "Staff sign-in",
-    "rights": "© {year} Hamqadam Volunteers. Built for volunteer branches and head office."
+    "rights": "© {year} Hamqadam Volunteers. Built for volunteer branches and head office.",
+    "linksLabel": "Site links"
   },
   "fallback": {
     "notice": "This page is not available in Urdu yet, so it is shown in English."
@@ -88,7 +91,8 @@
       "Local gatherings that bring a neighbourhood together around a shared cause.",
       "Experienced volunteers guide newcomers as they find their footing.",
       "When a crisis hits a city, the nearest branch is ready to respond."
-    ]
+    ],
+    "resultsMore": "See our results"
   },
   "about": {
     "metaTitle": "About us",
@@ -101,7 +105,10 @@
     "metaDescription": "What Hamqadam Volunteers branches do week after week: tutoring, food and clothing drives and community events.",
     "title": "Programs",
     "intro": "What our branches do, week after week.",
-    "empty": "Programs will be listed here soon."
+    "empty": "Programs will be listed here soon.",
+    "eventsTitle": "Upcoming events",
+    "eventsMore": "All events",
+    "eventsEmpty": "No upcoming events right now."
   },
   "branches": {
     "metaTitle": "Branches",
@@ -267,7 +274,16 @@
       "messages": "Messages",
       "audit": "Audit log",
       "password": "Password",
-      "signOut": "Sign out"
+      "signOut": "Sign out",
+      "results": "Results"
     }
+  },
+  "results": {
+    "metaTitle": "Results",
+    "metaDescription": "See what our volunteer branches across Pakistan have achieved — real results and milestones, published by the branches and head office.",
+    "title": "Our results",
+    "intro": "Milestones and achievements from across the Hamqadam network.",
+    "empty": "No results have been published yet. Please check back soon.",
+    "networkLabel": "Network-wide"
   }
 }

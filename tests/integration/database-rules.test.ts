@@ -74,6 +74,33 @@ describe("audit log is append-only (section 5)", () => {
       }
     });
 
+    it("can create and read results and their images (default privileges)", async () => {
+      const app = await connect(appUrl);
+      try {
+        const result = await app.query<{ id: string }>(
+          `INSERT INTO results (title_en, body_en, status) VALUES ('App Result', 'Body', 'PUBLISHED') RETURNING id`,
+        );
+        const id = result.rows[0]!.id;
+        await app.query(
+          `INSERT INTO result_images (result_id, data, content_type, byte_size)
+           VALUES ($1, '\\x89504e47'::bytea, 'image/png', 4)`,
+          [id],
+        );
+        const read = await app.query(
+          `SELECT r.id FROM results r JOIN result_images i ON i.result_id = r.id WHERE r.id = $1`,
+          [id],
+        );
+        expect(read.rowCount).toBe(1);
+        // UPDATE is allowed (e.g. to republish); DELETE is not.
+        await app.query(`UPDATE results SET status = 'DRAFT' WHERE id = $1`, [id]);
+        expect(await sqlState(app, `DELETE FROM results WHERE id = $1`, [id])).toBe(
+          INSUFFICIENT_PRIVILEGE,
+        );
+      } finally {
+        await app.end();
+      }
+    });
+
     it("cannot delete collections or read the migration history", async () => {
       const branchId = await createBranch();
       const leadId = await createUser("BRANCH_LEAD", branchId);

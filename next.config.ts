@@ -16,6 +16,9 @@ const nextConfig: NextConfig = {
     // The public site and the admin area have separate root layouts, so unmatched URLs use
     // app/global-not-found.tsx.
     globalNotFound: true,
+    // Result images are uploaded through a server action; the default 1 MB would reject an
+    // image near the 1.5 MB cap once the rest of the form is counted.
+    serverActions: { bodySizeLimit: "2mb" },
   },
   // Section 8, A05: on every response, including static files and API routes. /admin gets a
   // nonce-based policy from proxy.ts instead of the public one.
