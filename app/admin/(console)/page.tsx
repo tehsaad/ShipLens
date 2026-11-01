@@ -87,7 +87,7 @@ export default async function AdminHomePage() {
               label="Active members"
               value={membership.activeMembers}
               icon={Users}
-              tone="emerald"
+              variant="gradient"
             />
             <StatCard
               label="Pending applications"
