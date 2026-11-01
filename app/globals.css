@@ -466,26 +466,28 @@ html[lang="en"].site .eyebrow {
   box-shadow: 0 10px 30px -12px color-mix(in oklab, var(--primary) 60%, transparent);
 }
 
-/* The dot that travels along the river path. */
+/* The dot that travels along the river path: a teal bead that pops on the
+   marigold ribbon. */
 .river-boat {
-  fill: var(--marigold);
+  fill: var(--primary);
   stroke: var(--card);
-  stroke-width: 3;
-  filter: drop-shadow(0 4px 10px color-mix(in oklab, var(--marigold) 70%, transparent));
+  stroke-width: 3.5;
+  filter: drop-shadow(0 4px 10px color-mix(in oklab, var(--primary) 70%, transparent));
 }
 
-/* Numbered stop sitting on the river (drawn in SVG by the river scene). */
+/* Numbered stop sitting on the river (drawn in SVG by the river scene): a card
+   disc with a teal rim and the stop number. */
 .river-node-ring {
   fill: var(--card);
   stroke: var(--primary);
-  stroke-width: 2;
-  filter: drop-shadow(0 10px 24px color-mix(in oklab, var(--primary) 45%, transparent));
+  stroke-width: 2.5;
+  filter: drop-shadow(0 12px 26px color-mix(in oklab, var(--primary) 45%, transparent));
 }
 .river-node-label {
-  fill: var(--primary);
+  fill: var(--foreground);
   font-family: var(--font-mono), ui-monospace, monospace;
   font-weight: 700;
-  font-size: 1rem;
+  font-size: 1.05rem;
 }
 .river-host {
   position: absolute;
@@ -503,11 +505,14 @@ html[lang="en"].site .eyebrow {
   pointer-events: none;
 }
 
+/* The chunky ribbon: a faint full-length channel with the solid marigold ribbon
+   drawn on over it as the visitor scrolls (see river-scene.tsx). */
 .river-path-track {
-  stroke: color-mix(in oklab, var(--primary) 18%, transparent);
+  stroke: color-mix(in oklab, var(--marigold) 24%, transparent);
+  stroke-linecap: round;
 }
 .river-path-draw {
-  stroke: var(--primary);
+  stroke: var(--marigold);
   stroke-linecap: round;
 }
 
@@ -541,4 +546,131 @@ html[lang="en"].site .eyebrow {
   letter-spacing: -0.03em;
   line-height: 1;
   font-variant-numeric: tabular-nums;
+}
+
+/* ===========================================================================
+   Bold landing restyle: saturated colour blocks, big display type, pill CTAs
+   with an icon badge, a chunky ribbon, and colourful accent chips. Every text
+   pairing here is verified at >= 4.5:1 (large text >= 3:1) in both themes.
+   =========================================================================== */
+
+/* Multi-hue accent fills — light pastels carrying dark ink, so one set reads on
+   both light and dark card surfaces (the pill is its own light surface). */
+.site,
+.site.dark {
+  --fill-sky: #bae6fd;
+  --fill-leaf: #bbf7d0;
+  --fill-coral: #fecaca;
+  --fill-amber: #fde68a;
+  --fill-lilac: #ddd6fe;
+}
+
+/* Saturated marigold block (hero, join). Re-scopes the semantic tokens so every
+   descendant — eyebrow, links, muted lede, outline button, focus ring — lands on
+   a panel-safe colour with no per-element patching. Marigold in both themes. */
+.site .panel-marigold {
+  background: var(--marigold);
+  color: #0b1f1e;
+  border-radius: var(--radius-4xl);
+  /* The panel is marigold in both themes, so its surface tokens are fixed light
+     values — this keeps the outline pill, its hover and the inner cards readable
+     in dark mode too. */
+  --foreground: #0b1f1e;
+  --muted-foreground: #243b39;
+  --primary: #0b1f1e;
+  --primary-foreground: #ffffff;
+  --marigold-ink: #0b1f1e;
+  --focus-ring: #0b1f1e;
+  --border: color-mix(in oklab, #0b1f1e 24%, transparent);
+  --background: #fffbf2;
+  --card: #ffffff;
+  --muted: #f6edd7;
+  --accent: #fdf3dc;
+  --secondary: #f6edd7;
+}
+.site .panel-marigold .eyebrow::before {
+  background: #0b1f1e;
+}
+
+/* Deep-teal block (impact). White text, marigold accents on large figures. */
+.site .panel-teal {
+  background: var(--teal-deep);
+  color: #ffffff;
+  border-radius: var(--radius-4xl);
+  --foreground: #ffffff;
+  --muted-foreground: color-mix(in oklab, #ffffff 78%, transparent);
+  --focus-ring: var(--marigold);
+  --border: color-mix(in oklab, #ffffff 16%, transparent);
+  /* Brighter marigold so small marigold labels/links clear 4.5:1 on deep teal. */
+  --marigold: #fbbf24;
+}
+
+/* Huge hero headline. clamp keeps it from overflowing 390px in Urdu, where the
+   existing html[lang="ur"] rule restores a taller line height. */
+.site .hero-title {
+  font-size: clamp(2.6rem, 6vw + 1rem, 4.75rem);
+  line-height: 1.02;
+}
+
+/* Colourful category chip in place of the plain eyebrow (dark ink on a pastel). */
+.site .eyebrow-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--chip, var(--fill-amber));
+  color: #0b1f1e;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+}
+.site .eyebrow-chip::before {
+  display: none;
+}
+
+/* Pill CTA with a trailing icon badge (NASCON style), built on the shared
+   Button via a class so admin/e2e buttons are untouched. */
+.site .cta-pill {
+  height: auto;
+  min-height: 3rem;
+  border-radius: 999px;
+  gap: 0.7rem;
+  padding-block: 0.65rem;
+  padding-inline: 1.4rem 0.55rem;
+  font-size: 0.95rem;
+}
+.site .cta-pill .cta-badge {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  transition: transform 0.25s ease;
+}
+.site .cta-pill[data-variant="default"] .cta-badge {
+  background: #ffffff;
+  color: var(--primary);
+}
+.site .cta-pill[data-variant="outline"] .cta-badge {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+html[dir="rtl"] .site .cta-pill .cta-badge svg {
+  transform: rotate(180deg);
+}
+@media (hover: hover) {
+  .site .cta-pill:hover .cta-badge {
+    transform: translateX(0.18rem);
+  }
+  html[dir="rtl"] .site .cta-pill:hover .cta-badge {
+    transform: translateX(-0.18rem);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .site .cta-pill:hover .cta-badge {
+    transform: none;
+  }
+}
+
+/* Colourful left accent on a flowing card (decorative; not text). */
+.site .accent-bar {
+  border-top: 4px solid var(--accent, var(--marigold));
 }

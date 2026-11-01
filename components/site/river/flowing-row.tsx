@@ -1,8 +1,18 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { type CSSProperties, useEffect, useRef } from "react";
 
 type Item = { title: string; body: string };
+
+// Colourful top accent per card: a saturated line, with a matching pastel chip.
+const ACCENT_LINE = ["#38bdf8", "#34d399", "#fb7185", "#f59e0b", "#a78bfa"];
+const ACCENT_CHIP = [
+  "var(--fill-sky)",
+  "var(--fill-leaf)",
+  "var(--fill-coral)",
+  "var(--fill-amber)",
+  "var(--fill-lilac)",
+];
 
 /**
  * A row of cards that flows sideways as the visitor scrolls past it — the horizontal echo of
@@ -73,10 +83,15 @@ export function FlowingRow({ items }: { items: Item[] }) {
         {items.map((item, i) => (
           <article
             key={i}
-            className="card-surface is-interactive w-64 shrink-0 p-5"
+            className="card-surface accent-bar is-interactive w-64 shrink-0 p-5"
+            style={{ "--accent": ACCENT_LINE[i % ACCENT_LINE.length] } as CSSProperties}
             aria-hidden="false"
           >
-            <span className="eyebrow" aria-hidden="true">
+            <span
+              className="eyebrow eyebrow-chip"
+              style={{ "--chip": ACCENT_CHIP[i % ACCENT_CHIP.length] } as CSSProperties}
+              aria-hidden="true"
+            >
               {String(i + 1).padStart(2, "0")}
             </span>
             <h3 className="mt-2 text-lg font-semibold">{item.title}</h3>
