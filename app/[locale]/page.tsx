@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { CalendarDays, HeartHandshake, MapPin, Sparkles, TrendingUp } from "lucide-react";
+import type { CSSProperties } from "react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Markdown } from "@/components/markdown";
 import { PageJsonLd } from "@/components/seo/page-json-ld";
-import { DustField } from "@/components/site/river/dust-field";
+import { CtaPill } from "@/components/site/cta-pill";
 import { FlowingRow } from "@/components/site/river/flowing-row";
 import { RiverScene } from "@/components/site/river/river-scene";
-import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { getPrisma } from "@/lib/db";
 import { localeFrom } from "@/lib/locale-params";
@@ -49,24 +49,25 @@ export default async function HomePage({ params }: Props) {
   return (
     <div className="grid gap-20 lg:gap-28">
       {/* Hero ------------------------------------------------------------- */}
-      <section className="relative isolate grid max-w-3xl gap-6 pt-6 pb-2">
-        <div className="hero-aurora" aria-hidden="true" />
-        <DustField />
-        <p className="eyebrow relative">{t("eyebrow")}</p>
-        <h1 className="relative text-4xl sm:text-5xl lg:text-6xl">{t("heroTitle")}</h1>
-        <p className="text-muted-foreground relative max-w-2xl text-lg text-pretty">
-          {t("heroText")}
-        </p>
-        <div className="relative flex flex-wrap items-center gap-3">
-          <Button asChild size="lg">
-            <Link href="/get-involved">{t("ctaApply")}</Link>
-          </Button>
-          <Button asChild size="lg" variant="outline">
-            <Link href="/programs">{t("ctaPrograms")}</Link>
-          </Button>
-          <Link href="/branches" className="text-primary ms-2 font-medium underline">
-            {t("statBranches", { count: branches.length })}
-          </Link>
+      <section className="panel-marigold relative isolate overflow-hidden px-6 py-10 sm:px-10 sm:py-14 lg:px-14 lg:py-16">
+        <div className="grid max-w-3xl gap-6">
+          <p className="eyebrow">{t("eyebrow")}</p>
+          <h1 className="hero-title">{t("heroTitle")}</h1>
+          <p className="text-muted-foreground max-w-2xl text-lg text-pretty sm:text-xl">
+            {t("heroText")}
+          </p>
+          <div className="mt-1 flex flex-wrap items-center gap-3">
+            <CtaPill href="/get-involved">{t("ctaApply")}</CtaPill>
+            <CtaPill href="/programs" variant="outline">
+              {t("ctaPrograms")}
+            </CtaPill>
+            <Link
+              href="/branches"
+              className="text-primary ms-2 font-semibold underline underline-offset-4"
+            >
+              {t("statBranches", { count: branches.length })}
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -126,7 +127,10 @@ export default async function HomePage({ params }: Props) {
               data-side="start"
               className="card-surface is-interactive w-full p-6 lg:w-[42%] lg:p-8 lg:me-auto"
             >
-              <p className="eyebrow">
+              <p
+                className="eyebrow eyebrow-chip"
+                style={{ "--chip": "var(--fill-sky)" } as CSSProperties}
+              >
                 <Sparkles className="h-4 w-4" aria-hidden="true" />
                 {t("stopPrograms")}
               </p>
@@ -159,7 +163,10 @@ export default async function HomePage({ params }: Props) {
               data-side="end"
               className="card-surface is-interactive w-full p-6 lg:w-[42%] lg:p-8 lg:ms-auto"
             >
-              <p className="eyebrow">
+              <p
+                className="eyebrow eyebrow-chip"
+                style={{ "--chip": "var(--fill-leaf)" } as CSSProperties}
+              >
                 <MapPin className="h-4 w-4" aria-hidden="true" />
                 {t("stopBranches")}
               </p>
@@ -191,9 +198,12 @@ export default async function HomePage({ params }: Props) {
             <article
               data-river-card
               data-side="start"
-              className="card-surface bg-teal-deep is-interactive w-full p-6 text-white lg:w-[48%] lg:p-9 lg:me-auto"
+              className="card-surface panel-teal is-interactive w-full p-6 lg:w-[48%] lg:p-9 lg:me-auto"
             >
-              <p className="eyebrow" style={{ color: "var(--marigold)" }}>
+              <p
+                className="eyebrow eyebrow-chip"
+                style={{ "--chip": "var(--fill-amber)" } as CSSProperties}
+              >
                 <TrendingUp className="h-4 w-4" aria-hidden="true" />
                 {t("stopImpact")}
               </p>
@@ -245,7 +255,10 @@ export default async function HomePage({ params }: Props) {
               data-side="end"
               className="card-surface is-interactive w-full p-6 lg:w-[42%] lg:p-8 lg:ms-auto"
             >
-              <p className="eyebrow">
+              <p
+                className="eyebrow eyebrow-chip"
+                style={{ "--chip": "var(--fill-coral)" } as CSSProperties}
+              >
                 <CalendarDays className="h-4 w-4" aria-hidden="true" />
                 {t("stopEvents")}
               </p>
@@ -287,10 +300,13 @@ export default async function HomePage({ params }: Props) {
             <article
               data-river-card
               data-side="start"
-              className="card-surface is-interactive w-full p-6 text-center lg:w-[42%] lg:p-10 lg:me-auto"
+              className="card-surface panel-marigold is-interactive w-full p-6 text-center lg:w-[42%] lg:p-10 lg:me-auto"
             >
               <p className="flex justify-center">
-                <span className="eyebrow">
+                <span
+                  className="eyebrow eyebrow-chip"
+                  style={{ "--chip": "var(--fill-lilac)" } as CSSProperties}
+                >
                   <HeartHandshake className="h-4 w-4" aria-hidden="true" />
                   {t("stopJoin")}
                 </span>
@@ -300,12 +316,10 @@ export default async function HomePage({ params }: Props) {
                 {t("joinText")}
               </p>
               <div className="mt-6 flex flex-wrap justify-center gap-3">
-                <Button asChild size="lg">
-                  <Link href="/get-involved">{t("ctaApply")}</Link>
-                </Button>
-                <Button asChild size="lg" variant="outline">
-                  <Link href="/contact">{t("ctaContact")}</Link>
-                </Button>
+                <CtaPill href="/get-involved">{t("ctaApply")}</CtaPill>
+                <CtaPill href="/contact" variant="outline">
+                  {t("ctaContact")}
+                </CtaPill>
               </div>
             </article>
           </div>

@@ -43,18 +43,29 @@ export function RiverScene({ targetId }: { targetId: string }) {
       overflow: "visible",
     } as CSSStyleDeclaration);
 
+    const RIBBON = 16;
+
+    // Always-visible faint channel: the whole route, waiting to be filled.
     const track = document.createElementNS(svgNS, "path");
     track.setAttribute("class", "river-path-track");
-    track.setAttribute("stroke-width", "3");
+    track.setAttribute("stroke-width", String(RIBBON));
+
+    // The solid marigold ribbon, drawn on as the visitor scrolls.
     const draw = document.createElementNS(svgNS, "path");
     draw.setAttribute("class", "river-path-draw");
-    draw.setAttribute("stroke-width", "3");
+    draw.setAttribute("stroke-width", String(RIBBON));
+
     const boat = document.createElementNS(svgNS, "circle");
     boat.setAttribute("class", "river-boat");
-    boat.setAttribute("r", "9");
+    boat.setAttribute("r", "11");
 
     svg.append(track, draw, boat);
     host.append(svg);
+
+    function setPaths(d: string) {
+      track.setAttribute("d", d);
+      draw.setAttribute("d", d);
+    }
 
     const nodeEls: SVGGElement[] = [];
 
@@ -100,7 +111,7 @@ export function RiverScene({ targetId }: { targetId: string }) {
           g.setAttribute("class", "river-node-g");
           const ring = document.createElementNS(svgNS, "circle");
           ring.setAttribute("class", "river-node-ring");
-          ring.setAttribute("r", "22");
+          ring.setAttribute("r", "24");
           const label = document.createElementNS(svgNS, "text");
           label.setAttribute("class", "river-node-label");
           label.setAttribute("text-anchor", "middle");
@@ -124,8 +135,10 @@ export function RiverScene({ targetId }: { targetId: string }) {
       const { points, W, H } = geometry(cards);
       svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
       const d = pathD(points);
-      track.setAttribute("d", d);
-      draw.setAttribute("d", d);
+      setPaths(d);
+      // No scroll animation under reduced motion: show the whole ribbon.
+      draw.removeAttribute("stroke-dasharray");
+      draw.removeAttribute("stroke-dashoffset");
       placeNodes(points);
       const first = points[1] ?? points[0]!;
       boat.setAttribute("cx", String(first.x));
@@ -196,7 +209,7 @@ export function RiverScene({ targetId }: { targetId: string }) {
                 ring,
                 { attr: { r: 6 } },
                 {
-                  attr: { r: 22 },
+                  attr: { r: 24 },
                   duration: 0.5,
                   ease: "back.out(2)",
                   overwrite: "auto",
@@ -217,8 +230,7 @@ export function RiverScene({ targetId }: { targetId: string }) {
         const { points, W, H } = geometry(cards);
         svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
         const d = pathD(points);
-        track.setAttribute("d", d);
-        draw.setAttribute("d", d);
+        setPaths(d);
         placeNodes(points);
 
         const len = draw.getTotalLength();
