@@ -1,10 +1,10 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
+import { AdminShell, type NavItem } from "@/components/admin/admin-shell";
 import { Button } from "@/components/ui/button";
 import { requireUser } from "@/lib/auth/session";
 import { ROLE_LABELS } from "@/lib/labels";
-import { can, type Action } from "@/lib/permissions";
+import { type Action, can } from "@/lib/permissions";
 import { logout } from "../actions";
 
 /**
@@ -29,38 +29,33 @@ const NAV = [
 export default async function ConsoleLayout({ children }: { children: ReactNode }) {
   const user = await requireUser();
   const t = await getTranslations({ locale: user.locale, namespace: "admin.nav" });
-  const links = NAV.filter((item) => can(user, item.action));
+
+  // Dashboard is open to every signed-in user; the rest are gated by role.
+  const links: NavItem[] = [
+    { href: "/admin", label: t("dashboard"), icon: "dashboard" },
+    ...NAV.filter((item) => can(user, item.action)).map((item) => ({
+      href: item.href,
+      label: t(item.key),
+      icon: item.key,
+    })),
+  ];
 
   return (
-    <div className="min-h-svh">
-      <header className="border-border bg-card/80 sticky top-0 z-40 border-b backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
-          <Link href="/admin" className="text-primary text-base font-bold tracking-tight">
-            {t("label")}
-          </Link>
-          <nav aria-label={t("label")} className="flex flex-wrap gap-4 text-sm">
-            {links.map((item) => (
-              <Link key={item.href} href={item.href} className="hover:underline">
-                {t(item.key)}
-              </Link>
-            ))}
-          </nav>
-          <div className="text-muted-foreground ms-auto flex items-center gap-3 text-sm">
-            <span>
-              {user.name} · {ROLE_LABELS[user.role]}
-            </span>
-            <Link href="/admin/change-password" className="hover:underline">
-              {t("password")}
-            </Link>
-            <form action={logout}>
-              <Button type="submit" size="sm" variant="outline">
-                {t("signOut")}
-              </Button>
-            </form>
-          </div>
-        </div>
-      </header>
-      <main className="mx-auto grid max-w-6xl gap-6 px-4 py-8">{children}</main>
-    </div>
+    <AdminShell
+      brand={t("label")}
+      links={links}
+      user={{ name: user.name, role: ROLE_LABELS[user.role] }}
+      passwordHref="/admin/change-password"
+      passwordLabel={t("password")}
+      signOut={
+        <form action={logout} className="flex-1">
+          <Button type="submit" size="sm" variant="outline" className="w-full">
+            {t("signOut")}
+          </Button>
+        </form>
+      }
+    >
+      {children}
+    </AdminShell>
   );
 }
